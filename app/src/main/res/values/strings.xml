@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">zanguleh</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="daily_counter">روز شمار</string>
+    <string name="tasks">وظایف</string>
+    <string name="calendar">تقویم</string>
+    <string name="settings">تنظیمات</string>
+</resources>
