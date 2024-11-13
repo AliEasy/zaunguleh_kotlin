@@ -71,8 +71,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.dagger.hilt.navigation)
 
     //room
     implementation(libs.androidx.room.runtime)
@@ -84,4 +86,7 @@ dependencies {
     //dagger hilt
     implementation(libs.google.dagger.hilt)
     kapt(libs.google.dagger.hilt.compiler)
+
+    //kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.ktx)
 }

@@ -33,6 +33,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import top.easyware.zanguleh.features.daily_counter.presentation.DailyCounterScreen
 import top.easyware.zanguleh.ui.theme.ZangulehTheme
 import java.util.Locale
 
