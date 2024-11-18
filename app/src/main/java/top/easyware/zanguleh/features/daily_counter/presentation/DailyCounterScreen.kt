@@ -31,12 +31,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import top.easyware.zanguleh.features.daily_counter.presentation.components.FilterSection
 import top.easyware.zanguleh.features.daily_counter.presentation.components.ReminderItem
 
 @Composable
 fun DailyCounterScreen(
-    viewModel: DailyCounterViewModel = hiltviewModel(), //todo
+    viewModel: DailyCounterViewModel = hiltViewModel(), //todo
 ) {
     val state = viewModel.state.value
     val scaffoldState = rememberScrollState()
