@@ -49,7 +49,9 @@ fun DailyCounterScreen(
     ) {
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(onClick = {}) {
+                FloatingActionButton(onClick = {
+                    viewModel.onEvent(DailyCounterEvent.AddReminder)
+                }) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
                 }
             },

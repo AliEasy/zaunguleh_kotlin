@@ -10,13 +10,13 @@ enum class ReminderType(val value: String) {
 
 @Entity
 data class ReminderModel(
-    @PrimaryKey val reminderId: Int,
+    @PrimaryKey val reminderId: Int? = null,
     val title: String,
     val reminderType: String,
-    val reminderRepeat: Boolean?,
-    val reminderDateTime: String?,
-    val isImportant: Boolean?,
-    val showInDailyCounter: Boolean?,
-    val description: String?,
-    val creationDataTime: String
+    val reminderRepeat: Boolean? = null,
+    val reminderDateTime: String? = null,
+    val isImportant: Boolean? = null,
+    val showInDailyCounter: Boolean? = null,
+    val description: String? = null,
+    val creationDataTime: String? = null
 )
