@@ -17,6 +17,6 @@ fun ReminderItem(
         modifier = modifier,
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = reminder.title, style = MaterialTheme.typography.bodyLarge, color = androidx.compose.ui.graphics.Color.Black)
+        Text(text = reminder.title, style = MaterialTheme.typography.headlineMedium, color = androidx.compose.ui.graphics.Color.Black)
     }
 }

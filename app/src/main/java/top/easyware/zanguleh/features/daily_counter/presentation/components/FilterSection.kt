@@ -18,8 +18,7 @@ fun FilterSection(
     Column(
         modifier = modifier,
     ) {
-        Column(
-        ) {
+        Column {
             DefaultRadioButton(
                 text = "Is Important",
                 selected = filter is ReminderFilter.IsImportantFilter,
