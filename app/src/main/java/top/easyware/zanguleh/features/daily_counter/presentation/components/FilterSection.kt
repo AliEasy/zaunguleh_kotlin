@@ -1,9 +1,7 @@
 package top.easyware.zanguleh.features.daily_counter.presentation.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,25 +18,24 @@ fun FilterSection(
     Column(
         modifier = modifier,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth()
+        Column(
         ) {
             DefaultRadioButton(
-                text = "1",
+                text = "Is Important",
                 selected = filter is ReminderFilter.IsImportantFilter,
                 onSelect = { onFilterChanged(ReminderFilter.IsImportantFilter) },
                 modifier = modifier
             )
             Spacer(modifier = Modifier.width(8.dp))
             DefaultRadioButton(
-                text = "2",
+                text = "Task",
                 selected = filter is ReminderFilter.ReminderTypeFilter && filter.reminderType == ReminderType.TASK,
                 onSelect = { onFilterChanged(ReminderFilter.ReminderTypeFilter(reminderType = ReminderType.TASK)) },
                 modifier = modifier
             )
             Spacer(modifier = Modifier.width(8.dp))
             DefaultRadioButton(
-                text = "3",
+                text = "Occasion",
                 selected = filter is ReminderFilter.ReminderTypeFilter && filter.reminderType == ReminderType.OCCASION,
                 onSelect = { onFilterChanged(ReminderFilter.ReminderTypeFilter(reminderType = ReminderType.OCCASION)) },
                 modifier = modifier

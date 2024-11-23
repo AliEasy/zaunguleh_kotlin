@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
@@ -27,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -37,11 +35,9 @@ import top.easyware.zanguleh.features.daily_counter.presentation.components.Remi
 
 @Composable
 fun DailyCounterScreen(
-    viewModel: DailyCounterViewModel = hiltViewModel(), //todo
+    viewModel: DailyCounterViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
-    val scaffoldState = rememberScrollState()
-    val scope = rememberCoroutineScope()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -55,14 +51,10 @@ fun DailyCounterScreen(
                     Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
                 }
             },
-//        scaffoldState = scaffoldState //todo
         ) {
-            Column(
-                modifier = Modifier.padding(it),
-                verticalArrangement = Arrangement.Center
-            ) {
+            Column {
                 Row(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -84,8 +76,7 @@ fun DailyCounterScreen(
                 ) {
                     FilterSection(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 16.dp),
+                            .fillMaxWidth(),
                         filter = state.reminderFilter,
                         onFilterChanged = { reminderFilter ->
                             viewModel.onEvent(DailyCounterEvent.GetReminders(reminderFilter))
@@ -94,7 +85,9 @@ fun DailyCounterScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it),
                 ) {
                     items(state.reminders) { reminder ->
                         ReminderItem(modifier = Modifier.fillMaxWidth(), reminder = reminder)
@@ -102,6 +95,44 @@ fun DailyCounterScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
+//            Column(
+//                modifier = Modifier.padding(it),
+//            ) {
+//                Row(
+//                    modifier = Modifier.fillMaxSize(),
+//                    horizontalArrangement = Arrangement.SpaceBetween,
+////                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Text(
+//                        text = "Reminders",
+//                        style = MaterialTheme.typography.bodyLarge
+//                    )
+//                    IconButton(
+//                        onClick = {
+//                            viewModel.onEvent(DailyCounterEvent.ToggleFilterSection)
+//                        }) {
+//                        Icon(imageVector = Icons.Default.Menu, contentDescription = "Filter")
+//                    }
+//                }
+//                AnimatedVisibility(
+//                    visible = state.isFilterSectionVisible,
+//                    enter = fadeIn() + slideInVertically(),
+//                    exit = fadeOut() + slideOutVertically()
+//                ) {
+//                    FilterSection(
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .padding(vertical = 16.dp),
+//                        filter = state.reminderFilter,
+//                        onFilterChanged = { reminderFilter ->
+//                            viewModel.onEvent(DailyCounterEvent.GetReminders(reminderFilter))
+//                        }
+//                    )
+//                }
+//                Spacer(modifier = Modifier.height(16.dp))
+//
+//                Spacer(modifier = Modifier.height(16.dp))
+//            }
         }
     }
 }

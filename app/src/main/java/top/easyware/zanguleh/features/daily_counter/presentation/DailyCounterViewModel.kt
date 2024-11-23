@@ -34,7 +34,9 @@ class DailyCounterViewModel @Inject constructor(
                 getReminders(event.reminderFilter)
             }
 
-            is DailyCounterEvent.ToggleFilterSection -> {}
+            is DailyCounterEvent.ToggleFilterSection -> {
+                _state.value = state.value.copy(isFilterSectionVisible = !state.value.isFilterSectionVisible)
+            }
             is DailyCounterEvent.AddReminder -> {
                 addDefReminder()
             }
