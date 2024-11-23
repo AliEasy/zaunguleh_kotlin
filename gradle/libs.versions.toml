@@ -21,6 +21,7 @@ coroutines = "1.3.9"
 daggerHilt = "2.51.1"
 daggerHiltNavigation = "1.2.0"
 persianDate = "1.7.1"
+persianDatePicker = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,7 @@ google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", versi
 google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "daggerHiltNavigation" }
 persian-date = { group = "com.github.samanzamani", name = "PersianDate", version.ref = "persianDate" }
+persian-date-picker = { group = "com.github.aliab", name = "Persian-Date-Picker-Dialog", version.ref = "persianDatePicker" }
 
 
 [plugins]

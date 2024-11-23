@@ -92,4 +92,7 @@ dependencies {
 
     //persian date
     implementation(libs.persian.date)
+
+    //persian date picker
+    implementation(libs.persian.date.picker)
 }
