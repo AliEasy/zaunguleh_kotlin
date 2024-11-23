@@ -19,7 +19,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,12 +48,24 @@ fun DailyCounterScreen(
     ) {
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(onClick = {
-                    viewModel.onEvent(DailyCounterEvent.AddReminder)
-                }) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
-                }
+                ExtendedFloatingActionButton(
+                    onClick = {
+                        viewModel.onEvent(DailyCounterEvent.AddReminder)
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add note"
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "add",
+                        )
+                    },
+                )
             },
+            floatingActionButtonPosition = FabPosition.Center,
             topBar = {
                 CenterAlignedTopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -101,6 +114,7 @@ fun DailyCounterScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(
                     modifier = Modifier
+                        .padding(horizontal = 5.dp)
                         .fillMaxSize()
                         .padding(it),
                 ) {
