@@ -74,7 +74,7 @@ dependencies {
     //compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.dagger.hilt.navigation)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     //room
     implementation(libs.androidx.room.runtime)
@@ -89,4 +89,7 @@ dependencies {
 
     //kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
+
+    //persian date
+    implementation(libs.persian.date)
 }
