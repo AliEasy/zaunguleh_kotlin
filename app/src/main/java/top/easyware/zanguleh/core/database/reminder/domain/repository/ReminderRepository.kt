@@ -10,5 +10,5 @@ interface ReminderRepository {
 
     suspend fun addReminder(reminder: ReminderModel)
 
-    suspend fun deleteReminder(reminder: ReminderModel)
+    suspend fun deleteReminder(reminderId: Int)
 }

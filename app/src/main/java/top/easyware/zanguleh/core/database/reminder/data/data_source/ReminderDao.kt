@@ -1,7 +1,6 @@
 package top.easyware.zanguleh.core.database.reminder.data.data_source
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -19,6 +18,6 @@ interface ReminderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addReminder(reminder: ReminderModel)
 
-    @Delete
-    suspend fun deleteReminder(reminder: ReminderModel)
+    @Query("DELETE FROM remindermodel WHERE reminderId = :reminderId")
+    suspend fun deleteReminder(reminderId: Int)
 }

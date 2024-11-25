@@ -20,8 +20,8 @@ class ReminderRepositoryImpl(
         dao.addReminder(reminder)
     }
 
-    override suspend fun deleteReminder(reminder: ReminderModel) {
-        dao.deleteReminder(reminder)
+    override suspend fun deleteReminder(reminderId: Int) {
+        dao.deleteReminder(reminderId)
     }
 
 }
