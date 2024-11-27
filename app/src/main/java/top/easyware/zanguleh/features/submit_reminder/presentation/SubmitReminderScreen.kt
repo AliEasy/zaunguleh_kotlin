@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.BottomAppBar
@@ -26,16 +26,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import top.easyware.zanguleh.core.uikit.ButtonComponent
 import top.easyware.zanguleh.core.uikit.ButtonComponentType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubmitReminderScreen(
-    viewModel: SubmitReminderViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: SubmitReminderViewModel = hiltViewModel(),
+    reminderId: Int = -1
 ) {
+
+    print(reminderId)
 
     val state = viewModel.state.value
 
@@ -61,12 +67,12 @@ fun SubmitReminderScreen(
                                 if (state.isEditMode) {
                                     viewModel.onEvent(SubmitReminderEvent.EditReminderCancel)
                                 } else {
-                                    //todo
+                                    navController.popBackStack()
                                 }
                             })
                         {
                             Icon(
-                                imageVector = Icons.Default.ArrowBack,
+                                imageVector = Icons.Default.ArrowForward,
                                 contentDescription = "back"
                             )
                         }
@@ -93,6 +99,7 @@ fun SubmitReminderScreen(
                                                         imageVector = Icons.Default.Delete,
                                                         contentDescription = "delete"
                                                     )
+                                                    Text(text = "Delete")
                                                 }
                                             },
                                             onClick = {
@@ -137,7 +144,9 @@ fun SubmitReminderScreen(
         ) {
             Box(
                 modifier = Modifier.padding(it)
-            )
+            ) {
+                Text(text = "hellooooooo", color = Color.DarkGray)
+            }
         }
     }
 }

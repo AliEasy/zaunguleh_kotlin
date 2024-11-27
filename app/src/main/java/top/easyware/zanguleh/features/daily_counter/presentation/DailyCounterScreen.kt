@@ -32,12 +32,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import top.easyware.zanguleh.core.screens.Screens
 import top.easyware.zanguleh.features.daily_counter.presentation.components.FilterSection
 import top.easyware.zanguleh.features.daily_counter.presentation.components.ReminderItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyCounterScreen(
+    navController: NavController,
     viewModel: DailyCounterViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
@@ -50,7 +53,7 @@ fun DailyCounterScreen(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        viewModel.onEvent(DailyCounterEvent.AddReminder)
+                        navController.navigate(Screens.SubmitReminder.withOptionalArgs(mapOf("reminderId" to "-1")))
                     },
                     icon = {
                         Icon(
@@ -119,7 +122,19 @@ fun DailyCounterScreen(
                         .padding(it),
                 ) {
                     items(state.reminders) { reminder ->
-                        ReminderItem(modifier = Modifier.fillMaxWidth(), reminder = reminder)
+                        ReminderItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            reminder = reminder,
+                            onTap = {
+                                navController.navigate(
+                                    Screens.SubmitReminder.withOptionalArgs(
+                                        mapOf(
+                                            "reminderId" to reminder.reminderId.toString()
+                                        )
+                                    )
+                                )
+                            },
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))

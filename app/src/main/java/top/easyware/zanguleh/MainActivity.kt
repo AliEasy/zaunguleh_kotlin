@@ -29,12 +29,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import top.easyware.zanguleh.core.screens.Screens
 import top.easyware.zanguleh.features.daily_counter.presentation.DailyCounterScreen
+import top.easyware.zanguleh.features.submit_reminder.presentation.SubmitReminderScreen
 import top.easyware.zanguleh.ui.theme.ZangulehTheme
 import java.util.Locale
 
@@ -171,7 +175,7 @@ fun NavigationGraph(
         startDestination = BottomNavigationItemsEnum.DAILY_COUNTER.value
     ) {
         composable(BottomNavigationItemsEnum.DAILY_COUNTER.value) {
-            DailyCounterScreen()
+            DailyCounterScreen(navController = navController)
         }
         composable(BottomNavigationItemsEnum.TASKS.value) {
             TasksScreen()
@@ -181,6 +185,19 @@ fun NavigationGraph(
         }
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()
+        }
+        composable(
+            route = Screens.SubmitReminder.route + "/reminderId={reminderId}",
+            arguments = listOf(navArgument("reminderId") {
+                type = NavType.IntType
+                defaultValue = -1
+                nullable = false
+            })
+        ) { entry ->
+            SubmitReminderScreen(
+                navController = navController,
+                reminderId = entry.arguments?.getInt("reminderId") ?: -1
+            )
         }
     }
 }
