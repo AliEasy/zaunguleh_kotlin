@@ -60,13 +60,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val locale = Locale("fa")
-        Locale.setDefault(locale)
-        val config = resources.configuration
-        config.setLocale(locale)
-        config.setLayoutDirection(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
-
         setContent {
             ZangulehTheme {
                 val navController: NavHostController = rememberNavController()
@@ -186,8 +179,11 @@ fun NavigationGraph(
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()
         }
+        composable(route = Screens.MainScreen.route) {
+
+        }
         composable(
-            route = Screens.SubmitReminder.route + "/reminderId={reminderId}",
+            route = Screens.SubmitReminderScreen.route + "/reminderId={reminderId}",
             arguments = listOf(navArgument("reminderId") {
                 type = NavType.IntType
                 defaultValue = -1
