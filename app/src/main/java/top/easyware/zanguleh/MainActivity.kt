@@ -179,9 +179,6 @@ fun NavigationGraph(
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()
         }
-        composable(route = Screens.MainScreen.route) {
-
-        }
         composable(
             route = Screens.SubmitReminderScreen.route + "/reminderId={reminderId}",
             arguments = listOf(navArgument("reminderId") {
@@ -190,7 +187,7 @@ fun NavigationGraph(
                 nullable = false
             })
         ) { entry ->
-            SubmitReminderScreen(
+            SubmitReminder(
                 navController = navController,
                 reminderId = entry.arguments?.getInt("reminderId") ?: -1
             )
