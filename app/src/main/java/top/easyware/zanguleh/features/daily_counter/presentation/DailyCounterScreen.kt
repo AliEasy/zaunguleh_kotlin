@@ -53,7 +53,7 @@ fun DailyCounterScreen(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        navController.navigate(Screens.SubmitReminder.withOptionalArgs(mapOf("reminderId" to "-1")))
+                        navController.navigate(Screens.SubmitReminderScreen.withOptionalArgs(mapOf("reminderId" to "-1")))
                     },
                     icon = {
                         Icon(
@@ -127,7 +127,7 @@ fun DailyCounterScreen(
                             reminder = reminder,
                             onTap = {
                                 navController.navigate(
-                                    Screens.SubmitReminder.withOptionalArgs(
+                                    Screens.SubmitReminderScreen.withOptionalArgs(
                                         mapOf(
                                             "reminderId" to reminder.reminderId.toString()
                                         )

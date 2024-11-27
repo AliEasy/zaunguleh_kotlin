@@ -1,7 +1,8 @@
 package top.easyware.zanguleh.core.screens
 
 sealed class Screens(val route: String) {
-    data object SubmitReminder : Screens("SubmitReminder")
+    data object HomeScreen : Screens("HomeScreen")
+    data object SubmitReminderScreen : Screens("SubmitReminderScreen")
 
     fun withOptionalArgs(args: Map<String, String>): String {
         return buildString {
