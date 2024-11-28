@@ -2,6 +2,7 @@ package top.easyware.zanguleh.features.submit_reminder.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -45,12 +47,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ir.hamsaa.persiandatepicker.PersianDatePickerDialog
+import ir.hamsaa.persiandatepicker.api.PersianPickerDate
+import ir.hamsaa.persiandatepicker.api.PersianPickerListener
 import kotlinx.coroutines.flow.collectLatest
 import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.uikit.ButtonComponent
 import top.easyware.zanguleh.core.uikit.ButtonComponentType
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.TransparentHintTextField
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,7 +134,8 @@ fun SubmitReminderScreen(
                                 Box {
                                     Icon(
                                         imageVector = Icons.Default.MoreVert,
-                                        contentDescription = context.getString(R.string.operation)
+                                        contentDescription = context.getString(R.string.operation),
+                                        tint = MaterialTheme.colorScheme.onSecondary
                                     )
                                     DropdownMenu(
                                         expanded = isDropdownExpanded.value,
@@ -219,22 +226,98 @@ fun SubmitReminderScreen(
                         .background(MaterialTheme.colorScheme.secondary)
                         .padding(start = 23.dp, end = 23.dp, top = 15.dp, bottom = 15.dp),
                 ) {
-                    TransparentHintTextField(
-                        text = viewModel.title.value.text,
-                        hint = viewModel.title.value.hint,
-                        isHintVisible = viewModel.title.value.isHintVisible,
-                        onValueChange = {
-                            viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnTitleChangeValue(it))
-                        },
-                        onFocusChange = {
-                            viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnTitleChangeFocus(it))
-                        },
-                        singleLine = true,
-                        textStyle = MaterialTheme.typography.bodyLarge.copy(
-                            fontSize = 18.sp,
-                            color = MaterialTheme.colorScheme.onSecondary
+                    Column {
+                        TransparentHintTextField(
+                            text = viewModel.title.value.text,
+                            hint = viewModel.title.value.hint,
+                            isHintVisible = viewModel.title.value.isHintVisible,
+                            onValueChange = {
+                                viewModel.onFieldsEvent(
+                                    SubmitReminderFieldsEvent.OnTitleChangeValue(
+                                        it
+                                    )
+                                )
+                            },
+                            onFocusChange = {
+                                viewModel.onFieldsEvent(
+                                    SubmitReminderFieldsEvent.OnTitleChangeFocus(
+                                        it
+                                    )
+                                )
+                            },
+                            singleLine = true,
+                            textStyle = MaterialTheme.typography.bodyLarge.copy(
+                                fontSize = 18.sp,
+                                color = MaterialTheme.colorScheme.onSecondary
+                            )
                         )
-                    )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .clickable {
+                                    val picker = PersianDatePickerDialog(context)
+                                        .setPositiveButtonString("باشه")
+                                        .setNegativeButton("بیخیال")
+                                        .setTodayButton("امروز")
+                                        .setTodayButtonVisible(true)
+                                        .setMinYear(1300)
+                                        .setMaxYear(1405)
+                                        .setMaxMonth(12)
+                                        .setMaxDay(29)
+//                                    .setActionTextColor(Color.Gray.)
+//                                    .setTypeFace(typeface)
+                                        .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
+                                        .setListener(
+                                            object : PersianPickerListener {
+                                                override fun onDateSelected(persianPickerDate: PersianPickerDate) {
+                                                    viewModel.onFieldsEvent(
+                                                        SubmitReminderFieldsEvent.OnDueDatePickerChange(
+                                                            persianDate = "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}",
+                                                            gregorianDate = "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+//                                                            gregorianDate = persianPickerDate.gregorianDate.toString()
+//                                                            gregorianDate = SimpleDateFormat(
+//                                                                "yyyy-MM-dd",
+//                                                                Locale.ENGLISH
+//                                                            ).format(
+//                                                                persianPickerDate.gregorianDate
+//                                                            )
+                                                        )
+                                                    )
+                                                }
+
+                                                override fun onDismissed() {}
+                                            }
+                                        )
+                                    picker.show()
+                                }
+                        ) {
+                            Image(
+                                imageVector = ImageVector.vectorResource(R.drawable.calendar_outline),
+                                contentDescription = context.getString(R.string.event_date),
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            if (viewModel.dueDate.value.isHintVisible) {
+                                Text(
+                                    text = context.getString(R.string.event_date),
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        fontSize = 18.sp,
+                                        color = MaterialTheme.colorScheme.onSecondary
+                                    )
+                                )
+                            } else {
+                                Text(
+                                    text = viewModel.dueDate.value.persianDate,
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        fontSize = 18.sp,
+                                        color = MaterialTheme.colorScheme.onSecondary
+                                    )
+                                )
+                            }
+                        }
+
+                    }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Box(
@@ -259,7 +342,11 @@ fun SubmitReminderScreen(
                             )
                         }
                         Spacer(modifier = Modifier.height(9.dp))
-                        Divider(color = Color.LightGray, thickness = 0.5.dp, modifier = Modifier.padding(horizontal = 15.dp))
+                        Divider(
+                            color = Color.LightGray,
+                            thickness = 0.5.dp,
+                            modifier = Modifier.padding(horizontal = 15.dp)
+                        )
                         Spacer(modifier = Modifier.height(9.dp))
                         Row {
                             Image(

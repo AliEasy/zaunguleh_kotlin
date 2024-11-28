@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
+import top.easyware.zanguleh.features.submit_reminder.presentation.components.DatePickerState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.TextFieldState
 import javax.inject.Inject
@@ -41,6 +42,11 @@ class SubmitReminderViewModel @Inject constructor(
     )
     val description = _description
 
+    private val _dueDate = mutableStateOf(
+        DatePickerState()
+    )
+    val dueDate = _dueDate
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -63,7 +69,7 @@ class SubmitReminderViewModel @Inject constructor(
                         )
                         _description.value = description.value.copy(
                             text = reminder.description ?: "",
-                            isHintVisible = reminder.description?.isBlank() ?: false
+                            isHintVisible = reminder.description?.isBlank() ?: true
                         )
                         _state.value = state.value.copy(isHereForInsert = false)
                     }
@@ -94,7 +100,9 @@ class SubmitReminderViewModel @Inject constructor(
                     reminderId = _reminderId,
                     title = _title.value.text,
                     reminderType = "Occasion",
-                    reminderDueDateTime = ""
+                    reminderDueDatePersian = _dueDate.value.persianDate,
+                    reminderDueDate = _dueDate.value.gregorianDate,
+                    description = _description.value.text
                 )
             )
             _eventFlow.emit(UiEvent.NavigateBack)
@@ -140,8 +148,16 @@ class SubmitReminderViewModel @Inject constructor(
 //                )
             }
 
-            is SubmitReminderFieldsEvent.IsImportant -> {
+            is SubmitReminderFieldsEvent.OnIsImportantChange -> {
 
+            }
+
+            is SubmitReminderFieldsEvent.OnDueDatePickerChange -> {
+                _dueDate.value = dueDate.value.copy(
+                    persianDate = event.persianDate,
+                    gregorianDate = event.gregorianDate,
+                    isHintVisible = event.persianDate.isBlank()
+                )
             }
         }
     }

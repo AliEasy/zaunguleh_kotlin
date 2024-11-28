@@ -7,5 +7,6 @@ sealed class SubmitReminderFieldsEvent {
     data class OnTitleChangeFocus(val focusState: FocusState) : SubmitReminderFieldsEvent()
     data class OnDescriptionChangeValue(val value: String) : SubmitReminderFieldsEvent()
     data class OnDescriptionChangeFocus(val focusState: FocusState) : SubmitReminderFieldsEvent()
-    data class IsImportant(val isSelected: Boolean) : SubmitReminderFieldsEvent()
+    data class OnIsImportantChange(val isSelected: Boolean) : SubmitReminderFieldsEvent()
+    data class OnDueDatePickerChange(val persianDate: String, val gregorianDate : String) : SubmitReminderFieldsEvent()
 }

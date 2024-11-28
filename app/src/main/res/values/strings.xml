@@ -17,4 +17,5 @@
     <string name="event_title">عنوان رویداد</string>
     <string name="note">یادداشت</string>
     <string name="event_is_important">این رویداد مهم است</string>
+    <string name="event_date">تاریخ رویداد</string>
 </resources>
