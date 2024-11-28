@@ -80,7 +80,7 @@ fun DailyCounterScreen(
                 CenterAlignedTopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        titleContentColor = MaterialTheme.colorScheme.onSecondary,
                     ),
                     title = {
                         Text(
@@ -95,7 +95,8 @@ fun DailyCounterScreen(
                             }) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(R.drawable.filter_outline),
-                                contentDescription = context.getString(R.string.filter)
+                                contentDescription = context.getString(R.string.filter),
+                                tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     },

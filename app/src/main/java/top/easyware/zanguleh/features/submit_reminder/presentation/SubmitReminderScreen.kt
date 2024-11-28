@@ -1,5 +1,6 @@
 package top.easyware.zanguleh.features.submit_reminder.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,8 +37,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collectLatest
@@ -87,13 +93,12 @@ fun SubmitReminderScreen(
                 CenterAlignedTopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        titleContentColor = MaterialTheme.colorScheme.onSecondary,
                     ),
                     title = {
                         Text(
                             text = title,
                             style = MaterialTheme.typography.headlineLarge,
-                            color = MaterialTheme.colorScheme.onPrimary,
                         )
                     },
                     navigationIcon = {
@@ -108,7 +113,8 @@ fun SubmitReminderScreen(
                         {
                             Icon(
                                 imageVector = Icons.Default.ArrowForward,
-                                contentDescription = context.getString(R.string.get_back)
+                                contentDescription = context.getString(R.string.get_back),
+                                tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     },
@@ -210,8 +216,8 @@ fun SubmitReminderScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.primaryContainer)
-                        .padding(start = 23.dp, end = 23.dp, top = 5.dp, bottom = 5.dp),
+                        .background(MaterialTheme.colorScheme.secondary)
+                        .padding(start = 23.dp, end = 23.dp, top = 15.dp, bottom = 15.dp),
                 ) {
                     TransparentHintTextField(
                         text = viewModel.title.value.text,
@@ -223,7 +229,11 @@ fun SubmitReminderScreen(
                         onFocusChange = {
                             viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnTitleChangeFocus(it))
                         },
-                        singleLine = true
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -235,26 +245,48 @@ fun SubmitReminderScreen(
                         .padding(19.dp)
 
                 ) {
-                    TransparentHintTextField(
-                        text = viewModel.description.value.text,
-                        hint = viewModel.description.value.hint,
-                        isHintVisible = viewModel.description.value.isHintVisible,
-                        onValueChange = {
-                            viewModel.onFieldsEvent(
-                                SubmitReminderFieldsEvent.OnDescriptionChangeValue(
-                                    it
-                                )
+                    Column {
+                        Row {
+                            Image(
+                                imageVector = ImageVector.vectorResource(R.drawable.important_unselected),
+                                contentDescription = context.getString(R.string.event_is_important)
                             )
-                        },
-                        onFocusChange = {
-                            viewModel.onFieldsEvent(
-                                SubmitReminderFieldsEvent.OnDescriptionChangeFocus(
-                                    it
-                                )
+                            Spacer(modifier = Modifier.width(11.dp))
+                            Text(
+                                text = context.getString(R.string.event_is_important),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = Color.Gray
                             )
-                        },
-                        singleLine = true
-                    )
+                        }
+                        Spacer(modifier = Modifier.height(9.dp))
+                        Divider(color = Color.LightGray, thickness = 0.5.dp, modifier = Modifier.padding(horizontal = 15.dp))
+                        Spacer(modifier = Modifier.height(9.dp))
+                        Row {
+                            Image(
+                                imageVector = ImageVector.vectorResource(R.drawable.note_outline),
+                                contentDescription = context.getString(R.string.note)
+                            )
+                            Spacer(modifier = Modifier.width(11.dp))
+                            TransparentHintTextField(
+                                text = viewModel.description.value.text,
+                                hint = viewModel.description.value.hint,
+                                isHintVisible = viewModel.description.value.isHintVisible,
+                                onValueChange = {
+                                    viewModel.onFieldsEvent(
+                                        SubmitReminderFieldsEvent.OnDescriptionChangeValue(it)
+                                    )
+                                },
+                                onFocusChange = {
+                                    viewModel.onFieldsEvent(
+                                        SubmitReminderFieldsEvent.OnDescriptionChangeFocus(it)
+                                    )
+                                },
+                                singleLine = false,
+                                textStyle = MaterialTheme.typography.labelLarge.copy(color = Color.Gray),
+                                maxLines = 5
+                            )
+                        }
+                    }
                 }
             }
         }

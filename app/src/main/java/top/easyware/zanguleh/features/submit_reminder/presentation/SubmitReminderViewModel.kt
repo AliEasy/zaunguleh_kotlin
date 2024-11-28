@@ -116,26 +116,28 @@ class SubmitReminderViewModel @Inject constructor(
         when (event) {
             is SubmitReminderFieldsEvent.OnTitleChangeValue -> {
                 _title.value = title.value.copy(
-                    text = event.value
+                    text = event.value,
+                    isHintVisible = event.value.isBlank()
                 )
             }
 
             is SubmitReminderFieldsEvent.OnTitleChangeFocus -> {
-                _title.value = title.value.copy(
-                    isHintVisible = !event.focusState.isFocused && title.value.text.isBlank()
-                )
+//                _title.value = title.value.copy(
+//                    isHintVisible = title.value.text.isBlank()
+//                )
             }
 
             is SubmitReminderFieldsEvent.OnDescriptionChangeValue -> {
                 _description.value = description.value.copy(
-                    text = event.value
+                    text = event.value,
+                    isHintVisible = event.value.isBlank()
                 )
             }
 
             is SubmitReminderFieldsEvent.OnDescriptionChangeFocus -> {
-                _description.value = description.value.copy(
-                    isHintVisible = !event.focusState.isFocused && description.value.text.isBlank()
-                )
+//                _description.value = description.value.copy(
+//                    isHintVisible = description.value.text.isBlank()
+//                )
             }
 
             is SubmitReminderFieldsEvent.IsImportant -> {

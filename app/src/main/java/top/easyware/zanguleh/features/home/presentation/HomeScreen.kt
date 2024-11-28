@@ -3,11 +3,9 @@ package top.easyware.zanguleh.features.home.presentation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Settings
@@ -22,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -71,8 +70,8 @@ fun BottomBar(
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.DAILY_COUNTER,
             title = context.getString(R.string.daily_counter),
-            selectedIcon = Icons.Filled.Add,
-            unSelectedIcon = Icons.Outlined.Add,
+            selectedIcon = ImageVector.vectorResource(R.drawable.counter),
+            unSelectedIcon = ImageVector.vectorResource(R.drawable.counter),
         ),
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.TASKS,
@@ -114,7 +113,7 @@ fun BottomBar(
                 label = {
                     Text(
                         text = screen.title,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.titleSmall,
                     )
                 },
                 alwaysShowLabel = true,
