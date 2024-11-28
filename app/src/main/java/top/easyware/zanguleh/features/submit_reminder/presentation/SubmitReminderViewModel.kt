@@ -97,6 +97,7 @@ class SubmitReminderViewModel @Inject constructor(
                     reminderDueDateTime = ""
                 )
             )
+            _eventFlow.emit(UiEvent.NavigateBack)
         }
     }
 
