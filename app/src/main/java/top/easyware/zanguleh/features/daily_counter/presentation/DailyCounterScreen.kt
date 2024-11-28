@@ -30,9 +30,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.screens.Screens
 import top.easyware.zanguleh.features.daily_counter.presentation.components.FilterSection
 import top.easyware.zanguleh.features.daily_counter.presentation.components.ReminderItem
@@ -43,6 +45,7 @@ fun DailyCounterScreen(
     navController: NavController,
     viewModel: DailyCounterViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val state = viewModel.state.value
 
     Surface(
@@ -58,14 +61,16 @@ fun DailyCounterScreen(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add note"
+                            contentDescription = context.getString(R.string.new_event)
                         )
                     },
                     text = {
                         Text(
-                            text = "add",
+                            text = context.getString(R.string.new_event),
                         )
                     },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             },
             floatingActionButtonPosition = FabPosition.Center,
@@ -76,7 +81,7 @@ fun DailyCounterScreen(
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     title = {
-                        Text("tesxt")
+                        Text(context.getString(R.string.daily_counter))
                     },
                     navigationIcon = {
                         IconButton(
@@ -85,7 +90,7 @@ fun DailyCounterScreen(
                             }) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Filter"
+                                contentDescription = context.getString(R.string.filter)
                             )
                         }
                     },
@@ -117,7 +122,7 @@ fun DailyCounterScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(
                     modifier = Modifier
-                        .padding(horizontal = 5.dp)
+                        .padding(horizontal = 25.dp)
                         .fillMaxSize()
                         .padding(it),
                 ) {

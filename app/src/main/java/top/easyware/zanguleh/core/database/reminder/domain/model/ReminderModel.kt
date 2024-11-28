@@ -13,6 +13,7 @@ data class ReminderModel(
     @PrimaryKey val reminderId: Int? = null,
     val title: String,
     val reminderType: String,
+    val reminderDueDateTime: String,
     val reminderRepeat: Boolean? = null,
     val reminderDateTime: String? = null,
     val isImportant: Boolean? = null,

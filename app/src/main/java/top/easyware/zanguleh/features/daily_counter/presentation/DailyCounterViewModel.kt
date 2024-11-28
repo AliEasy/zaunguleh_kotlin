@@ -7,8 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
 import top.easyware.zanguleh.core.database.reminder.domain.util.ReminderFilter
 import javax.inject.Inject
@@ -37,22 +35,22 @@ class DailyCounterViewModel @Inject constructor(
             is DailyCounterEvent.ToggleFilterSection -> {
                 _state.value = state.value.copy(isFilterSectionVisible = !state.value.isFilterSectionVisible)
             }
-            is DailyCounterEvent.AddReminder -> {
-                addDefReminder()
-            }
+//            is DailyCounterEvent.AddReminder -> {
+//                addDefReminder()
+//            }
         }
     }
 
-    private fun addDefReminder() {
-        viewModelScope.launch {
-            fullReminderUseCase.addReminderUseCase(
-                ReminderModel(
-                    title = "Hi",
-                    reminderType = "Occasion"
-                )
-            )
-        }
-    }
+//    private fun addDefReminder() {
+//        viewModelScope.launch {
+//            fullReminderUseCase.addReminderUseCase(
+//                ReminderModel(
+//                    title = "Hi",
+//                    reminderType = "Occasion"
+//                )
+//            )
+//        }
+//    }
 
     private fun getReminders(reminderFilter: ReminderFilter?) {
         getRemindersJob?.cancel()

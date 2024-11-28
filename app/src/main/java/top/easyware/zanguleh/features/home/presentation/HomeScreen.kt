@@ -1,6 +1,5 @@
 package top.easyware.zanguleh.features.home.presentation
 
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -45,7 +44,6 @@ fun HomeScreen(
             BottomBar(
                 bottomNavigationNavController = bottomNavigationNavController,
                 modifier = Modifier,
-                context = LocalContext.current,
             )
         }
     )
@@ -61,9 +59,10 @@ fun HomeScreen(
 @Composable
 fun BottomBar(
     bottomNavigationNavController: NavHostController,
-    context: Context,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     val screens = listOf(
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.DAILY_COUNTER,
