@@ -29,9 +29,9 @@ fun ButtonComponent(
     modifier: Modifier = Modifier,
 ) {
     var buttonModifier = modifier
-        .fillMaxWidth()
         .clip(RoundedCornerShape(10.dp))
-        .height(50.dp)
+        .height(55.dp)
+        .fillMaxWidth()
 
     if (buttonType == ButtonComponentType.Outlined) {
         buttonModifier = buttonModifier.border(
@@ -45,13 +45,15 @@ fun ButtonComponent(
         modifier = buttonModifier,
         content = {
             Text(
-                text = title
+                text = title,
+                style = MaterialTheme.typography.titleLarge
             )
         },
         onClick = onClick,
         colors = when (buttonType) {
             ButtonComponentType.Filled -> ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             else -> ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-        }
+        },
+        shape = RoundedCornerShape(10.dp),
     )
 }

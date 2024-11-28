@@ -67,6 +67,7 @@ fun DailyCounterScreen(
                     text = {
                         Text(
                             text = context.getString(R.string.new_event),
+                            style = MaterialTheme.typography.titleLarge
                         )
                     },
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -81,7 +82,11 @@ fun DailyCounterScreen(
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     title = {
-                        Text(context.getString(R.string.daily_counter))
+                        Text(
+                            context.getString(R.string.daily_counter),
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                        )
                     },
                     navigationIcon = {
                         IconButton(

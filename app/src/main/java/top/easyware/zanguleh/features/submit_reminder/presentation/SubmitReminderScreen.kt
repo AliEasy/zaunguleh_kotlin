@@ -1,6 +1,7 @@
 package top.easyware.zanguleh.features.submit_reminder.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -89,7 +90,11 @@ fun SubmitReminderScreen(
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     title = {
-                        Text(text = title)
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                        )
                     },
                     navigationIcon = {
                         IconButton(
@@ -169,22 +174,31 @@ fun SubmitReminderScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 26.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             ButtonComponent(
                                 title = context.getString(R.string.submit_event),
                                 onClick = {
-
+                                    viewModel.onEvent(SubmitReminderEvent.SubmitReminder)
                                 },
-                                buttonType = ButtonComponentType.Filled
+                                buttonType = ButtonComponentType.Filled,
+                                modifier = Modifier.weight(1f)
                             )
                             Spacer(modifier = Modifier.width(15.dp))
                             ButtonComponent(
                                 title = context.getString(R.string.cancel),
                                 onClick = {
-                                    viewModel.onEvent(SubmitReminderEvent.EditReminderCancel)
+                                    if (state.isHereForInsert) {
+                                        navController.navigateUp()
+                                    } else {
+                                        viewModel.onEvent(SubmitReminderEvent.EditReminderCancel)
+                                    }
                                 },
-                                buttonType = ButtonComponentType.Outlined
+                                buttonType = ButtonComponentType.Outlined,
+                                modifier = Modifier.weight(1f)
                             )
                         }
                     }

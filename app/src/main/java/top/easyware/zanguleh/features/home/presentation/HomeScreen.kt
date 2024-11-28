@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -51,7 +52,10 @@ fun HomeScreen(
         Box(
             modifier = Modifier.padding(it)
         ) {
-            NavigationGraph(navController = navController, bottomNavigationNavController = bottomNavigationNavController)
+            NavigationGraph(
+                navController = navController,
+                bottomNavigationNavController = bottomNavigationNavController
+            )
         }
     }
 }
@@ -108,7 +112,10 @@ fun BottomBar(
                     }
                 },
                 label = {
-                    Text(text = screen.title)
+                    Text(
+                        text = screen.title,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
                 },
                 alwaysShowLabel = true,
                 icon = {
