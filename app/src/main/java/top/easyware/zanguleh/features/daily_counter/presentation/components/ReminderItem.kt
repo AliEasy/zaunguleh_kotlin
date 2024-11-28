@@ -51,7 +51,7 @@ fun ReminderItem(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = reminder.title,
+                text = reminder.reminderDueDatePersian,
                 style = MaterialTheme.typography.headlineSmall,
             )
         }

@@ -71,6 +71,11 @@ class SubmitReminderViewModel @Inject constructor(
                             text = reminder.description ?: "",
                             isHintVisible = reminder.description?.isBlank() ?: true
                         )
+                        _dueDate.value = dueDate.value.copy(
+                            persianDate = reminder.reminderDueDatePersian,
+                            gregorianDate = reminder.reminderDueDate,
+                            isHintVisible = reminder.reminderDueDatePersian.isBlank()
+                        )
                         _state.value = state.value.copy(isHereForInsert = false)
                     }
                 }
