@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.collectLatest
 import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.uikit.ButtonComponent
 import top.easyware.zanguleh.core.uikit.ButtonComponentType
+import top.easyware.zanguleh.core.uikit.TouchDisable
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.TransparentHintTextField
 
@@ -70,7 +71,9 @@ fun SubmitReminderScreen(
 
     val isDropdownExpanded = remember { mutableStateOf(false) }
 
-    val title = if (reminderId == -1) {
+    val title = if (!state.isEditMode && !state.isHereForInsert) {
+        context.getString(R.string.event)
+    } else if (reminderId == -1) {
         context.getString(R.string.new_event)
     } else {
         context.getString(R.string.edit_event)
@@ -218,168 +221,171 @@ fun SubmitReminderScreen(
                 }
             }
         ) {
-            Column(
-                modifier = Modifier.padding(it)
+            TouchDisable(
+                modifier = Modifier.padding(it),
+                disableTouch = !state.isEditMode && !state.isHereForInsert
             ) {
-                Box(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.secondary)
-                        .padding(start = 23.dp, end = 23.dp, top = 15.dp, bottom = 15.dp),
-                ) {
-                    Column {
-                        TransparentHintTextField(
-                            text = viewModel.title.value.text,
-                            hint = viewModel.title.value.hint,
-                            isHintVisible = viewModel.title.value.isHintVisible,
-                            onValueChange = {
-                                viewModel.onFieldsEvent(
-                                    SubmitReminderFieldsEvent.OnTitleChangeValue(
-                                        it
-                                    )
-                                )
-                            },
-                            onFocusChange = {
-                                viewModel.onFieldsEvent(
-                                    SubmitReminderFieldsEvent.OnTitleChangeFocus(
-                                        it
-                                    )
-                                )
-                            },
-                            singleLine = true,
-                            textStyle = MaterialTheme.typography.bodyLarge.copy(
-                                fontSize = 18.sp,
-                                color = MaterialTheme.colorScheme.onSecondary
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .clickable {
-                                    val picker = PersianDatePickerDialog(context)
-                                        .setPositiveButtonString("باشه")
-                                        .setNegativeButton("بیخیال")
-                                        .setTodayButton("امروز")
-                                        .setTodayButtonVisible(true)
-                                        .setMinYear(1300)
-                                        .setMaxYear(1405)
-                                        .setMaxMonth(12)
-                                        .setMaxDay(29)
-//                                    .setActionTextColor(Color.Gray.)
-//                                    .setTypeFace(typeface)
-                                        .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
-                                        .setListener(
-                                            object : PersianPickerListener {
-                                                override fun onDateSelected(persianPickerDate: PersianPickerDate) {
-                                                    viewModel.onFieldsEvent(
-                                                        SubmitReminderFieldsEvent.OnDueDatePickerChange(
-                                                            persianDate = "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}",
-                                                            gregorianDate = "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
-//                                                            gregorianDate = persianPickerDate.gregorianDate.toString()
-//                                                            gregorianDate = SimpleDateFormat(
-//                                                                "yyyy-MM-dd",
-//                                                                Locale.ENGLISH
-//                                                            ).format(
-//                                                                persianPickerDate.gregorianDate
-//                                                            )
-                                                        )
-                                                    )
-                                                }
-
-                                                override fun onDismissed() {}
-                                            }
-                                        )
-                                    picker.show()
-                                }
-                        ) {
-                            Image(
-                                imageVector = ImageVector.vectorResource(R.drawable.calendar_outline),
-                                contentDescription = context.getString(R.string.event_date),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            if (viewModel.dueDate.value.isHintVisible) {
-                                Text(
-                                    text = context.getString(R.string.event_date),
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontSize = 18.sp,
-                                        color = MaterialTheme.colorScheme.onSecondary
-                                    )
-                                )
-                            } else {
-                                Text(
-                                    text = viewModel.dueDate.value.persianDate,
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontSize = 18.sp,
-                                        color = MaterialTheme.colorScheme.onSecondary
-                                    )
-                                )
-                            }
-                        }
-
-                    }
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp, vertical = 12.dp)
-                        .clip(RoundedCornerShape(5.dp))
-                        .background(color = MaterialTheme.colorScheme.tertiary)
-                        .padding(19.dp)
-
-                ) {
-                    Column {
-                        Row(
-                            Modifier.clickable {
-                                viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnIsImportantChange)
-                            }
-                        ) {
-                            Image(
-                                imageVector = ImageVector.vectorResource(
-                                    if (viewModel.isImportant.value.isImportant) R.drawable.important_selected
-                                    else R.drawable.important_unselected
-                                ),
-                                contentDescription = context.getString(R.string.event_is_important)
-                            )
-                            Spacer(modifier = Modifier.width(11.dp))
-                            Text(
-                                text = context.getString(R.string.event_is_important),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = if (viewModel.isImportant.value.isImportant) Color.Black else Color.Gray
-                            )
-
-                        }
-                        Spacer(modifier = Modifier.height(9.dp))
-                        Divider(
-                            color = Color.LightGray,
-                            thickness = 0.5.dp,
-                            modifier = Modifier.padding(horizontal = 15.dp)
-                        )
-                        Spacer(modifier = Modifier.height(9.dp))
-                        Row {
-                            Image(
-                                imageVector = ImageVector.vectorResource(R.drawable.note_outline),
-                                contentDescription = context.getString(R.string.note)
-                            )
-                            Spacer(modifier = Modifier.width(11.dp))
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.secondary)
+                            .padding(start = 23.dp, end = 23.dp, top = 15.dp, bottom = 15.dp),
+                    ) {
+                        Column {
                             TransparentHintTextField(
-                                text = viewModel.description.value.text,
-                                hint = viewModel.description.value.hint,
-                                isHintVisible = viewModel.description.value.isHintVisible,
+                                text = viewModel.title.value.text,
+                                hint = viewModel.title.value.hint,
+                                isHintVisible = viewModel.title.value.isHintVisible,
                                 onValueChange = {
                                     viewModel.onFieldsEvent(
-                                        SubmitReminderFieldsEvent.OnDescriptionChangeValue(it)
+                                        SubmitReminderFieldsEvent.OnTitleChangeValue(
+                                            it
+                                        )
                                     )
                                 },
                                 onFocusChange = {
                                     viewModel.onFieldsEvent(
-                                        SubmitReminderFieldsEvent.OnDescriptionChangeFocus(it)
+                                        SubmitReminderFieldsEvent.OnTitleChangeFocus(
+                                            it
+                                        )
                                     )
                                 },
-                                singleLine = false,
-                                textStyle = MaterialTheme.typography.labelLarge.copy(color = Color.Gray),
-                                maxLines = 5
+                                singleLine = true,
+                                textStyle = MaterialTheme.typography.bodyLarge.copy(
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.onSecondary
+                                )
                             )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Row(
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .clickable {
+                                        val picker = PersianDatePickerDialog(context)
+                                            .setPositiveButtonString("باشه")
+                                            .setNegativeButton("بیخیال")
+                                            .setTodayButton("امروز")
+                                            .setTodayButtonVisible(true)
+                                            .setMinYear(1300)
+                                            .setMaxYear(1405)
+                                            .setMaxMonth(12)
+                                            .setMaxDay(29)
+                                            //                                    .setActionTextColor(Color.Gray.)
+                                            //                                    .setTypeFace(typeface)
+                                            .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
+                                            .setListener(
+                                                object : PersianPickerListener {
+                                                    override fun onDateSelected(persianPickerDate: PersianPickerDate) {
+                                                        viewModel.onFieldsEvent(
+                                                            SubmitReminderFieldsEvent.OnDueDatePickerChange(
+                                                                persianDate = "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}",
+                                                                gregorianDate = "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+                                                                //                                                            gregorianDate = persianPickerDate.gregorianDate.toString()
+                                                                //                                                            gregorianDate = SimpleDateFormat(
+                                                                //                                                                "yyyy-MM-dd",
+                                                                //                                                                Locale.ENGLISH
+                                                                //                                                            ).format(
+                                                                //                                                                persianPickerDate.gregorianDate
+                                                                //                                                            )
+                                                            )
+                                                        )
+                                                    }
+
+                                                    override fun onDismissed() {}
+                                                }
+                                            )
+                                        picker.show()
+                                    }
+                            ) {
+                                Image(
+                                    imageVector = ImageVector.vectorResource(R.drawable.calendar_outline),
+                                    contentDescription = context.getString(R.string.event_date),
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                if (viewModel.dueDate.value.isHintVisible) {
+                                    Text(
+                                        text = context.getString(R.string.event_date),
+                                        style = MaterialTheme.typography.bodyLarge.copy(
+                                            fontSize = 18.sp,
+                                            color = MaterialTheme.colorScheme.onSecondary
+                                        )
+                                    )
+                                } else {
+                                    Text(
+                                        text = viewModel.dueDate.value.persianDate,
+                                        style = MaterialTheme.typography.bodyLarge.copy(
+                                            fontSize = 18.sp,
+                                            color = MaterialTheme.colorScheme.onSecondary
+                                        )
+                                    )
+                                }
+                            }
+
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp, vertical = 12.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(color = MaterialTheme.colorScheme.tertiary)
+                            .padding(19.dp)
+
+                    ) {
+                        Column {
+                            Row(
+                                Modifier.clickable {
+                                    viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnIsImportantChange)
+                                }
+                            ) {
+                                Image(
+                                    imageVector = ImageVector.vectorResource(
+                                        if (viewModel.isImportant.value.isImportant) R.drawable.important_selected
+                                        else R.drawable.important_unselected
+                                    ),
+                                    contentDescription = context.getString(R.string.event_is_important)
+                                )
+                                Spacer(modifier = Modifier.width(11.dp))
+                                Text(
+                                    text = context.getString(R.string.event_is_important),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = if (viewModel.isImportant.value.isImportant) Color.Black else Color.Gray
+                                )
+
+                            }
+                            Spacer(modifier = Modifier.height(9.dp))
+                            Divider(
+                                color = Color.LightGray,
+                                thickness = 0.5.dp,
+                                modifier = Modifier.padding(horizontal = 15.dp)
+                            )
+                            Spacer(modifier = Modifier.height(9.dp))
+                            Row {
+                                Image(
+                                    imageVector = ImageVector.vectorResource(R.drawable.note_outline),
+                                    contentDescription = context.getString(R.string.note)
+                                )
+                                Spacer(modifier = Modifier.width(11.dp))
+                                TransparentHintTextField(
+                                    text = viewModel.description.value.text,
+                                    hint = viewModel.description.value.hint,
+                                    isHintVisible = viewModel.description.value.isHintVisible,
+                                    onValueChange = {
+                                        viewModel.onFieldsEvent(
+                                            SubmitReminderFieldsEvent.OnDescriptionChangeValue(it)
+                                        )
+                                    },
+                                    onFocusChange = {
+                                        viewModel.onFieldsEvent(
+                                            SubmitReminderFieldsEvent.OnDescriptionChangeFocus(it)
+                                        )
+                                    },
+                                    singleLine = false,
+                                    textStyle = MaterialTheme.typography.labelLarge.copy(color = Color.Gray),
+                                    maxLines = 5
+                                )
+                            }
                         }
                     }
                 }
