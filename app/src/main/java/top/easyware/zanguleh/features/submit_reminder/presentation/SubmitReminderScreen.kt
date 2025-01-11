@@ -329,17 +329,25 @@ fun SubmitReminderScreen(
 
                 ) {
                     Column {
-                        Row {
+                        Row(
+                            Modifier.clickable {
+                                viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnIsImportantChange)
+                            }
+                        ) {
                             Image(
-                                imageVector = ImageVector.vectorResource(R.drawable.important_unselected),
+                                imageVector = ImageVector.vectorResource(
+                                    if (viewModel.isImportant.value.isImportant) R.drawable.important_selected
+                                    else R.drawable.important_unselected
+                                ),
                                 contentDescription = context.getString(R.string.event_is_important)
                             )
                             Spacer(modifier = Modifier.width(11.dp))
                             Text(
                                 text = context.getString(R.string.event_is_important),
                                 style = MaterialTheme.typography.labelLarge,
-                                color = Color.Gray
+                                color = if (viewModel.isImportant.value.isImportant) Color.Black else Color.Gray
                             )
+
                         }
                         Spacer(modifier = Modifier.height(9.dp))
                         Divider(

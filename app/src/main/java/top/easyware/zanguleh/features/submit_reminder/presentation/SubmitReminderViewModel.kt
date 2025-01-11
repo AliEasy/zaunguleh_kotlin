@@ -14,6 +14,7 @@ import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.DatePickerState
+import top.easyware.zanguleh.features.submit_reminder.presentation.components.IsImportantState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.TextFieldState
 import javax.inject.Inject
@@ -47,6 +48,11 @@ class SubmitReminderViewModel @Inject constructor(
     )
     val dueDate = _dueDate
 
+    private val _isImportant = mutableStateOf(
+        IsImportantState()
+    )
+    val isImportant = _isImportant
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -75,6 +81,9 @@ class SubmitReminderViewModel @Inject constructor(
                             persianDate = reminder.reminderDueDatePersian,
                             gregorianDate = reminder.reminderDueDate,
                             isHintVisible = reminder.reminderDueDatePersian.isBlank()
+                        )
+                        _isImportant.value = isImportant.value.copy(
+                            isImportant = reminder.isImportant ?: false
                         )
                         _state.value = state.value.copy(isHereForInsert = false)
                     }
@@ -107,7 +116,8 @@ class SubmitReminderViewModel @Inject constructor(
                     reminderType = "Occasion",
                     reminderDueDatePersian = _dueDate.value.persianDate,
                     reminderDueDate = _dueDate.value.gregorianDate,
-                    description = _description.value.text
+                    description = _description.value.text,
+                    isImportant = _isImportant.value.isImportant
                 )
             )
             _eventFlow.emit(UiEvent.NavigateBack)
@@ -154,7 +164,9 @@ class SubmitReminderViewModel @Inject constructor(
             }
 
             is SubmitReminderFieldsEvent.OnIsImportantChange -> {
-
+                _isImportant.value = isImportant.value.copy(
+                    isImportant = !isImportant.value.isImportant
+                )
             }
 
             is SubmitReminderFieldsEvent.OnDueDatePickerChange -> {
