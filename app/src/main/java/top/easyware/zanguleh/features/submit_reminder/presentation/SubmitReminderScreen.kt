@@ -55,6 +55,7 @@ import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.uikit.ButtonComponent
 import top.easyware.zanguleh.core.uikit.ButtonComponentType
 import top.easyware.zanguleh.core.uikit.TouchDisable
+import top.easyware.zanguleh.features.submit_reminder.presentation.components.CustomDialog
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.TransparentHintTextField
 
@@ -70,6 +71,7 @@ fun SubmitReminderScreen(
     val state = viewModel.state.value
 
     val isDropdownExpanded = remember { mutableStateOf(false) }
+    val showSureDeleteDialog = remember { mutableStateOf(false) }
 
     val title = if (!state.isEditMode && !state.isHereForInsert) {
         context.getString(R.string.event)
@@ -155,9 +157,8 @@ fun SubmitReminderScreen(
                                                 }
                                             },
                                             onClick = {
-                                                viewModel.onEvent(
-                                                    SubmitReminderEvent.DeleteReminder
-                                                )
+                                                showSureDeleteDialog.value = true
+                                                isDropdownExpanded.value = false
                                             },
                                         )
                                         DropdownMenuItem(
@@ -391,5 +392,37 @@ fun SubmitReminderScreen(
                 }
             }
         }
+    }
+
+    if (showSureDeleteDialog.value) {
+        CustomDialog(
+            onConfirm = {
+                viewModel.onEvent(SubmitReminderEvent.DeleteReminder)
+                showSureDeleteDialog.value = false
+            },
+            onDismiss = {
+                showSureDeleteDialog.value = false
+            }
+        )
+//        AlertDialog(
+//            onDismissRequest = { showSureDeleteDialog.value = false },
+//            title = { Text(text = context.getString(R.string.sure_delete_event_title)) },
+//            text = { Text(text = context.getString(R.string.sure_delete_event_desc)) },
+//            confirmButton = {
+//                androidx.compose.material3.Button(onClick = {
+//                    viewModel.onEvent(SubmitReminderEvent.DeleteReminder)
+//                    showSureDeleteDialog.value = false
+//                }) {
+//                    Text(text = context.getString(R.string.yes))
+//                }
+//            },
+//            dismissButton = {
+//                androidx.compose.material3.Button(onClick = {
+//                    showSureDeleteDialog.value = false
+//                }) {
+//                    Text(text = context.getString(R.string.no))
+//                }
+//            },
+//        )
     }
 }
