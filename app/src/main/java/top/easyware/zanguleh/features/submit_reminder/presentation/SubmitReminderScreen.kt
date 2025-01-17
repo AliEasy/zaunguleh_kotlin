@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.collectLatest
 import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.uikit.ButtonComponent
 import top.easyware.zanguleh.core.uikit.ButtonComponentType
+import top.easyware.zanguleh.core.uikit.TimePickerDialog
 import top.easyware.zanguleh.core.uikit.TouchDisable
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.CustomDialog
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
@@ -72,6 +73,9 @@ fun SubmitReminderScreen(
 
     val isDropdownExpanded = remember { mutableStateOf(false) }
     val showSureDeleteDialog = remember { mutableStateOf(false) }
+    val showRemindTimeDialog = remember { mutableStateOf(false) }
+    val tempRemindDate = remember { mutableStateOf("") }
+    val tempRemindDatePersian = remember { mutableStateOf("") }
 
     val title = if (!state.isEditMode && !state.isHereForInsert) {
         context.getString(R.string.event)
@@ -362,6 +366,57 @@ fun SubmitReminderScreen(
                                 modifier = Modifier.padding(horizontal = 15.dp)
                             )
                             Spacer(modifier = Modifier.height(9.dp))
+                            Row(
+                                Modifier.clickable {
+                                    val picker = PersianDatePickerDialog(context)
+                                        .setPositiveButtonString("باشه")
+                                        .setNegativeButton("بیخیال")
+                                        .setTodayButton("امروز")
+                                        .setTodayButtonVisible(true)
+                                        .setMinYear(1300)
+                                        .setMaxYear(1405)
+                                        .setMaxMonth(12)
+                                        .setMaxDay(29)
+                                        //                                    .setActionTextColor(Color.Gray.)
+                                        //                                    .setTypeFace(typeface)
+                                        .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
+                                        .setListener(
+                                            object : PersianPickerListener {
+                                                override fun onDateSelected(persianPickerDate: PersianPickerDate) {
+                                                    tempRemindDatePersian.value =
+                                                        "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}"
+                                                    tempRemindDate.value =
+                                                        "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+                                                    showRemindTimeDialog.value = true
+                                                }
+
+                                                override fun onDismissed() {}
+                                            }
+                                        )
+                                    picker.show()
+                                }
+                            ) {
+                                Image(
+                                    imageVector = ImageVector.vectorResource(
+                                        R.drawable.bell
+                                    ),
+                                    contentDescription = context.getString(R.string.remind_date_time),
+                                )
+                                Spacer(modifier = Modifier.width(11.dp))
+                                Text(
+                                    text = context.getString(R.string.remind_date_time),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = if (viewModel.isImportant.value.isImportant) Color.Black else Color.Gray
+                                )
+
+                            }
+                            Spacer(modifier = Modifier.height(9.dp))
+                            Divider(
+                                color = Color.LightGray,
+                                thickness = 0.5.dp,
+                                modifier = Modifier.padding(horizontal = 15.dp)
+                            )
+                            Spacer(modifier = Modifier.height(9.dp))
                             Row {
                                 Image(
                                     imageVector = ImageVector.vectorResource(R.drawable.note_outline),
@@ -404,25 +459,22 @@ fun SubmitReminderScreen(
                 showSureDeleteDialog.value = false
             }
         )
-//        AlertDialog(
-//            onDismissRequest = { showSureDeleteDialog.value = false },
-//            title = { Text(text = context.getString(R.string.sure_delete_event_title)) },
-//            text = { Text(text = context.getString(R.string.sure_delete_event_desc)) },
-//            confirmButton = {
-//                androidx.compose.material3.Button(onClick = {
-//                    viewModel.onEvent(SubmitReminderEvent.DeleteReminder)
-//                    showSureDeleteDialog.value = false
-//                }) {
-//                    Text(text = context.getString(R.string.yes))
-//                }
-//            },
-//            dismissButton = {
-//                androidx.compose.material3.Button(onClick = {
-//                    showSureDeleteDialog.value = false
-//                }) {
-//                    Text(text = context.getString(R.string.no))
-//                }
-//            },
-//        )
+    }
+    if (showRemindTimeDialog.value) {
+        TimePickerDialog(
+            onConfirm = { hour, minute ->
+                viewModel.onFieldsEvent(
+                    SubmitReminderFieldsEvent.OnRemindDateTimePickerChange(
+                        persianDate = tempRemindDatePersian.value,
+                        gregorianDate = tempRemindDate.value,
+                        time = String.format("%02d:%02d", hour, minute)
+                    )
+                )
+                showRemindTimeDialog.value = false
+            },
+            onDismiss = {
+                showRemindTimeDialog.value = false
+            }
+        )
     }
 }

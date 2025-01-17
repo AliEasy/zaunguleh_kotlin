@@ -14,6 +14,7 @@ import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.DatePickerState
+import top.easyware.zanguleh.features.submit_reminder.presentation.components.DateTimePickerState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.IsImportantState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.TextFieldState
@@ -52,6 +53,11 @@ class SubmitReminderViewModel @Inject constructor(
         IsImportantState()
     )
     val isImportant = _isImportant
+
+    private val _remindDateTime = mutableStateOf(
+        DateTimePickerState()
+    )
+    val remindDateTime = _remindDateTime
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -117,7 +123,10 @@ class SubmitReminderViewModel @Inject constructor(
                     reminderDueDatePersian = _dueDate.value.persianDate,
                     reminderDueDate = _dueDate.value.gregorianDate,
                     description = _description.value.text,
-                    isImportant = _isImportant.value.isImportant
+                    isImportant = _isImportant.value.isImportant,
+                    remindDatePersian = _remindDateTime.value.persianDate,
+                    remindDate = _remindDateTime.value.gregorianDate,
+                    remindTime = _remindDateTime.value.time,
                 )
             )
             _eventFlow.emit(UiEvent.NavigateBack)
@@ -174,6 +183,14 @@ class SubmitReminderViewModel @Inject constructor(
                     persianDate = event.persianDate,
                     gregorianDate = event.gregorianDate,
                     isHintVisible = event.persianDate.isBlank()
+                )
+            }
+
+            is SubmitReminderFieldsEvent.OnRemindDateTimePickerChange -> {
+                _remindDateTime.value = remindDateTime.value.copy(
+                    persianDate = event.persianDate,
+                    gregorianDate = event.gregorianDate,
+                    time = event.time
                 )
             }
         }
