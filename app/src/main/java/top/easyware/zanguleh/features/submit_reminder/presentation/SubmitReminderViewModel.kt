@@ -21,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
 import top.easyware.zanguleh.core.util.CalendarUtil
@@ -76,6 +77,7 @@ class SubmitReminderViewModel @Inject constructor(
             val notifTitle: String,
             val notifId: Int
         ) : UiEvent()
+
         data object NavigateBack : UiEvent()
     }
 
@@ -282,7 +284,7 @@ class SubmitReminderViewModel @Inject constructor(
 
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
-        val title = intent?.getStringExtra("title") ?: "یادآوری"
+        val title = intent?.getStringExtra("title") ?: context.getString(R.string.reminder)
         val notificationId = intent?.getIntExtra("notificationId", 0) ?: 0
 
         val notificationManager =
@@ -294,7 +296,6 @@ class ReminderReceiver : BroadcastReceiver() {
                 android.Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // اگر مجوز داده نشده، نوتیفیکیشن ارسال نمی‌شود
             return
         }
 
@@ -302,7 +303,7 @@ class ReminderReceiver : BroadcastReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "یادآوری‌ها",
+                context.getString(R.string.reminders),
                 NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel)
@@ -311,7 +312,6 @@ class ReminderReceiver : BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(title)
-            .setContentText("زمان یادآوری فرا رسیده است.")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 
