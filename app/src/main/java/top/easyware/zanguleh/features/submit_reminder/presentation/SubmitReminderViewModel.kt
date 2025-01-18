@@ -1,7 +1,20 @@
 package top.easyware.zanguleh.features.submit_reminder.presentation
 
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +26,7 @@ import kotlinx.coroutines.launch
 import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
+import top.easyware.zanguleh.core.util.CalendarUtil
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.DatePickerState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.DateTimePickerState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.IsImportantState
@@ -64,6 +78,13 @@ class SubmitReminderViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class ShowSnackBar(val message: String) : UiEvent()
+        data class ScheduleReminder(
+            val remindDate: String,
+            val remindTime: String,
+            val notifTitle: String,
+            val notifId: Int
+        ) : UiEvent()
+
         data object NavigateBack : UiEvent()
     }
 
@@ -115,7 +136,7 @@ class SubmitReminderViewModel @Inject constructor(
 
     private fun submitReminder() {
         viewModelScope.launch {
-            fullReminderUseCase.addReminderUseCase(
+            val result : Long = fullReminderUseCase.addReminderUseCase(
                 ReminderModel(
                     reminderId = _reminderId,
                     title = _title.value.text,
@@ -129,7 +150,19 @@ class SubmitReminderViewModel @Inject constructor(
                     remindTime = _remindDateTime.value.time,
                 )
             )
-            _eventFlow.emit(UiEvent.NavigateBack)
+            if (result > 0) {
+                _eventFlow.emit(
+                    UiEvent.ScheduleReminder(
+                        _remindDateTime.value.persianDate,
+                        _remindDateTime.value.time,
+                        _title.value.text,
+                        result.toInt()
+                    )
+                )
+                _eventFlow.emit(UiEvent.NavigateBack)
+            } else {
+                _eventFlow.emit(UiEvent.ShowSnackBar("error")) //todo
+            }
         }
     }
 
@@ -194,5 +227,85 @@ class SubmitReminderViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun scheduleReminder(
+        context: Context,
+        remindDate: String,
+        remindTime: String,
+        notifTitle: String,
+        notifId: Int
+    ) {
+        val calendar = CalendarUtil.convertJalaliToGregorian(remindDate, remindTime)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, ReminderReceiver::class.java).apply {
+            putExtra("title", notifTitle)
+            putExtra("notificationId", notifId)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            notifId,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+            } else {
+                requestExactAlarmPermission(context)
+            }
+        }
+    }
+
+    private fun requestExactAlarmPermission(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                data = Uri.parse("package:${context.packageName}")
+            }
+            context.startActivity(intent)
+        }
+    }
+}
+
+class ReminderReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent?) {
+        val title = intent?.getStringExtra("title") ?: "یادآوری"
+        val notificationId = intent?.getIntExtra("notificationId", 0) ?: 0
+
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ActivityCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // اگر مجوز داده نشده، نوتیفیکیشن ارسال نمی‌شود
+            return
+        }
+
+        val channelId = "reminder_channel"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "یادآوری‌ها",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val builder = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle(title)
+            .setContentText("زمان یادآوری فرا رسیده است.")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+
+        notificationManager.notify(notificationId, builder.build())
     }
 }

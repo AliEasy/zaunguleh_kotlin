@@ -16,7 +16,7 @@ interface ReminderDao {
     suspend fun getReminderById(reminderId: Int): ReminderModel?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addReminder(reminder: ReminderModel)
+    suspend fun addReminder(reminder: ReminderModel): Long
 
     @Query("DELETE FROM remindermodel WHERE reminderId = :reminderId")
     suspend fun deleteReminder(reminderId: Int)

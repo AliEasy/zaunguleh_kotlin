@@ -95,6 +95,16 @@ fun SubmitReminderScreen(
                 is SubmitReminderViewModel.UiEvent.ShowSnackBar -> {
 
                 }
+
+                is SubmitReminderViewModel.UiEvent.ScheduleReminder -> {
+                    viewModel.scheduleReminder(
+                        context,
+                        event.remindDate,
+                        event.remindTime,
+                        event.notifTitle,
+                        event.notifId
+                    )
+                }
             }
         }
     }
