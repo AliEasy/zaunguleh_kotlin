@@ -436,7 +436,7 @@ fun SubmitReminderScreen(
                                         }
                                         if (viewModel.remindDateTime.value.isSelected) {
                                             Row {
-                                                Spacer(modifier = Modifier.width(25.dp))
+                                                Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
                                                     text = viewModel.remindDateTime.value.time,
                                                     style = MaterialTheme.typography.labelLarge,
