@@ -12,18 +12,15 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import top.easyware.zanguleh.R
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
 import top.easyware.zanguleh.core.util.CalendarUtil
@@ -36,7 +33,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SubmitReminderViewModel @Inject constructor(
-    @ApplicationContext context: Context,
     private val fullReminderUseCase: FullReminderUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -45,16 +41,12 @@ class SubmitReminderViewModel @Inject constructor(
     val state = _state
 
     private val _title = mutableStateOf(
-        TextFieldState(
-            hint = context.getString(R.string.event_title)
-        )
+        TextFieldState()
     )
     val title = _title
 
     private val _description = mutableStateOf(
-        TextFieldState(
-            hint = context.getString(R.string.note)
-        )
+        TextFieldState()
     )
     val description = _description
 
@@ -89,6 +81,14 @@ class SubmitReminderViewModel @Inject constructor(
     }
 
     private var _reminderId: Int? = null
+
+    fun setTitleHint(hint: String) {
+        _title.value = title.value.copy(hint = hint)
+    }
+
+    fun setDescriptionHint(hint: String) {
+        _description.value = _description.value.copy(hint = hint)
+    }
 
     init {
         savedStateHandle.get<Int>("reminderId")?.let { reminderId ->
@@ -136,7 +136,7 @@ class SubmitReminderViewModel @Inject constructor(
 
     private fun submitReminder() {
         viewModelScope.launch {
-            val result : Long = fullReminderUseCase.addReminderUseCase(
+            val result: Long = fullReminderUseCase.addReminderUseCase(
                 ReminderModel(
                     reminderId = _reminderId,
                     title = _title.value.text,

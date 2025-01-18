@@ -86,6 +86,9 @@ fun SubmitReminderScreen(
     }
 
     LaunchedEffect(key1 = true) {
+        viewModel.setTitleHint(context.getString(R.string.event_title))
+        viewModel.setDescriptionHint(context.getString(R.string.note))
+
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 SubmitReminderViewModel.UiEvent.NavigateBack -> {
