@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
@@ -36,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -380,48 +382,90 @@ fun SubmitReminderScreen(
                             )
                             Spacer(modifier = Modifier.height(9.dp))
                             Row(
-                                Modifier.clickable {
-                                    val picker = PersianDatePickerDialog(context)
-                                        .setPositiveButtonString("باشه")
-                                        .setNegativeButton("بیخیال")
-                                        .setTodayButton("امروز")
-                                        .setTodayButtonVisible(true)
-                                        .setMinYear(1300)
-                                        .setMaxYear(1405)
-                                        .setMaxMonth(12)
-                                        .setMaxDay(29)
-                                        //                                    .setActionTextColor(Color.Gray.)
-                                        //                                    .setTypeFace(typeface)
-                                        .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
-                                        .setListener(
-                                            object : PersianPickerListener {
-                                                override fun onDateSelected(persianPickerDate: PersianPickerDate) {
-                                                    tempRemindDatePersian.value =
-                                                        "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}"
-                                                    tempRemindDate.value =
-                                                        "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
-                                                    showRemindTimeDialog.value = true
-                                                }
-
-                                                override fun onDismissed() {}
-                                            }
-                                        )
-                                    picker.show()
-                                }
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Image(
-                                    imageVector = ImageVector.vectorResource(
-                                        R.drawable.bell
-                                    ),
-                                    contentDescription = context.getString(R.string.remind_date_time),
-                                )
-                                Spacer(modifier = Modifier.width(11.dp))
-                                Text(
-                                    text = context.getString(R.string.remind_date_time),
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = if (viewModel.isImportant.value.isImportant) Color.Black else Color.Gray
-                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(
+                                        imageVector = ImageVector.vectorResource(
+                                            R.drawable.bell
+                                        ),
+                                        contentDescription = context.getString(R.string.remind_date_time),
+                                        colorFilter = ColorFilter.tint(if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray)
+                                    )
+                                    Column {
+                                        Row(
+                                            Modifier.clickable {
+                                                val picker = PersianDatePickerDialog(context)
+                                                    .setPositiveButtonString("باشه")
+                                                    .setNegativeButton("بیخیال")
+                                                    .setTodayButton("امروز")
+                                                    .setTodayButtonVisible(true)
+                                                    .setMinYear(1300)
+                                                    .setMaxYear(1405)
+                                                    .setMaxMonth(12)
+                                                    .setMaxDay(29)
+                                                    //                                    .setActionTextColor(Color.Gray.)
+                                                    //                                    .setTypeFace(typeface)
+                                                    .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
+                                                    .setListener(
+                                                        object : PersianPickerListener {
+                                                            override fun onDateSelected(
+                                                                persianPickerDate: PersianPickerDate
+                                                            ) {
+                                                                tempRemindDatePersian.value =
+                                                                    "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}"
+                                                                tempRemindDate.value =
+                                                                    "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+                                                                showRemindTimeDialog.value = true
+                                                            }
 
+                                                            override fun onDismissed() {}
+                                                        }
+                                                    )
+                                                picker.show()
+                                            }
+                                        ) {
+                                            Spacer(modifier = Modifier.width(11.dp))
+                                            Text(
+                                                text = context.getString(R.string.remind_date_time),
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray
+                                            )
+                                        }
+                                        if (viewModel.remindDateTime.value.isSelected) {
+                                            Row {
+                                                Spacer(modifier = Modifier.width(25.dp))
+                                                Text(
+                                                    text = viewModel.remindDateTime.value.time,
+                                                    style = MaterialTheme.typography.labelLarge,
+                                                    color = Color.Green
+                                                )
+                                                Spacer(modifier = Modifier.width(5.dp))
+                                                Text(
+                                                    text = viewModel.remindDateTime.value.persianDate,
+                                                    style = MaterialTheme.typography.labelLarge,
+                                                    color = Color.Green
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                                if (viewModel.remindDateTime.value.isSelected) {
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnRemindDateTimePickerClear)
+                                        },
+                                    )
+                                    {
+                                        Icon(
+                                            imageVector = Icons.Default.Clear,
+                                            contentDescription = context.getString(R.string.clear),
+                                            tint = Color.Cyan
+                                        )
+                                    }
+                                }
                             }
                             Spacer(modifier = Modifier.height(9.dp))
                             Divider(

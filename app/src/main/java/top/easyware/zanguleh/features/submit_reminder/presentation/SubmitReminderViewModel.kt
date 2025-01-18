@@ -76,7 +76,6 @@ class SubmitReminderViewModel @Inject constructor(
             val notifTitle: String,
             val notifId: Int
         ) : UiEvent()
-
         data object NavigateBack : UiEvent()
     }
 
@@ -223,7 +222,17 @@ class SubmitReminderViewModel @Inject constructor(
                 _remindDateTime.value = remindDateTime.value.copy(
                     persianDate = event.persianDate,
                     gregorianDate = event.gregorianDate,
-                    time = event.time
+                    time = event.time,
+                    isSelected = event.gregorianDate.isNotBlank() && event.time.isNotBlank()
+                )
+            }
+
+            is SubmitReminderFieldsEvent.OnRemindDateTimePickerClear -> {
+                _remindDateTime.value = remindDateTime.value.copy(
+                    persianDate = "",
+                    gregorianDate = "",
+                    time = "",
+                    isSelected = false
                 )
             }
         }
