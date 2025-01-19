@@ -274,12 +274,16 @@ fun SubmitReminderScreen(
                                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                                     fontSize = 18.sp,
                                     color = MaterialTheme.colorScheme.onSecondary
+                                ),
+                                hintTextStyle = MaterialTheme.typography.bodyLarge.copy(
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.onSecondary
                                 )
                             )
                             Spacer(modifier = Modifier.height(10.dp))
                             Row(
                                 modifier = Modifier
-                                    .padding(5.dp)
+                                    .fillMaxWidth()
                                     .clickable {
                                         val picker = PersianDatePickerDialog(context)
                                             .setPositiveButtonString("باشه")
@@ -316,6 +320,7 @@ fun SubmitReminderScreen(
                                             )
                                         picker.show()
                                     }
+                                    .padding(5.dp)
                             ) {
                                 Image(
                                     imageVector = ImageVector.vectorResource(R.drawable.calendar_outline),
@@ -355,9 +360,12 @@ fun SubmitReminderScreen(
                     ) {
                         Column {
                             Row(
-                                Modifier.clickable {
-                                    viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnIsImportantChange)
-                                }
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnIsImportantChange)
+                                    }
+                                    .padding(5.dp)
                             ) {
                                 Image(
                                     imageVector = ImageVector.vectorResource(
@@ -382,11 +390,45 @@ fun SubmitReminderScreen(
                             )
                             Spacer(modifier = Modifier.height(9.dp))
                             Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        val picker = PersianDatePickerDialog(context)
+                                            .setPositiveButtonString("باشه")
+                                            .setNegativeButton("بیخیال")
+                                            .setTodayButton("امروز")
+                                            .setTodayButtonVisible(true)
+                                            .setMinYear(1300)
+                                            .setMaxYear(1405)
+                                            .setMaxMonth(12)
+                                            .setMaxDay(29)
+                                            //                                    .setActionTextColor(Color.Gray.)
+                                            //                                    .setTypeFace(typeface)
+                                            .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
+                                            .setListener(
+                                                object : PersianPickerListener {
+                                                    override fun onDateSelected(
+                                                        persianPickerDate: PersianPickerDate
+                                                    ) {
+                                                        tempRemindDatePersian.value =
+                                                            "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}"
+                                                        tempRemindDate.value =
+                                                            "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+                                                        showRemindTimeDialog.value = true
+                                                    }
+
+                                                    override fun onDismissed() {}
+                                                }
+                                            )
+                                        picker.show()
+                                    }
+                                    .padding(5.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
                                     Image(
                                         imageVector = ImageVector.vectorResource(
                                             R.drawable.bell
@@ -395,38 +437,7 @@ fun SubmitReminderScreen(
                                         colorFilter = ColorFilter.tint(if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray)
                                     )
                                     Column {
-                                        Row(
-                                            Modifier.clickable {
-                                                val picker = PersianDatePickerDialog(context)
-                                                    .setPositiveButtonString("باشه")
-                                                    .setNegativeButton("بیخیال")
-                                                    .setTodayButton("امروز")
-                                                    .setTodayButtonVisible(true)
-                                                    .setMinYear(1300)
-                                                    .setMaxYear(1405)
-                                                    .setMaxMonth(12)
-                                                    .setMaxDay(29)
-                                                    //                                    .setActionTextColor(Color.Gray.)
-                                                    //                                    .setTypeFace(typeface)
-                                                    .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
-                                                    .setListener(
-                                                        object : PersianPickerListener {
-                                                            override fun onDateSelected(
-                                                                persianPickerDate: PersianPickerDate
-                                                            ) {
-                                                                tempRemindDatePersian.value =
-                                                                    "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}"
-                                                                tempRemindDate.value =
-                                                                    "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
-                                                                showRemindTimeDialog.value = true
-                                                            }
-
-                                                            override fun onDismissed() {}
-                                                        }
-                                                    )
-                                                picker.show()
-                                            }
-                                        ) {
+                                        Row {
                                             Spacer(modifier = Modifier.width(11.dp))
                                             Text(
                                                 text = context.getString(R.string.remind_date_time),
@@ -495,8 +506,9 @@ fun SubmitReminderScreen(
                                         )
                                     },
                                     singleLine = false,
-                                    textStyle = MaterialTheme.typography.labelLarge.copy(color = Color.Gray),
-                                    maxLines = 5
+                                    textStyle = MaterialTheme.typography.labelLarge.copy(color = Color.Black),
+                                    maxLines = 5,
+                                    hintTextStyle = MaterialTheme.typography.labelLarge.copy(color = Color.Gray),
                                 )
                             }
                         }

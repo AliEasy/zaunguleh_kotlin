@@ -18,6 +18,7 @@ fun TransparentHintTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
+    hintTextStyle: TextStyle = TextStyle(),
     singleLine: Boolean = true,
     onFocusChange: (FocusState) -> Unit,
     isHintVisible: Boolean,
@@ -40,7 +41,7 @@ fun TransparentHintTextField(
             cursorBrush = SolidColor(textStyle.color)
         )
         if (isHintVisible) {
-            Text(text = hint, style = textStyle)
+            Text(text = hint, style = hintTextStyle)
         }
     }
 }
