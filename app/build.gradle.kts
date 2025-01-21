@@ -95,4 +95,9 @@ dependencies {
 
     //persian date picker
     implementation(libs.persian.date.picker)
+
+    //glance
+    implementation(libs.glance.app.widget)
+    implementation(libs.glance.material3)
+    implementation(libs.glance.material)
 }
