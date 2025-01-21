@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -35,7 +36,8 @@ import top.easyware.zanguleh.features.daily_counter.presentation.DailyCounterScr
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val bottomNavigationNavController = rememberNavController()
 
@@ -44,6 +46,7 @@ fun HomeScreen(
             BottomBar(
                 bottomNavigationNavController = bottomNavigationNavController,
                 modifier = Modifier,
+                viewModel = viewModel
             )
         }
     )
@@ -53,7 +56,8 @@ fun HomeScreen(
         ) {
             NavigationGraph(
                 navController = navController,
-                bottomNavigationNavController = bottomNavigationNavController
+                bottomNavigationNavController = bottomNavigationNavController,
+                viewModel = viewModel
             )
         }
     }
@@ -63,6 +67,7 @@ fun HomeScreen(
 fun BottomBar(
     bottomNavigationNavController: NavHostController,
     modifier: Modifier = Modifier,
+    viewModel: HomeViewModel
 ) {
     val context = LocalContext.current
 
@@ -109,6 +114,8 @@ fun BottomBar(
                         launchSingleTop = true
                         restoreState = true
                     }
+
+                    viewModel.saveLastVisitedTab(screen.route.value)
                 },
                 label = {
                     Text(
@@ -136,10 +143,11 @@ fun BottomBar(
 fun NavigationGraph(
     navController: NavHostController,
     bottomNavigationNavController: NavHostController,
+    viewModel: HomeViewModel
 ) {
     NavHost(
         navController = bottomNavigationNavController,
-        startDestination = BottomNavigationItemsEnum.DAILY_COUNTER.value
+        startDestination = viewModel.getLastVisitedTab()
     ) {
         composable(BottomNavigationItemsEnum.DAILY_COUNTER.value) {
             DailyCounterScreen(navController = navController)
