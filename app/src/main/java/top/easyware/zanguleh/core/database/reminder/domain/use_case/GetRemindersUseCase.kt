@@ -7,7 +7,7 @@ import top.easyware.zanguleh.core.database.reminder.domain.repository.ReminderRe
 import top.easyware.zanguleh.core.database.reminder.domain.util.ReminderFilter
 
 class GetRemindersUseCase(private val repository: ReminderRepository) {
-    operator fun invoke(reminderFilter: ReminderFilter?): Flow<List<ReminderModel>> {
+    operator fun invoke(reminderFilter: ReminderFilter? = null): Flow<List<ReminderModel>> {
         return repository.getReminders().map { reminders ->
             when (reminderFilter) {
                 is ReminderFilter.IsImportantFilter -> reminders.filter { reminderModel ->
