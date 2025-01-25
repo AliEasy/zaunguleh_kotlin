@@ -1,6 +1,7 @@
 package top.easyware.zanguleh.features.submit_reminder.presentation.components
 
 import androidx.compose.ui.focus.FocusState
+import top.easyware.zanguleh.core.database.reminder.domain.model.RemindRepeatType
 
 sealed class SubmitReminderFieldsEvent {
     data class OnTitleChangeValue(val value: String) : SubmitReminderFieldsEvent()
@@ -11,4 +12,6 @@ sealed class SubmitReminderFieldsEvent {
     data class OnDueDatePickerChange(val persianDate: String, val gregorianDate : String) : SubmitReminderFieldsEvent()
     data class OnRemindDateTimePickerChange(val persianDate: String, val gregorianDate : String, val time : String) : SubmitReminderFieldsEvent()
     data object OnRemindDateTimePickerClear : SubmitReminderFieldsEvent()
+    data class OnRemindRepeatTypeChange(val type: RemindRepeatType) : SubmitReminderFieldsEvent()
+    data object OnRemindRepeatTypeClear : SubmitReminderFieldsEvent()
 }

@@ -28,6 +28,7 @@ import top.easyware.zanguleh.core.util.CalendarUtil
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.DatePickerState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.DateTimePickerState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.IsImportantState
+import top.easyware.zanguleh.features.submit_reminder.presentation.components.RemindRepeatState
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.TextFieldState
 import javax.inject.Inject
@@ -65,6 +66,12 @@ class SubmitReminderViewModel @Inject constructor(
         DateTimePickerState()
     )
     val remindDateTime = _remindDateTime
+
+    private val _remindRepeatType = mutableStateOf(
+        RemindRepeatState()
+    )
+    val remindRepeatType = _remindRepeatType
+
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -113,6 +120,17 @@ class SubmitReminderViewModel @Inject constructor(
                         _isImportant.value = isImportant.value.copy(
                             isImportant = reminder.isImportant ?: false
                         )
+                        _remindDateTime.value = remindDateTime.value.copy(
+                            persianDate = reminder.remindDatePersian ?: "",
+                            gregorianDate = reminder.remindDate ?: "",
+                            time = reminder.remindTime ?: "",
+                            isSelected = (reminder.remindDate?.isNotBlank()
+                                ?: false) && (reminder.remindTime?.isNotBlank() ?: false)
+                        )
+                        _remindRepeatType.value = remindRepeatType.value.copy(
+                            type = reminder.remindRepeatType,
+                            isSelected = reminder.remindRepeatType != null
+                        )
                         _state.value = state.value.copy(isHereForInsert = false)
                     }
                 }
@@ -124,14 +142,23 @@ class SubmitReminderViewModel @Inject constructor(
 
     fun onEvent(event: SubmitReminderEvent) {
         when (event) {
-            SubmitReminderEvent.EditReminderEnable -> _state.value =
-                state.value.copy(isEditMode = true)
+            SubmitReminderEvent.EditReminderEnable -> {
+                _state.value =
+                    state.value.copy(isEditMode = true)
+            }
 
-            SubmitReminderEvent.EditReminderCancel -> _state.value =
-                state.value.copy(isEditMode = false)
+            SubmitReminderEvent.EditReminderCancel -> {
+                _state.value =
+                    state.value.copy(isEditMode = false)
+            }
 
-            SubmitReminderEvent.DeleteReminder -> deleteReminder()
-            SubmitReminderEvent.SubmitReminder -> submitReminder()
+            SubmitReminderEvent.DeleteReminder -> {
+                deleteReminder()
+            }
+
+            SubmitReminderEvent.SubmitReminder -> {
+                submitReminder()
+            }
         }
     }
 
@@ -149,6 +176,7 @@ class SubmitReminderViewModel @Inject constructor(
                     remindDatePersian = _remindDateTime.value.persianDate,
                     remindDate = _remindDateTime.value.gregorianDate,
                     remindTime = _remindDateTime.value.time,
+                    remindRepeatType = _remindRepeatType.value.type
                 )
             )
             if (result > 0) {
@@ -234,8 +262,23 @@ class SubmitReminderViewModel @Inject constructor(
                     persianDate = "",
                     gregorianDate = "",
                     time = "",
-                    isSelected = false
+                    isSelected = false,
                 )
+            }
+
+            is SubmitReminderFieldsEvent.OnRemindRepeatTypeChange -> {
+                _remindRepeatType.value = remindRepeatType.value.copy(
+                    type = event.type,
+                    isSelected = true
+                )
+            }
+
+            is SubmitReminderFieldsEvent.OnRemindRepeatTypeClear -> {
+                _remindRepeatType.value =
+                    remindRepeatType.value.copy(
+                        type = null,
+                        isSelected = false,
+                    )
             }
         }
     }

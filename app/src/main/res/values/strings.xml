@@ -23,8 +23,13 @@
     <string name="no">خیر</string>
     <string name="sure_delete_event_title">حذف رویداد؟!</string>
     <string name="sure_delete_event_desc">آیا از حذف رویداد مطمئن هستید؟</string>
-    <string name="remind_date_time">تاریخ و ساعت یادآوری</string>
+    <string name="event_remind_date_time">تاریخ و ساعت یادآوری رویداد</string>
+    <string name="event_remind_repeat">تکرار یادآوری رویداد</string>
     <string name="clear">پاک کردن</string>
     <string name="reminder">یادآوری</string>
     <string name="reminders">یادآوری ها</string>
+    <string name="daily">روزانه</string>
+    <string name="weekly">هفتگی</string>
+    <string name="monthly">ماهانه</string>
+    <string name="yearly">سالانه</string>
 </resources>
