@@ -110,7 +110,8 @@ fun SubmitReminderScreen(
                         event.remindDate,
                         event.remindTime,
                         event.notifTitle,
-                        event.notifId
+                        event.notifId,
+                        event.repeatType
                     )
                 }
             }
@@ -307,8 +308,24 @@ fun SubmitReminderScreen(
                                                     override fun onDateSelected(persianPickerDate: PersianPickerDate) {
                                                         viewModel.onFieldsEvent(
                                                             SubmitReminderFieldsEvent.OnDueDatePickerChange(
-                                                                persianDate = "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth.toString().padStart(2, '0')}/${persianPickerDate.persianDay.toString().padStart(2, '0')}",
-                                                                gregorianDate = "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth.toString().padStart(2, '0')}-${persianPickerDate.gregorianDay.toString().padStart(2, '0')}"
+                                                                persianDate = "${persianPickerDate.persianYear}/${
+                                                                    persianPickerDate.persianMonth
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }/${
+                                                                    persianPickerDate.persianDay
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }",
+                                                                gregorianDate = "${persianPickerDate.gregorianYear}-${
+                                                                    persianPickerDate.gregorianMonth
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }-${
+                                                                    persianPickerDate.gregorianDay
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }"
                                                                 //                                                            gregorianDate = persianPickerDate.gregorianDate.toString()
                                                                 //                                                            gregorianDate = SimpleDateFormat(
                                                                 //                                                                "yyyy-MM-dd",
@@ -416,9 +433,25 @@ fun SubmitReminderScreen(
                                                         persianPickerDate: PersianPickerDate
                                                     ) {
                                                         tempRemindDatePersian.value =
-                                                            "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth.toString().padStart(2, '0')}/${persianPickerDate.persianDay.toString().padStart(2, '0')}"
+                                                            "${persianPickerDate.persianYear}/${
+                                                                persianPickerDate.persianMonth
+                                                                    .toString()
+                                                                    .padStart(2, '0')
+                                                            }/${
+                                                                persianPickerDate.persianDay
+                                                                    .toString()
+                                                                    .padStart(2, '0')
+                                                            }"
                                                         tempRemindDate.value =
-                                                            "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth.toString().padStart(2, '0')}-${persianPickerDate.gregorianDay.toString().padStart(2, '0')}"
+                                                            "${persianPickerDate.gregorianYear}-${
+                                                                persianPickerDate.gregorianMonth
+                                                                    .toString()
+                                                                    .padStart(2, '0')
+                                                            }-${
+                                                                persianPickerDate.gregorianDay
+                                                                    .toString()
+                                                                    .padStart(2, '0')
+                                                            }"
                                                         showRemindTimeDialog.value = true
                                                     }
 
@@ -559,7 +592,11 @@ fun SubmitReminderScreen(
                                             Row {
                                                 Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
-                                                    text = "${context.getString(R.string.repeat_in)} ${viewModel.remindRepeatType.value.type!!.toHumanReadable(context)}",
+                                                    text = "${context.getString(R.string.repeat_in)} ${
+                                                        viewModel.remindRepeatType.value.type!!.toHumanReadable(
+                                                            context
+                                                        )
+                                                    }",
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
                                                 )

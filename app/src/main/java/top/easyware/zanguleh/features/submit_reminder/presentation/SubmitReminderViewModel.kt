@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import top.easyware.zanguleh.R
+import top.easyware.zanguleh.core.database.reminder.domain.model.RemindRepeatType
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
 import top.easyware.zanguleh.core.util.CalendarUtil
@@ -82,7 +83,8 @@ class SubmitReminderViewModel @Inject constructor(
             val remindDate: String,
             val remindTime: String,
             val notifTitle: String,
-            val notifId: Int
+            val notifId: Int,
+            val repeatType: RemindRepeatType?
         ) : UiEvent()
 
         data object NavigateBack : UiEvent()
@@ -180,14 +182,17 @@ class SubmitReminderViewModel @Inject constructor(
                 )
             )
             if (result > 0) {
-                _eventFlow.emit(
-                    UiEvent.ScheduleReminder(
-                        _remindDateTime.value.persianDate,
-                        _remindDateTime.value.time,
-                        _title.value.text,
-                        result.toInt()
+                if (_remindDateTime.value.persianDate.isNotBlank() && _remindDateTime.value.time.isNotBlank()) {
+                    _eventFlow.emit(
+                        UiEvent.ScheduleReminder(
+                            _remindDateTime.value.persianDate,
+                            _remindDateTime.value.time,
+                            _title.value.text,
+                            result.toInt(),
+                            _remindRepeatType.value.type
+                        )
                     )
-                )
+                }
                 _eventFlow.emit(UiEvent.NavigateBack)
             } else {
                 _eventFlow.emit(UiEvent.ShowSnackBar("error")) //todo
@@ -287,18 +292,24 @@ class SubmitReminderViewModel @Inject constructor(
         context: Context,
         remindDate: String,
         remindTime: String,
-        notifTitle: String,
-        notifId: Int
+        notificationTitle: String,
+        notificationId: Int,
+        repeatType: RemindRepeatType?
     ) {
         val calendar = CalendarUtil.convertJalaliToGregorian(remindDate, remindTime)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, ReminderReceiver::class.java).apply {
-            putExtra("title", notifTitle)
-            putExtra("notificationId", notifId)
+            putExtra("notificationTitle", notificationTitle)
+            putExtra("notificationId", notificationId)
+            if (repeatType != null) {
+                putExtra("repeatTypeStr", repeatType.value)
+                putExtra("mainRemindDate", remindDate)
+                putExtra("mainRemindTime", remindTime)
+            }
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            notifId,
+            notificationId,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -327,8 +338,13 @@ class SubmitReminderViewModel @Inject constructor(
 
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
-        val title = intent?.getStringExtra("title") ?: context.getString(R.string.reminder)
+        val notificationTitle =
+            intent?.getStringExtra("notificationTitle") ?: context.getString(R.string.reminder)
         val notificationId = intent?.getIntExtra("notificationId", 0) ?: 0
+        val repeatTypeStr = intent?.getStringExtra("repeatTypeStr")
+        val repeatType = RemindRepeatType.entries.find { it.value == repeatTypeStr }
+        val mainRemindDate = intent?.getStringExtra("mainRemindDate")
+        val mainRemindTime = intent?.getStringExtra("mainRemindTime")
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -354,10 +370,36 @@ class ReminderReceiver : BroadcastReceiver() {
 
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle(title)
+            .setContentTitle(notificationTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 
         notificationManager.notify(notificationId, builder.build())
+
+        if (repeatType != null && mainRemindDate != null && mainRemindTime != null) {
+            val nextJalaliDate = CalendarUtil.addDaysToJalali(mainRemindDate, 1)
+            val nextGregorianCalendar =
+                CalendarUtil.convertJalaliToGregorian(nextJalaliDate, mainRemindTime)
+
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val newIntent = Intent(context, ReminderReceiver::class.java).apply {
+                putExtra("title", notificationTitle)
+                putExtra("notificationId", notificationId)
+                putExtra("repeatTypeStr", repeatType.value)
+                putExtra("mainRemindDate", nextJalaliDate)
+                putExtra("mainRemindTime", mainRemindTime)
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                notificationId,
+                newIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                nextGregorianCalendar.timeInMillis,
+                pendingIntent
+            )
+        }
     }
 }
