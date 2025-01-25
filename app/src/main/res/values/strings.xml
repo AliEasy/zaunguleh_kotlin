@@ -32,4 +32,5 @@
     <string name="weekly">هفتگی</string>
     <string name="monthly">ماهانه</string>
     <string name="yearly">سالانه</string>
+    <string name="repeat_in">تکرار به صورت</string>
 </resources>

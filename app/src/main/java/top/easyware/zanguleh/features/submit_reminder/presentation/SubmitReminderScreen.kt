@@ -307,8 +307,8 @@ fun SubmitReminderScreen(
                                                     override fun onDateSelected(persianPickerDate: PersianPickerDate) {
                                                         viewModel.onFieldsEvent(
                                                             SubmitReminderFieldsEvent.OnDueDatePickerChange(
-                                                                persianDate = "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}",
-                                                                gregorianDate = "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+                                                                persianDate = "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth.toString().padStart(2, '0')}/${persianPickerDate.persianDay.toString().padStart(2, '0')}",
+                                                                gregorianDate = "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth.toString().padStart(2, '0')}-${persianPickerDate.gregorianDay.toString().padStart(2, '0')}"
                                                                 //                                                            gregorianDate = persianPickerDate.gregorianDate.toString()
                                                                 //                                                            gregorianDate = SimpleDateFormat(
                                                                 //                                                                "yyyy-MM-dd",
@@ -416,9 +416,9 @@ fun SubmitReminderScreen(
                                                         persianPickerDate: PersianPickerDate
                                                     ) {
                                                         tempRemindDatePersian.value =
-                                                            "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}"
+                                                            "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth.toString().padStart(2, '0')}/${persianPickerDate.persianDay.toString().padStart(2, '0')}"
                                                         tempRemindDate.value =
-                                                            "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+                                                            "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth.toString().padStart(2, '0')}-${persianPickerDate.gregorianDay.toString().padStart(2, '0')}"
                                                         showRemindTimeDialog.value = true
                                                     }
 
@@ -494,7 +494,7 @@ fun SubmitReminderScreen(
                                 Modifier
                                     .fillMaxWidth()
                                     .clickable {
-
+                                        isRepeatDropdownExpanded.value = true
                                     }
                                     .padding(5.dp),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -508,7 +508,7 @@ fun SubmitReminderScreen(
                                             R.drawable.repeat_fill
                                         ),
                                         contentDescription = context.getString(R.string.event_remind_repeat),
-                                        colorFilter = ColorFilter.tint(if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray)
+                                        colorFilter = ColorFilter.tint(if (viewModel.remindRepeatType.value.isSelected) Color.Black else Color.Gray)
                                     )
                                     Column {
                                         Box {
@@ -517,7 +517,7 @@ fun SubmitReminderScreen(
                                                 Text(
                                                     text = context.getString(R.string.event_remind_repeat),
                                                     style = MaterialTheme.typography.labelLarge,
-                                                    color = if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray
+                                                    color = if (viewModel.remindRepeatType.value.isSelected) Color.Black else Color.Gray
                                                 )
                                             }
                                             DropdownMenu(
@@ -555,13 +555,11 @@ fun SubmitReminderScreen(
                                                 }
                                             }
                                         }
-                                        if (viewModel.remindDateTime.value.isSelected) {
+                                        if (viewModel.remindRepeatType.value.isSelected) {
                                             Row {
                                                 Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
-                                                    text = viewModel.remindRepeatType.value.type!!.toHumanReadable(
-                                                        context
-                                                    ),
+                                                    text = "${context.getString(R.string.repeat_in)} ${viewModel.remindRepeatType.value.type!!.toHumanReadable(context)}",
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
                                                 )
@@ -569,7 +567,7 @@ fun SubmitReminderScreen(
                                         }
                                     }
                                 }
-                                if (viewModel.remindDateTime.value.isSelected) {
+                                if (viewModel.remindRepeatType.value.isSelected) {
                                     IconButton(
                                         onClick = {
                                             viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnRemindRepeatTypeClear)
