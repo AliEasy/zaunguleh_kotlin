@@ -54,6 +54,8 @@ import ir.hamsaa.persiandatepicker.api.PersianPickerDate
 import ir.hamsaa.persiandatepicker.api.PersianPickerListener
 import kotlinx.coroutines.flow.collectLatest
 import top.easyware.zanguleh.R
+import top.easyware.zanguleh.core.database.reminder.domain.model.RemindRepeatType
+import top.easyware.zanguleh.core.database.reminder.domain.model.toHumanReadable
 import top.easyware.zanguleh.core.uikit.ButtonComponent
 import top.easyware.zanguleh.core.uikit.ButtonComponentType
 import top.easyware.zanguleh.core.uikit.TimePickerDialog
@@ -73,7 +75,8 @@ fun SubmitReminderScreen(
     val context = LocalContext.current
     val state = viewModel.state.value
 
-    val isDropdownExpanded = remember { mutableStateOf(false) }
+    val isAppbarDropdownExpanded = remember { mutableStateOf(false) }
+    val isRepeatDropdownExpanded = remember { mutableStateOf(false) }
     val showSureDeleteDialog = remember { mutableStateOf(false) }
     val showRemindTimeDialog = remember { mutableStateOf(false) }
     val tempRemindDate = remember { mutableStateOf("") }
@@ -107,7 +110,8 @@ fun SubmitReminderScreen(
                         event.remindDate,
                         event.remindTime,
                         event.notifTitle,
-                        event.notifId
+                        event.notifId,
+                        event.repeatType
                     )
                 }
             }
@@ -152,7 +156,7 @@ fun SubmitReminderScreen(
                         if (!state.isEditMode && !state.isHereForInsert)
                             IconButton(
                                 onClick = {
-                                    isDropdownExpanded.value = !isDropdownExpanded.value
+                                    isAppbarDropdownExpanded.value = !isAppbarDropdownExpanded.value
                                 })
                             {
                                 Box {
@@ -162,8 +166,10 @@ fun SubmitReminderScreen(
                                         tint = MaterialTheme.colorScheme.onSecondary
                                     )
                                     DropdownMenu(
-                                        expanded = isDropdownExpanded.value,
-                                        onDismissRequest = { isDropdownExpanded.value = false }) {
+                                        expanded = isAppbarDropdownExpanded.value,
+                                        onDismissRequest = {
+                                            isAppbarDropdownExpanded.value = false
+                                        }) {
                                         DropdownMenuItem(
                                             text = {
                                                 Row {
@@ -177,7 +183,7 @@ fun SubmitReminderScreen(
                                             },
                                             onClick = {
                                                 showSureDeleteDialog.value = true
-                                                isDropdownExpanded.value = false
+                                                isAppbarDropdownExpanded.value = false
                                             },
                                         )
                                         DropdownMenuItem(
@@ -302,8 +308,24 @@ fun SubmitReminderScreen(
                                                     override fun onDateSelected(persianPickerDate: PersianPickerDate) {
                                                         viewModel.onFieldsEvent(
                                                             SubmitReminderFieldsEvent.OnDueDatePickerChange(
-                                                                persianDate = "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}",
-                                                                gregorianDate = "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+                                                                persianDate = "${persianPickerDate.persianYear}/${
+                                                                    persianPickerDate.persianMonth
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }/${
+                                                                    persianPickerDate.persianDay
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }",
+                                                                gregorianDate = "${persianPickerDate.gregorianYear}-${
+                                                                    persianPickerDate.gregorianMonth
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }-${
+                                                                    persianPickerDate.gregorianDay
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }"
                                                                 //                                                            gregorianDate = persianPickerDate.gregorianDate.toString()
                                                                 //                                                            gregorianDate = SimpleDateFormat(
                                                                 //                                                                "yyyy-MM-dd",
@@ -411,9 +433,25 @@ fun SubmitReminderScreen(
                                                         persianPickerDate: PersianPickerDate
                                                     ) {
                                                         tempRemindDatePersian.value =
-                                                            "${persianPickerDate.persianYear}/${persianPickerDate.persianMonth}/${persianPickerDate.persianDay}"
+                                                            "${persianPickerDate.persianYear}/${
+                                                                persianPickerDate.persianMonth
+                                                                    .toString()
+                                                                    .padStart(2, '0')
+                                                            }/${
+                                                                persianPickerDate.persianDay
+                                                                    .toString()
+                                                                    .padStart(2, '0')
+                                                            }"
                                                         tempRemindDate.value =
-                                                            "${persianPickerDate.gregorianYear}-${persianPickerDate.gregorianMonth}-${persianPickerDate.gregorianDay}"
+                                                            "${persianPickerDate.gregorianYear}-${
+                                                                persianPickerDate.gregorianMonth
+                                                                    .toString()
+                                                                    .padStart(2, '0')
+                                                            }-${
+                                                                persianPickerDate.gregorianDay
+                                                                    .toString()
+                                                                    .padStart(2, '0')
+                                                            }"
                                                         showRemindTimeDialog.value = true
                                                     }
 
@@ -433,14 +471,14 @@ fun SubmitReminderScreen(
                                         imageVector = ImageVector.vectorResource(
                                             R.drawable.bell
                                         ),
-                                        contentDescription = context.getString(R.string.remind_date_time),
+                                        contentDescription = context.getString(R.string.event_remind_date_time),
                                         colorFilter = ColorFilter.tint(if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray)
                                     )
                                     Column {
                                         Row {
                                             Spacer(modifier = Modifier.width(11.dp))
                                             Text(
-                                                text = context.getString(R.string.remind_date_time),
+                                                text = context.getString(R.string.event_remind_date_time),
                                                 style = MaterialTheme.typography.labelLarge,
                                                 color = if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray
                                             )
@@ -467,6 +505,109 @@ fun SubmitReminderScreen(
                                     IconButton(
                                         onClick = {
                                             viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnRemindDateTimePickerClear)
+                                        },
+                                    )
+                                    {
+                                        Icon(
+                                            imageVector = Icons.Default.Clear,
+                                            contentDescription = context.getString(R.string.clear),
+                                            tint = Color.Cyan
+                                        )
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(9.dp))
+                            Divider(
+                                color = Color.LightGray,
+                                thickness = 0.5.dp,
+                                modifier = Modifier.padding(horizontal = 15.dp)
+                            )
+                            Spacer(modifier = Modifier.height(9.dp))
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        isRepeatDropdownExpanded.value = true
+                                    }
+                                    .padding(5.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Image(
+                                        imageVector = ImageVector.vectorResource(
+                                            R.drawable.repeat_fill
+                                        ),
+                                        contentDescription = context.getString(R.string.event_remind_repeat),
+                                        colorFilter = ColorFilter.tint(if (viewModel.remindRepeatType.value.isSelected) Color.Black else Color.Gray)
+                                    )
+                                    Column {
+                                        Box {
+                                            Row {
+                                                Spacer(modifier = Modifier.width(11.dp))
+                                                Text(
+                                                    text = context.getString(R.string.event_remind_repeat),
+                                                    style = MaterialTheme.typography.labelLarge,
+                                                    color = if (viewModel.remindRepeatType.value.isSelected) Color.Black else Color.Gray
+                                                )
+                                            }
+                                            DropdownMenu(
+                                                expanded = isRepeatDropdownExpanded.value,
+                                                onDismissRequest = {
+                                                    isRepeatDropdownExpanded.value = false
+                                                }) {
+                                                for (i in RemindRepeatType.entries) {
+                                                    DropdownMenuItem(
+                                                        text = {
+                                                            Row {
+//                                                                Icon(
+//                                                                    imageVector = Icons.Default.Delete,
+//                                                                    contentDescription = context.getString(
+//                                                                        R.string.delete_event
+//                                                                    )
+//                                                                )
+//                                                                Spacer(modifier = Modifier.width(5.dp))
+                                                                Text(
+                                                                    text = i.toHumanReadable(
+                                                                        context
+                                                                    )
+                                                                )
+                                                            }
+                                                        },
+                                                        onClick = {
+                                                            viewModel.onFieldsEvent(
+                                                                SubmitReminderFieldsEvent.OnRemindRepeatTypeChange(
+                                                                    type = i
+                                                                )
+                                                            )
+                                                            isRepeatDropdownExpanded.value = false
+                                                        },
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        if (viewModel.remindRepeatType.value.isSelected) {
+                                            Row {
+                                                Spacer(modifier = Modifier.width(11.dp))
+                                                Text(
+                                                    text = "${context.getString(R.string.repeat_in)} ${
+                                                        viewModel.remindRepeatType.value.type!!.toHumanReadable(
+                                                            context
+                                                        )
+                                                    }",
+                                                    style = MaterialTheme.typography.labelLarge,
+                                                    color = Color.Green
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                                if (viewModel.remindRepeatType.value.isSelected) {
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnRemindRepeatTypeClear)
                                         },
                                     )
                                     {
