@@ -2,7 +2,6 @@ package top.easyware.zanguleh.features.home_widget.event_daily_counter.presentat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +16,11 @@ class EventDailyCounterViewModel @Inject constructor(
     private var _eventList = MutableStateFlow<List<ReminderModel>>(emptyList())
     var eventList: StateFlow<List<ReminderModel>> = _eventList
 
-    fun getEventList() {
+    init {
+        getEventList()
+    }
+
+    private fun getEventList() {
         viewModelScope.launch {
             fullReminderUseCase.getRemindersUseCase().collect { result ->
                 _eventList.value = result
