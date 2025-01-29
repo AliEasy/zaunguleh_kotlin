@@ -377,7 +377,20 @@ class ReminderReceiver : BroadcastReceiver() {
         notificationManager.notify(notificationId, builder.build())
 
         if (repeatType != null && mainRemindDate != null && mainRemindTime != null) {
-            val nextJalaliDate = CalendarUtil.addDaysToJalali(mainRemindDate, 1)
+            val nextJalaliDate = when(repeatType) {
+                RemindRepeatType.DAILY -> {
+                    CalendarUtil.addDaysToJalali(mainRemindDate, 1)
+                }
+                RemindRepeatType.WEEKLY -> {
+                    CalendarUtil.addWeeksToJalali(mainRemindDate, 1)
+                }
+                RemindRepeatType.MONTHLY -> {
+                    CalendarUtil.addMonthsToJalali(mainRemindDate, 1)
+                }
+                RemindRepeatType.YEARLY -> {
+                    CalendarUtil.addYearsToJalali(mainRemindDate, 1)
+                }
+            }
             val nextGregorianCalendar =
                 CalendarUtil.convertJalaliToGregorian(nextJalaliDate, mainRemindTime)
 
