@@ -629,7 +629,8 @@ fun SubmitReminderScreen(
                             Row {
                                 Image(
                                     imageVector = ImageVector.vectorResource(R.drawable.note_outline),
-                                    contentDescription = context.getString(R.string.note)
+                                    contentDescription = context.getString(R.string.note),
+                                    colorFilter = ColorFilter.tint(if (viewModel.description.value.isHintVisible) Color.Gray else Color.Black)
                                 )
                                 Spacer(modifier = Modifier.width(11.dp))
                                 TransparentHintTextField(
