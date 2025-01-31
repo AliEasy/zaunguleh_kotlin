@@ -3,11 +3,7 @@ package top.easyware.zanguleh.features.home.presentation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,10 +24,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import top.easyware.zanguleh.CalendarScreen
 import top.easyware.zanguleh.R
 import top.easyware.zanguleh.SettingsScreen
-import top.easyware.zanguleh.TasksScreen
 import top.easyware.zanguleh.features.daily_counter.presentation.DailyCounterScreen
 
 @Composable
@@ -77,18 +71,6 @@ fun BottomBar(
             title = context.getString(R.string.daily_counter),
             selectedIcon = ImageVector.vectorResource(R.drawable.counter),
             unSelectedIcon = ImageVector.vectorResource(R.drawable.counter),
-        ),
-        BottomNavigationBarItem(
-            route = BottomNavigationItemsEnum.TASKS,
-            title = context.getString(R.string.tasks),
-            selectedIcon = Icons.Filled.Create,
-            unSelectedIcon = Icons.Outlined.Create,
-        ),
-        BottomNavigationBarItem(
-            route = BottomNavigationItemsEnum.CALENDAR,
-            title = context.getString(R.string.calendar),
-            selectedIcon = Icons.Filled.Build,
-            unSelectedIcon = Icons.Outlined.Build,
         ),
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.SETTINGS,
@@ -152,12 +134,6 @@ fun NavigationGraph(
         composable(BottomNavigationItemsEnum.DAILY_COUNTER.value) {
             DailyCounterScreen(navController = navController)
         }
-        composable(BottomNavigationItemsEnum.TASKS.value) {
-            TasksScreen()
-        }
-        composable(BottomNavigationItemsEnum.CALENDAR.value) {
-            CalendarScreen()
-        }
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()
         }
@@ -173,7 +149,5 @@ data class BottomNavigationBarItem(
 
 enum class BottomNavigationItemsEnum(val value: String) {
     DAILY_COUNTER("DailyCounter"),
-    TASKS("Tasks"),
-    CALENDAR("Calendar"),
     SETTINGS("Settings"),
 }
