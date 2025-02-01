@@ -396,7 +396,7 @@ class ReminderReceiver : BroadcastReceiver() {
 
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val newIntent = Intent(context, ReminderReceiver::class.java).apply {
-                putExtra("title", notificationTitle)
+                putExtra("notificationTitle", notificationTitle)
                 putExtra("notificationId", notificationId)
                 putExtra("repeatTypeStr", repeatType.value)
                 putExtra("mainRemindDate", nextJalaliDate)
