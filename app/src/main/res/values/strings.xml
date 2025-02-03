@@ -35,4 +35,5 @@
     <string name="repeat_in">تکرار به صورت</string>
     <string name="reminder_title_is_empty">عنوان رویداد وارد نشده است</string>
     <string name="reminder_due_date_is_empty">تاریخ رویداد وارد نشده است</string>
+    <string name="nothing_found_to_show">موردی برای نمایش یافت نشد</string>
 </resources>
