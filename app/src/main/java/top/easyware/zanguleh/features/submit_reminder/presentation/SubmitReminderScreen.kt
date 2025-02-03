@@ -553,6 +553,7 @@ fun SubmitReminderScreen(
                                     IconButton(
                                         onClick = {
                                             viewModel.onEvent(SubmitReminderEvent.RemindDateTimePickerClear)
+                                            viewModel.onEvent(SubmitReminderEvent.RemindRepeatTypeClear)
                                         },
                                     )
                                     {
