@@ -1,9 +1,10 @@
 package top.easyware.zanguleh.core.database.reminder.domain.model
 
-import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import top.easyware.zanguleh.R
+import top.easyware.zanguleh.core.util.UiText
 
 enum class ReminderType(val value: String) {
     TASK("Task"),
@@ -17,14 +18,24 @@ enum class RemindRepeatType(val value: String) {
     YEARLY("Yearly")
 }
 
-fun RemindRepeatType.toHumanReadable(context: Context) : String {
+@Composable
+fun RemindRepeatType.toHumanReadable() : String {
     return when (this) {
-        RemindRepeatType.DAILY -> context.getString(R.string.daily)
-        RemindRepeatType.WEEKLY -> context.getString(R.string.weekly)
-        RemindRepeatType.MONTHLY -> context.getString(R.string.monthly)
-        RemindRepeatType.YEARLY -> context.getString(R.string.yearly)
+        RemindRepeatType.DAILY -> UiText.StringResource(R.string.daily).asString()
+        RemindRepeatType.WEEKLY -> UiText.StringResource(R.string.weekly).asString()
+        RemindRepeatType.MONTHLY -> UiText.StringResource(R.string.monthly).asString()
+        RemindRepeatType.YEARLY -> UiText.StringResource(R.string.yearly).asString()
     }
 }
+
+//fun RemindRepeatType.toHumanReadable(context: Context) : String {
+//    return when (this) {
+//        RemindRepeatType.DAILY -> UiText.StringResource(R.string.daily).asString(context)
+//        RemindRepeatType.WEEKLY -> UiText.StringResource(R.string.weekly).asString(context)
+//        RemindRepeatType.MONTHLY -> UiText.StringResource(R.string.monthly).asString(context)
+//        RemindRepeatType.YEARLY -> UiText.StringResource(R.string.yearly).asString(context)
+//    }
+//}
 
 @Entity
 data class ReminderModel(

@@ -26,12 +26,6 @@ import top.easyware.zanguleh.core.database.reminder.domain.model.RemindRepeatTyp
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
 import top.easyware.zanguleh.core.util.CalendarUtil
-import top.easyware.zanguleh.features.submit_reminder.presentation.components.DatePickerState
-import top.easyware.zanguleh.features.submit_reminder.presentation.components.DateTimePickerState
-import top.easyware.zanguleh.features.submit_reminder.presentation.components.IsImportantState
-import top.easyware.zanguleh.features.submit_reminder.presentation.components.RemindRepeatState
-import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
-import top.easyware.zanguleh.features.submit_reminder.presentation.components.TextFieldState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,37 +37,6 @@ class SubmitReminderViewModel @Inject constructor(
     private val _state = mutableStateOf(SubmitReminderState())
     val state = _state
 
-    private val _title = mutableStateOf(
-        TextFieldState()
-    )
-    val title = _title
-
-    private val _description = mutableStateOf(
-        TextFieldState()
-    )
-    val description = _description
-
-    private val _dueDate = mutableStateOf(
-        DatePickerState()
-    )
-    val dueDate = _dueDate
-
-    private val _isImportant = mutableStateOf(
-        IsImportantState()
-    )
-    val isImportant = _isImportant
-
-    private val _remindDateTime = mutableStateOf(
-        DateTimePickerState()
-    )
-    val remindDateTime = _remindDateTime
-
-    private val _remindRepeatType = mutableStateOf(
-        RemindRepeatState()
-    )
-    val remindRepeatType = _remindRepeatType
-
-
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -82,22 +45,12 @@ class SubmitReminderViewModel @Inject constructor(
         data class ScheduleReminder(
             val remindDate: String,
             val remindTime: String,
-            val notifTitle: String,
-            val notifId: Int,
+            val notificationTitle: String,
+            val notificationId: Int,
             val repeatType: RemindRepeatType?
         ) : UiEvent()
 
         data object NavigateBack : UiEvent()
-    }
-
-    private var _reminderId: Int? = null
-
-    fun setTitleHint(hint: String) {
-        _title.value = title.value.copy(hint = hint)
-    }
-
-    fun setDescriptionHint(hint: String) {
-        _description.value = _description.value.copy(hint = hint)
     }
 
     init {
@@ -105,35 +58,34 @@ class SubmitReminderViewModel @Inject constructor(
             if (reminderId != -1) {
                 viewModelScope.launch {
                     fullReminderUseCase.getReminderByIdUseCase(reminderId)?.also { reminder ->
-                        _reminderId = reminder.reminderId
-                        _title.value = title.value.copy(
-                            text = reminder.title,
-                            isHintVisible = reminder.title.isBlank()
+                        _state.value = _state.value.copy(
+                            reminderId = reminder.reminderId,
+                            title = _state.value.title.copy(
+                                text = reminder.title,
+                                isHintVisible = reminder.title.isBlank()
+                            ),
+                            description = _state.value.description.copy(
+                                text = reminder.description ?: "",
+                                isHintVisible = reminder.description.isNullOrBlank()
+                            ),
+                            dueDate = _state.value.dueDate.copy(
+                                persianDate = reminder.reminderDueDatePersian,
+                                gregorianDate = reminder.reminderDueDate,
+                                isHintVisible = reminder.reminderDueDatePersian.isBlank()
+                            ),
+                            isImportant = reminder.isImportant ?: false,
+                            remindDateTime = _state.value.remindDateTime.copy(
+                                persianDate = reminder.remindDatePersian ?: "",
+                                gregorianDate = reminder.remindDate ?: "",
+                                time = reminder.remindTime ?: "",
+                                isSelected = !reminder.remindDate.isNullOrBlank() && !reminder.remindTime.isNullOrBlank()
+                            ),
+                            remindRepeatType = _state.value.remindRepeatType.copy(
+                                type = reminder.remindRepeatType,
+                                isSelected = reminder.remindRepeatType != null
+                            ),
+                            isHereForInsert = false
                         )
-                        _description.value = description.value.copy(
-                            text = reminder.description ?: "",
-                            isHintVisible = reminder.description?.isBlank() ?: true
-                        )
-                        _dueDate.value = dueDate.value.copy(
-                            persianDate = reminder.reminderDueDatePersian,
-                            gregorianDate = reminder.reminderDueDate,
-                            isHintVisible = reminder.reminderDueDatePersian.isBlank()
-                        )
-                        _isImportant.value = isImportant.value.copy(
-                            isImportant = reminder.isImportant ?: false
-                        )
-                        _remindDateTime.value = remindDateTime.value.copy(
-                            persianDate = reminder.remindDatePersian ?: "",
-                            gregorianDate = reminder.remindDate ?: "",
-                            time = reminder.remindTime ?: "",
-                            isSelected = (reminder.remindDate?.isNotBlank()
-                                ?: false) && (reminder.remindTime?.isNotBlank() ?: false)
-                        )
-                        _remindRepeatType.value = remindRepeatType.value.copy(
-                            type = reminder.remindRepeatType,
-                            isSelected = reminder.remindRepeatType != null
-                        )
-                        _state.value = state.value.copy(isHereForInsert = false)
                     }
                 }
             } else {
@@ -144,52 +96,160 @@ class SubmitReminderViewModel @Inject constructor(
 
     fun onEvent(event: SubmitReminderEvent) {
         when (event) {
-            SubmitReminderEvent.EditReminderEnable -> {
+            is SubmitReminderEvent.EditReminderEnable -> {
                 _state.value =
                     state.value.copy(isEditMode = true)
             }
 
-            SubmitReminderEvent.EditReminderCancel -> {
+            is SubmitReminderEvent.EditReminderCancel -> {
                 _state.value =
                     state.value.copy(isEditMode = false)
             }
 
-            SubmitReminderEvent.DeleteReminder -> {
+            is SubmitReminderEvent.DeleteReminder -> {
                 deleteReminder()
             }
 
-            SubmitReminderEvent.SubmitReminder -> {
+            is SubmitReminderEvent.SubmitReminder -> {
                 submitReminder()
             }
+
+            is SubmitReminderEvent.TitleChangeValue -> {
+                _state.value = _state.value.copy(
+                    title = _state.value.title.copy(
+                        text = event.value,
+                        isHintVisible = event.value.isBlank()
+                    )
+                )
+            }
+
+            is SubmitReminderEvent.DescriptionChangeValue -> {
+                _state.value = _state.value.copy(
+                    description = _state.value.description.copy(
+                        text = event.value,
+                        isHintVisible = event.value.isBlank()
+                    )
+                )
+            }
+
+            is SubmitReminderEvent.IsImportantChange -> {
+                _state.value = _state.value.copy(
+                    isImportant = !_state.value.isImportant
+                )
+            }
+
+            is SubmitReminderEvent.DueDatePickerChange -> {
+                _state.value = _state.value.copy(
+                    dueDate = _state.value.dueDate.copy(
+                        persianDate = event.persianDate,
+                        gregorianDate = event.gregorianDate,
+                        isHintVisible = event.persianDate.isBlank()
+                    )
+                )
+            }
+
+            is SubmitReminderEvent.RemindDateTimePickerChange -> {
+                _state.value = _state.value.copy(
+                    remindDateTime = _state.value.remindDateTime.copy(
+                        persianDate = event.persianDate,
+                        gregorianDate = event.gregorianDate,
+                        time = event.time,
+                        isSelected = event.gregorianDate.isNotBlank() && event.time.isNotBlank()
+                    )
+                )
+            }
+
+            is SubmitReminderEvent.RemindDateTimePickerClear -> {
+                _state.value = _state.value.copy(
+                    remindDateTime = _state.value.remindDateTime.copy(
+                        persianDate = "",
+                        gregorianDate = "",
+                        time = "",
+                        isSelected = false,
+                    )
+                )
+            }
+
+            is SubmitReminderEvent.RemindRepeatTypeChange -> {
+                _state.value = _state.value.copy(
+                    remindRepeatType = _state.value.remindRepeatType.copy(
+                        type = event.type,
+                        isSelected = true
+                    )
+                )
+            }
+
+            is SubmitReminderEvent.RemindRepeatTypeClear -> {
+                _state.value = _state.value.copy(
+                    remindRepeatType = _state.value.remindRepeatType.copy(
+                        type = null,
+                        isSelected = false
+                    )
+                )
+            }
+
+            is SubmitReminderEvent.SetDescriptionHint -> {
+                setDescriptionHint(event.value)
+            }
+
+            is SubmitReminderEvent.SetTitleHint -> {
+                setTitleHint(event.value)
+            }
+
+            is SubmitReminderEvent.SetPageTitle -> {
+                setPageTitle(event.value)
+            }
         }
+    }
+
+    private fun setTitleHint(hint: String) {
+        _state.value = _state.value.copy(
+            title = _state.value.title.copy(
+                hint = hint
+            )
+        )
+    }
+
+    private fun setDescriptionHint(hint: String) {
+        _state.value = _state.value.copy(
+            description = _state.value.description.copy(
+                hint = hint
+            )
+        )
+    }
+
+    private fun setPageTitle(pageTitle: String) {
+        _state.value = _state.value.copy(
+            pageTitle = pageTitle
+        )
     }
 
     private fun submitReminder() {
         viewModelScope.launch {
             val result: Long = fullReminderUseCase.addReminderUseCase(
                 ReminderModel(
-                    reminderId = _reminderId,
-                    title = _title.value.text,
+                    reminderId = _state.value.reminderId,
+                    title = _state.value.title.text,
                     reminderType = "Occasion",
-                    reminderDueDatePersian = _dueDate.value.persianDate,
-                    reminderDueDate = _dueDate.value.gregorianDate,
-                    description = _description.value.text,
-                    isImportant = _isImportant.value.isImportant,
-                    remindDatePersian = _remindDateTime.value.persianDate,
-                    remindDate = _remindDateTime.value.gregorianDate,
-                    remindTime = _remindDateTime.value.time,
-                    remindRepeatType = _remindRepeatType.value.type
+                    reminderDueDatePersian = _state.value.dueDate.persianDate,
+                    reminderDueDate = _state.value.dueDate.gregorianDate,
+                    description = _state.value.description.text,
+                    isImportant = _state.value.isImportant,
+                    remindDatePersian = _state.value.remindDateTime.persianDate,
+                    remindDate = _state.value.remindDateTime.gregorianDate,
+                    remindTime = _state.value.remindDateTime.time,
+                    remindRepeatType = _state.value.remindRepeatType.type
                 )
             )
             if (result > 0) {
-                if (_remindDateTime.value.persianDate.isNotBlank() && _remindDateTime.value.time.isNotBlank()) {
+                if (_state.value.remindDateTime.persianDate.isNotBlank() && _state.value.remindDateTime.time.isNotBlank()) {
                     _eventFlow.emit(
                         UiEvent.ScheduleReminder(
-                            _remindDateTime.value.persianDate,
-                            _remindDateTime.value.time,
-                            _title.value.text,
+                            _state.value.remindDateTime.persianDate,
+                            _state.value.remindDateTime.time,
+                            _state.value.title.text,
                             result.toInt(),
-                            _remindRepeatType.value.type
+                            _state.value.remindRepeatType.type
                         )
                     )
                 }
@@ -202,88 +262,11 @@ class SubmitReminderViewModel @Inject constructor(
 
     private fun deleteReminder() {
         viewModelScope.launch {
-            if ((_reminderId ?: -1) != -1) {
-                fullReminderUseCase.deleteReminderUseCase(_reminderId!!)
+            if ((_state.value.reminderId ?: -1) != -1) {
+                fullReminderUseCase.deleteReminderUseCase(_state.value.reminderId!!)
                 _eventFlow.emit(UiEvent.NavigateBack)
             } else {
                 _eventFlow.emit(UiEvent.ShowSnackBar("error")) //todo
-            }
-        }
-    }
-
-    fun onFieldsEvent(event: SubmitReminderFieldsEvent) {
-        when (event) {
-            is SubmitReminderFieldsEvent.OnTitleChangeValue -> {
-                _title.value = title.value.copy(
-                    text = event.value,
-                    isHintVisible = event.value.isBlank()
-                )
-            }
-
-            is SubmitReminderFieldsEvent.OnTitleChangeFocus -> {
-//                _title.value = title.value.copy(
-//                    isHintVisible = title.value.text.isBlank()
-//                )
-            }
-
-            is SubmitReminderFieldsEvent.OnDescriptionChangeValue -> {
-                _description.value = description.value.copy(
-                    text = event.value,
-                    isHintVisible = event.value.isBlank()
-                )
-            }
-
-            is SubmitReminderFieldsEvent.OnDescriptionChangeFocus -> {
-//                _description.value = description.value.copy(
-//                    isHintVisible = description.value.text.isBlank()
-//                )
-            }
-
-            is SubmitReminderFieldsEvent.OnIsImportantChange -> {
-                _isImportant.value = isImportant.value.copy(
-                    isImportant = !isImportant.value.isImportant
-                )
-            }
-
-            is SubmitReminderFieldsEvent.OnDueDatePickerChange -> {
-                _dueDate.value = dueDate.value.copy(
-                    persianDate = event.persianDate,
-                    gregorianDate = event.gregorianDate,
-                    isHintVisible = event.persianDate.isBlank()
-                )
-            }
-
-            is SubmitReminderFieldsEvent.OnRemindDateTimePickerChange -> {
-                _remindDateTime.value = remindDateTime.value.copy(
-                    persianDate = event.persianDate,
-                    gregorianDate = event.gregorianDate,
-                    time = event.time,
-                    isSelected = event.gregorianDate.isNotBlank() && event.time.isNotBlank()
-                )
-            }
-
-            is SubmitReminderFieldsEvent.OnRemindDateTimePickerClear -> {
-                _remindDateTime.value = remindDateTime.value.copy(
-                    persianDate = "",
-                    gregorianDate = "",
-                    time = "",
-                    isSelected = false,
-                )
-            }
-
-            is SubmitReminderFieldsEvent.OnRemindRepeatTypeChange -> {
-                _remindRepeatType.value = remindRepeatType.value.copy(
-                    type = event.type,
-                    isSelected = true
-                )
-            }
-
-            is SubmitReminderFieldsEvent.OnRemindRepeatTypeClear -> {
-                _remindRepeatType.value =
-                    remindRepeatType.value.copy(
-                        type = null,
-                        isSelected = false,
-                    )
             }
         }
     }
@@ -377,16 +360,19 @@ class ReminderReceiver : BroadcastReceiver() {
         notificationManager.notify(notificationId, builder.build())
 
         if (repeatType != null && mainRemindDate != null && mainRemindTime != null) {
-            val nextJalaliDate = when(repeatType) {
+            val nextJalaliDate = when (repeatType) {
                 RemindRepeatType.DAILY -> {
                     CalendarUtil.addDaysToJalali(mainRemindDate, 1)
                 }
+
                 RemindRepeatType.WEEKLY -> {
                     CalendarUtil.addWeeksToJalali(mainRemindDate, 1)
                 }
+
                 RemindRepeatType.MONTHLY -> {
                     CalendarUtil.addMonthsToJalali(mainRemindDate, 1)
                 }
+
                 RemindRepeatType.YEARLY -> {
                     CalendarUtil.addYearsToJalali(mainRemindDate, 1)
                 }

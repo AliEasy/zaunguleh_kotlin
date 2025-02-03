@@ -6,8 +6,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 
@@ -20,7 +18,6 @@ fun TransparentHintTextField(
     textStyle: TextStyle = TextStyle(),
     hintTextStyle: TextStyle = TextStyle(),
     singleLine: Boolean = true,
-    onFocusChange: (FocusState) -> Unit,
     isHintVisible: Boolean,
     maxLines: Int = 1,
 ) {
@@ -33,10 +30,7 @@ fun TransparentHintTextField(
             singleLine = singleLine,
             textStyle = textStyle,
             modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged {
-                    onFocusChange(it)
-                },
+                .fillMaxWidth(),
             maxLines = maxLines,
             cursorBrush = SolidColor(textStyle.color)
         )

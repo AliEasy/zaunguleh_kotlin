@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -60,8 +61,8 @@ import top.easyware.zanguleh.core.uikit.ButtonComponent
 import top.easyware.zanguleh.core.uikit.ButtonComponentType
 import top.easyware.zanguleh.core.uikit.TimePickerDialog
 import top.easyware.zanguleh.core.uikit.TouchDisable
+import top.easyware.zanguleh.core.util.UiText
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.CustomDialog
-import top.easyware.zanguleh.features.submit_reminder.presentation.components.SubmitReminderFieldsEvent
 import top.easyware.zanguleh.features.submit_reminder.presentation.components.TransparentHintTextField
 
 
@@ -73,7 +74,7 @@ fun SubmitReminderScreen(
     reminderId: Int = -1
 ) {
     val context = LocalContext.current
-    val state = viewModel.state.value
+    val state by viewModel.state
 
     val isAppbarDropdownExpanded = remember { mutableStateOf(false) }
     val isRepeatDropdownExpanded = remember { mutableStateOf(false) }
@@ -82,17 +83,37 @@ fun SubmitReminderScreen(
     val tempRemindDate = remember { mutableStateOf("") }
     val tempRemindDatePersian = remember { mutableStateOf("") }
 
-    val title = if (!state.isEditMode && !state.isHereForInsert) {
-        context.getString(R.string.event)
-    } else if (reminderId == -1) {
-        context.getString(R.string.new_event)
-    } else {
-        context.getString(R.string.edit_event)
-    }
-
     LaunchedEffect(key1 = true) {
-        viewModel.setTitleHint(context.getString(R.string.event_title))
-        viewModel.setDescriptionHint(context.getString(R.string.note))
+        viewModel.onEvent(
+            SubmitReminderEvent.SetTitleHint(
+                UiText.StringResource(R.string.event_title).asString(context)
+            )
+        )
+        viewModel.onEvent(
+            SubmitReminderEvent.SetDescriptionHint(
+                UiText.StringResource(R.string.note).asString(context)
+            )
+        )
+
+        if (!state.isEditMode && !state.isHereForInsert) {
+            viewModel.onEvent(
+                SubmitReminderEvent.SetPageTitle(
+                    UiText.StringResource(R.string.event).asString(context)
+                )
+            )
+        } else if (reminderId == -1) {
+            viewModel.onEvent(
+                SubmitReminderEvent.SetPageTitle(
+                    UiText.StringResource(R.string.new_event).asString(context)
+                )
+            )
+        } else {
+            viewModel.onEvent(
+                SubmitReminderEvent.SetPageTitle(
+                    UiText.StringResource(R.string.edit_event).asString(context)
+                )
+            )
+        }
 
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -109,8 +130,8 @@ fun SubmitReminderScreen(
                         context,
                         event.remindDate,
                         event.remindTime,
-                        event.notifTitle,
-                        event.notifId,
+                        event.notificationTitle,
+                        event.notificationId,
                         event.repeatType
                     )
                 }
@@ -131,7 +152,7 @@ fun SubmitReminderScreen(
                     ),
                     title = {
                         Text(
-                            text = title,
+                            text = state.pageTitle,
                             style = MaterialTheme.typography.headlineLarge,
                         )
                     },
@@ -147,7 +168,8 @@ fun SubmitReminderScreen(
                         {
                             Icon(
                                 imageVector = Icons.Default.ArrowForward,
-                                contentDescription = context.getString(R.string.get_back),
+                                contentDescription = UiText.StringResource(R.string.get_back)
+                                    .asString(),
                                 tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
@@ -162,7 +184,8 @@ fun SubmitReminderScreen(
                                 Box {
                                     Icon(
                                         imageVector = Icons.Default.MoreVert,
-                                        contentDescription = context.getString(R.string.operation),
+                                        contentDescription = UiText.StringResource(R.string.operation)
+                                            .asString(),
                                         tint = MaterialTheme.colorScheme.onSecondary
                                     )
                                     DropdownMenu(
@@ -175,10 +198,14 @@ fun SubmitReminderScreen(
                                                 Row {
                                                     Icon(
                                                         imageVector = Icons.Default.Delete,
-                                                        contentDescription = context.getString(R.string.delete_event)
+                                                        contentDescription = UiText.StringResource(R.string.delete_event)
+                                                            .asString()
                                                     )
                                                     Spacer(modifier = Modifier.width(5.dp))
-                                                    Text(text = context.getString(R.string.delete_event))
+                                                    Text(
+                                                        text = UiText.StringResource(R.string.delete_event)
+                                                            .asString()
+                                                    )
                                                 }
                                             },
                                             onClick = {
@@ -191,10 +218,14 @@ fun SubmitReminderScreen(
                                                 Row {
                                                     Icon(
                                                         imageVector = Icons.Default.Edit,
-                                                        contentDescription = context.getString(R.string.edit_event)
+                                                        contentDescription = UiText.StringResource(R.string.edit_event)
+                                                            .asString()
                                                     )
                                                     Spacer(modifier = Modifier.width(5.dp))
-                                                    Text(text = context.getString(R.string.edit_event))
+                                                    Text(
+                                                        text = UiText.StringResource(R.string.edit_event)
+                                                            .asString()
+                                                    )
                                                 }
                                             },
                                             onClick = {
@@ -222,7 +253,7 @@ fun SubmitReminderScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             ButtonComponent(
-                                title = context.getString(R.string.submit_event),
+                                title = UiText.StringResource(R.string.submit_event).asString(),
                                 onClick = {
                                     viewModel.onEvent(SubmitReminderEvent.SubmitReminder)
                                 },
@@ -231,7 +262,7 @@ fun SubmitReminderScreen(
                             )
                             Spacer(modifier = Modifier.width(15.dp))
                             ButtonComponent(
-                                title = context.getString(R.string.cancel),
+                                title = UiText.StringResource(R.string.cancel).asString(),
                                 onClick = {
                                     if (state.isHereForInsert) {
                                         navController.navigateUp()
@@ -259,20 +290,13 @@ fun SubmitReminderScreen(
                     ) {
                         Column {
                             TransparentHintTextField(
-                                text = viewModel.title.value.text,
-                                hint = viewModel.title.value.hint,
-                                isHintVisible = viewModel.title.value.isHintVisible,
-                                onValueChange = {
-                                    viewModel.onFieldsEvent(
-                                        SubmitReminderFieldsEvent.OnTitleChangeValue(
-                                            it
-                                        )
-                                    )
-                                },
-                                onFocusChange = {
-                                    viewModel.onFieldsEvent(
-                                        SubmitReminderFieldsEvent.OnTitleChangeFocus(
-                                            it
+                                text = state.title.text,
+                                hint = state.title.hint,
+                                isHintVisible = state.title.isHintVisible,
+                                onValueChange = { value ->
+                                    viewModel.onEvent(
+                                        SubmitReminderEvent.TitleChangeValue(
+                                            value
                                         )
                                     )
                                 },
@@ -306,8 +330,8 @@ fun SubmitReminderScreen(
                                             .setListener(
                                                 object : PersianPickerListener {
                                                     override fun onDateSelected(persianPickerDate: PersianPickerDate) {
-                                                        viewModel.onFieldsEvent(
-                                                            SubmitReminderFieldsEvent.OnDueDatePickerChange(
+                                                        viewModel.onEvent(
+                                                            SubmitReminderEvent.DueDatePickerChange(
                                                                 persianDate = "${persianPickerDate.persianYear}/${
                                                                     persianPickerDate.persianMonth
                                                                         .toString()
@@ -346,13 +370,15 @@ fun SubmitReminderScreen(
                             ) {
                                 Image(
                                     imageVector = ImageVector.vectorResource(R.drawable.calendar_outline),
-                                    contentDescription = context.getString(R.string.event_date),
+                                    contentDescription = UiText.StringResource(R.string.event_date)
+                                        .asString(),
                                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                if (viewModel.dueDate.value.isHintVisible) {
+                                if (state.dueDate.isHintVisible) {
                                     Text(
-                                        text = context.getString(R.string.event_date),
+                                        text = UiText.StringResource(R.string.event_date)
+                                            .asString(),
                                         style = MaterialTheme.typography.bodyLarge.copy(
                                             fontSize = 18.sp,
                                             color = MaterialTheme.colorScheme.onSecondary
@@ -360,7 +386,7 @@ fun SubmitReminderScreen(
                                     )
                                 } else {
                                     Text(
-                                        text = viewModel.dueDate.value.persianDate,
+                                        text = state.dueDate.persianDate,
                                         style = MaterialTheme.typography.bodyLarge.copy(
                                             fontSize = 18.sp,
                                             color = MaterialTheme.colorScheme.onSecondary
@@ -385,22 +411,24 @@ fun SubmitReminderScreen(
                                 Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnIsImportantChange)
+                                        viewModel.onEvent(SubmitReminderEvent.IsImportantChange)
                                     }
                                     .padding(5.dp)
                             ) {
                                 Image(
                                     imageVector = ImageVector.vectorResource(
-                                        if (viewModel.isImportant.value.isImportant) R.drawable.important_selected
+                                        if (state.isImportant) R.drawable.important_selected
                                         else R.drawable.important_unselected
                                     ),
-                                    contentDescription = context.getString(R.string.event_is_important)
+                                    contentDescription = UiText.StringResource(R.string.event_is_important)
+                                        .asString()
                                 )
                                 Spacer(modifier = Modifier.width(11.dp))
                                 Text(
-                                    text = context.getString(R.string.event_is_important),
+                                    text = UiText.StringResource(R.string.event_is_important)
+                                        .asString(),
                                     style = MaterialTheme.typography.labelLarge,
-                                    color = if (viewModel.isImportant.value.isImportant) Color.Black else Color.Gray
+                                    color = if (state.isImportant) Color.Black else Color.Gray
                                 )
 
                             }
@@ -471,29 +499,31 @@ fun SubmitReminderScreen(
                                         imageVector = ImageVector.vectorResource(
                                             R.drawable.bell
                                         ),
-                                        contentDescription = context.getString(R.string.event_remind_date_time),
-                                        colorFilter = ColorFilter.tint(if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray)
+                                        contentDescription = UiText.StringResource(R.string.event_remind_date_time)
+                                            .asString(),
+                                        colorFilter = ColorFilter.tint(if (state.remindDateTime.isSelected) Color.Black else Color.Gray)
                                     )
                                     Column {
                                         Row {
                                             Spacer(modifier = Modifier.width(11.dp))
                                             Text(
-                                                text = context.getString(R.string.event_remind_date_time),
+                                                text = UiText.StringResource(R.string.event_remind_date_time)
+                                                    .asString(),
                                                 style = MaterialTheme.typography.labelLarge,
-                                                color = if (viewModel.remindDateTime.value.isSelected) Color.Black else Color.Gray
+                                                color = if (state.remindDateTime.isSelected) Color.Black else Color.Gray
                                             )
                                         }
-                                        if (viewModel.remindDateTime.value.isSelected) {
+                                        if (state.remindDateTime.isSelected) {
                                             Row {
                                                 Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
-                                                    text = viewModel.remindDateTime.value.time,
+                                                    text = state.remindDateTime.time,
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
                                                 )
                                                 Spacer(modifier = Modifier.width(5.dp))
                                                 Text(
-                                                    text = viewModel.remindDateTime.value.persianDate,
+                                                    text = state.remindDateTime.persianDate,
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
                                                 )
@@ -501,16 +531,17 @@ fun SubmitReminderScreen(
                                         }
                                     }
                                 }
-                                if (viewModel.remindDateTime.value.isSelected) {
+                                if (state.remindDateTime.isSelected) {
                                     IconButton(
                                         onClick = {
-                                            viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnRemindDateTimePickerClear)
+                                            viewModel.onEvent(SubmitReminderEvent.RemindDateTimePickerClear)
                                         },
                                     )
                                     {
                                         Icon(
                                             imageVector = Icons.Default.Clear,
-                                            contentDescription = context.getString(R.string.clear),
+                                            contentDescription = UiText.StringResource(R.string.clear)
+                                                .asString(),
                                             tint = Color.Cyan
                                         )
                                     }
@@ -540,17 +571,19 @@ fun SubmitReminderScreen(
                                         imageVector = ImageVector.vectorResource(
                                             R.drawable.repeat_fill
                                         ),
-                                        contentDescription = context.getString(R.string.event_remind_repeat),
-                                        colorFilter = ColorFilter.tint(if (viewModel.remindRepeatType.value.isSelected) Color.Black else Color.Gray)
+                                        contentDescription = UiText.StringResource(R.string.event_remind_repeat)
+                                            .asString(),
+                                        colorFilter = ColorFilter.tint(if (state.remindRepeatType.isSelected) Color.Black else Color.Gray)
                                     )
                                     Column {
                                         Box {
                                             Row {
                                                 Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
-                                                    text = context.getString(R.string.event_remind_repeat),
+                                                    text = UiText.StringResource(R.string.event_remind_repeat)
+                                                        .asString(),
                                                     style = MaterialTheme.typography.labelLarge,
-                                                    color = if (viewModel.remindRepeatType.value.isSelected) Color.Black else Color.Gray
+                                                    color = if (state.remindRepeatType.isSelected) Color.Black else Color.Gray
                                                 )
                                             }
                                             DropdownMenu(
@@ -562,23 +595,14 @@ fun SubmitReminderScreen(
                                                     DropdownMenuItem(
                                                         text = {
                                                             Row {
-//                                                                Icon(
-//                                                                    imageVector = Icons.Default.Delete,
-//                                                                    contentDescription = context.getString(
-//                                                                        R.string.delete_event
-//                                                                    )
-//                                                                )
-//                                                                Spacer(modifier = Modifier.width(5.dp))
                                                                 Text(
-                                                                    text = i.toHumanReadable(
-                                                                        context
-                                                                    )
+                                                                    text = i.toHumanReadable()
                                                                 )
                                                             }
                                                         },
                                                         onClick = {
-                                                            viewModel.onFieldsEvent(
-                                                                SubmitReminderFieldsEvent.OnRemindRepeatTypeChange(
+                                                            viewModel.onEvent(
+                                                                SubmitReminderEvent.RemindRepeatTypeChange(
                                                                     type = i
                                                                 )
                                                             )
@@ -588,14 +612,15 @@ fun SubmitReminderScreen(
                                                 }
                                             }
                                         }
-                                        if (viewModel.remindRepeatType.value.isSelected) {
+                                        if (state.remindRepeatType.isSelected) {
                                             Row {
                                                 Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
-                                                    text = "${context.getString(R.string.repeat_in)} ${
-                                                        viewModel.remindRepeatType.value.type!!.toHumanReadable(
-                                                            context
-                                                        )
+                                                    text = "${
+                                                        UiText.StringResource(R.string.repeat_in)
+                                                            .asString()
+                                                    } ${
+                                                        state.remindRepeatType.type!!.toHumanReadable()
                                                     }",
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
@@ -604,16 +629,17 @@ fun SubmitReminderScreen(
                                         }
                                     }
                                 }
-                                if (viewModel.remindRepeatType.value.isSelected) {
+                                if (state.remindRepeatType.isSelected) {
                                     IconButton(
                                         onClick = {
-                                            viewModel.onFieldsEvent(SubmitReminderFieldsEvent.OnRemindRepeatTypeClear)
+                                            viewModel.onEvent(SubmitReminderEvent.RemindRepeatTypeClear)
                                         },
                                     )
                                     {
                                         Icon(
                                             imageVector = Icons.Default.Clear,
-                                            contentDescription = context.getString(R.string.clear),
+                                            contentDescription = UiText.StringResource(R.string.clear)
+                                                .asString(),
                                             tint = Color.Cyan
                                         )
                                     }
@@ -629,22 +655,18 @@ fun SubmitReminderScreen(
                             Row {
                                 Image(
                                     imageVector = ImageVector.vectorResource(R.drawable.note_outline),
-                                    contentDescription = context.getString(R.string.note),
-                                    colorFilter = ColorFilter.tint(if (viewModel.description.value.isHintVisible) Color.Gray else Color.Black)
+                                    contentDescription = UiText.StringResource(R.string.note)
+                                        .asString(),
+                                    colorFilter = ColorFilter.tint(if (state.description.isHintVisible) Color.Gray else Color.Black)
                                 )
                                 Spacer(modifier = Modifier.width(11.dp))
                                 TransparentHintTextField(
-                                    text = viewModel.description.value.text,
-                                    hint = viewModel.description.value.hint,
-                                    isHintVisible = viewModel.description.value.isHintVisible,
-                                    onValueChange = {
-                                        viewModel.onFieldsEvent(
-                                            SubmitReminderFieldsEvent.OnDescriptionChangeValue(it)
-                                        )
-                                    },
-                                    onFocusChange = {
-                                        viewModel.onFieldsEvent(
-                                            SubmitReminderFieldsEvent.OnDescriptionChangeFocus(it)
+                                    text = state.description.text,
+                                    hint = state.description.hint,
+                                    isHintVisible = state.description.isHintVisible,
+                                    onValueChange = { value ->
+                                        viewModel.onEvent(
+                                            SubmitReminderEvent.DescriptionChangeValue(value)
                                         )
                                     },
                                     singleLine = false,
@@ -674,8 +696,8 @@ fun SubmitReminderScreen(
     if (showRemindTimeDialog.value) {
         TimePickerDialog(
             onConfirm = { hour, minute ->
-                viewModel.onFieldsEvent(
-                    SubmitReminderFieldsEvent.OnRemindDateTimePickerChange(
+                viewModel.onEvent(
+                    SubmitReminderEvent.RemindDateTimePickerChange(
                         persianDate = tempRemindDatePersian.value,
                         gregorianDate = tempRemindDate.value,
                         time = String.format("%02d:%02d", hour, minute)
