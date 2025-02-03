@@ -36,8 +36,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,13 +73,6 @@ fun SubmitReminderScreen(
 ) {
     val context = LocalContext.current
     val state by viewModel.state
-
-    val isAppbarDropdownExpanded = remember { mutableStateOf(false) }
-    val isRepeatDropdownExpanded = remember { mutableStateOf(false) }
-    val showSureDeleteDialog = remember { mutableStateOf(false) }
-    val showRemindTimeDialog = remember { mutableStateOf(false) }
-    val tempRemindDate = remember { mutableStateOf("") }
-    val tempRemindDatePersian = remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = true) {
         viewModel.onEvent(
@@ -178,7 +169,11 @@ fun SubmitReminderScreen(
                         if (!state.isEditMode && !state.isHereForInsert)
                             IconButton(
                                 onClick = {
-                                    isAppbarDropdownExpanded.value = !isAppbarDropdownExpanded.value
+                                    viewModel.onEvent(
+                                        SubmitReminderEvent.SetAppbarDropdownExpanded(
+                                            null
+                                        )
+                                    )
                                 })
                             {
                                 Box {
@@ -189,9 +184,13 @@ fun SubmitReminderScreen(
                                         tint = MaterialTheme.colorScheme.onSecondary
                                     )
                                     DropdownMenu(
-                                        expanded = isAppbarDropdownExpanded.value,
+                                        expanded = state.isAppbarDropdownExpanded,
                                         onDismissRequest = {
-                                            isAppbarDropdownExpanded.value = false
+                                            viewModel.onEvent(
+                                                SubmitReminderEvent.SetAppbarDropdownExpanded(
+                                                    false
+                                                )
+                                            )
                                         }) {
                                         DropdownMenuItem(
                                             text = {
@@ -209,8 +208,16 @@ fun SubmitReminderScreen(
                                                 }
                                             },
                                             onClick = {
-                                                showSureDeleteDialog.value = true
-                                                isAppbarDropdownExpanded.value = false
+                                                viewModel.onEvent(
+                                                    SubmitReminderEvent.SetShowSureDeleteDialog(
+                                                        true
+                                                    )
+                                                )
+                                                viewModel.onEvent(
+                                                    SubmitReminderEvent.SetAppbarDropdownExpanded(
+                                                        false
+                                                    )
+                                                )
                                             },
                                         )
                                         DropdownMenuItem(
@@ -460,27 +467,37 @@ fun SubmitReminderScreen(
                                                     override fun onDateSelected(
                                                         persianPickerDate: PersianPickerDate
                                                     ) {
-                                                        tempRemindDatePersian.value =
-                                                            "${persianPickerDate.persianYear}/${
-                                                                persianPickerDate.persianMonth
-                                                                    .toString()
-                                                                    .padStart(2, '0')
-                                                            }/${
-                                                                persianPickerDate.persianDay
-                                                                    .toString()
-                                                                    .padStart(2, '0')
-                                                            }"
-                                                        tempRemindDate.value =
-                                                            "${persianPickerDate.gregorianYear}-${
-                                                                persianPickerDate.gregorianMonth
-                                                                    .toString()
-                                                                    .padStart(2, '0')
-                                                            }-${
-                                                                persianPickerDate.gregorianDay
-                                                                    .toString()
-                                                                    .padStart(2, '0')
-                                                            }"
-                                                        showRemindTimeDialog.value = true
+                                                        viewModel.onEvent(
+                                                            SubmitReminderEvent.SetTempRemindDate(
+                                                                "${persianPickerDate.gregorianYear}-${
+                                                                    persianPickerDate.gregorianMonth
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }-${
+                                                                    persianPickerDate.gregorianDay
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }"
+                                                            )
+                                                        )
+                                                        viewModel.onEvent(
+                                                            SubmitReminderEvent.SetTempRemindDatePersian(
+                                                                "${persianPickerDate.persianYear}/${
+                                                                    persianPickerDate.persianMonth
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }/${
+                                                                    persianPickerDate.persianDay
+                                                                        .toString()
+                                                                        .padStart(2, '0')
+                                                                }"
+                                                            )
+                                                        )
+                                                        viewModel.onEvent(
+                                                            SubmitReminderEvent.SetShowRemindTimeDialog(
+                                                                true
+                                                            )
+                                                        )
                                                     }
 
                                                     override fun onDismissed() {}
@@ -558,7 +575,11 @@ fun SubmitReminderScreen(
                                 Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        isRepeatDropdownExpanded.value = true
+                                        viewModel.onEvent(
+                                            SubmitReminderEvent.SetRepeatDropdownExpanded(
+                                                true
+                                            )
+                                        )
                                     }
                                     .padding(5.dp),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -587,9 +608,13 @@ fun SubmitReminderScreen(
                                                 )
                                             }
                                             DropdownMenu(
-                                                expanded = isRepeatDropdownExpanded.value,
+                                                expanded = state.isRepeatDropdownExpanded,
                                                 onDismissRequest = {
-                                                    isRepeatDropdownExpanded.value = false
+                                                    viewModel.onEvent(
+                                                        SubmitReminderEvent.SetRepeatDropdownExpanded(
+                                                            false
+                                                        )
+                                                    )
                                                 }) {
                                                 for (i in RemindRepeatType.entries) {
                                                     DropdownMenuItem(
@@ -606,7 +631,11 @@ fun SubmitReminderScreen(
                                                                     type = i
                                                                 )
                                                             )
-                                                            isRepeatDropdownExpanded.value = false
+                                                            viewModel.onEvent(
+                                                                SubmitReminderEvent.SetRepeatDropdownExpanded(
+                                                                    false
+                                                                )
+                                                            )
                                                         },
                                                     )
                                                 }
@@ -682,31 +711,31 @@ fun SubmitReminderScreen(
         }
     }
 
-    if (showSureDeleteDialog.value) {
+    if (state.showSureDeleteDialog) {
         CustomDialog(
             onConfirm = {
                 viewModel.onEvent(SubmitReminderEvent.DeleteReminder)
-                showSureDeleteDialog.value = false
+                viewModel.onEvent(SubmitReminderEvent.SetShowSureDeleteDialog(false))
             },
             onDismiss = {
-                showSureDeleteDialog.value = false
+                viewModel.onEvent(SubmitReminderEvent.SetShowSureDeleteDialog(false))
             }
         )
     }
-    if (showRemindTimeDialog.value) {
+    if (state.showRemindTimeDialog) {
         TimePickerDialog(
             onConfirm = { hour, minute ->
                 viewModel.onEvent(
                     SubmitReminderEvent.RemindDateTimePickerChange(
-                        persianDate = tempRemindDatePersian.value,
-                        gregorianDate = tempRemindDate.value,
+                        persianDate = state.tempRemindDatePersian,
+                        gregorianDate = state.tempRemindDate,
                         time = String.format("%02d:%02d", hour, minute)
                     )
                 )
-                showRemindTimeDialog.value = false
+                viewModel.onEvent(SubmitReminderEvent.SetShowRemindTimeDialog(false))
             },
             onDismiss = {
-                showRemindTimeDialog.value = false
+                viewModel.onEvent(SubmitReminderEvent.SetShowRemindTimeDialog(false))
             }
         )
     }

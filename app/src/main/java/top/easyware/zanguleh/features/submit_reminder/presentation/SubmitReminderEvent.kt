@@ -18,4 +18,10 @@ sealed interface SubmitReminderEvent {
     data class SetTitleHint(val value: String) : SubmitReminderEvent
     data class  SetDescriptionHint(val value: String) : SubmitReminderEvent
     data class  SetPageTitle(val value: String) : SubmitReminderEvent
+    data class  SetAppbarDropdownExpanded(val value: Boolean?) : SubmitReminderEvent
+    data class  SetRepeatDropdownExpanded(val value: Boolean?) : SubmitReminderEvent
+    data class  SetShowSureDeleteDialog(val value: Boolean?) : SubmitReminderEvent
+    data class  SetShowRemindTimeDialog(val value: Boolean?) : SubmitReminderEvent
+    data class  SetTempRemindDate(val value: String) : SubmitReminderEvent
+    data class  SetTempRemindDatePersian(val value: String) : SubmitReminderEvent
 }

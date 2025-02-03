@@ -16,4 +16,10 @@ data class SubmitReminderState(
     val remindDateTime: DateTimePickerState = DateTimePickerState(),
     val remindRepeatType: RemindRepeatState = RemindRepeatState(),
     val pageTitle: String = "",
+    val isAppbarDropdownExpanded: Boolean = false,
+    val isRepeatDropdownExpanded: Boolean = false,
+    val showSureDeleteDialog: Boolean = false,
+    val showRemindTimeDialog: Boolean = false,
+    val tempRemindDate: String = "",
+    val tempRemindDatePersian: String = "",
 )

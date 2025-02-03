@@ -189,39 +189,63 @@ class SubmitReminderViewModel @Inject constructor(
             }
 
             is SubmitReminderEvent.SetDescriptionHint -> {
-                setDescriptionHint(event.value)
+                _state.value = _state.value.copy(
+                    description = _state.value.description.copy(
+                        hint = event.value
+                    )
+                )
             }
 
             is SubmitReminderEvent.SetTitleHint -> {
-                setTitleHint(event.value)
+                _state.value = _state.value.copy(
+                    title = _state.value.title.copy(
+                        hint = event.value
+                    )
+                )
             }
 
             is SubmitReminderEvent.SetPageTitle -> {
-                setPageTitle(event.value)
+                _state.value = _state.value.copy(
+                    pageTitle = event.value
+                )
+            }
+
+            is SubmitReminderEvent.SetAppbarDropdownExpanded -> {
+                _state.value = _state.value.copy(
+                    isAppbarDropdownExpanded = event.value ?: !_state.value.isAppbarDropdownExpanded
+                )
+            }
+
+            is SubmitReminderEvent.SetRepeatDropdownExpanded -> {
+                _state.value = _state.value.copy(
+                    isRepeatDropdownExpanded = event.value ?: !_state.value.isRepeatDropdownExpanded
+                )
+            }
+
+            is SubmitReminderEvent.SetShowRemindTimeDialog -> {
+                _state.value = _state.value.copy(
+                    showRemindTimeDialog = event.value ?: !_state.value.showRemindTimeDialog
+                )
+            }
+
+            is SubmitReminderEvent.SetShowSureDeleteDialog -> {
+                _state.value = _state.value.copy(
+                    showSureDeleteDialog = event.value ?: !_state.value.showSureDeleteDialog
+                )
+            }
+
+            is SubmitReminderEvent.SetTempRemindDate -> {
+                _state.value = _state.value.copy(
+                    tempRemindDate = event.value
+                )
+            }
+
+            is SubmitReminderEvent.SetTempRemindDatePersian -> {
+                _state.value = _state.value.copy(
+                    tempRemindDatePersian = event.value
+                )
             }
         }
-    }
-
-    private fun setTitleHint(hint: String) {
-        _state.value = _state.value.copy(
-            title = _state.value.title.copy(
-                hint = hint
-            )
-        )
-    }
-
-    private fun setDescriptionHint(hint: String) {
-        _state.value = _state.value.copy(
-            description = _state.value.description.copy(
-                hint = hint
-            )
-        )
-    }
-
-    private fun setPageTitle(pageTitle: String) {
-        _state.value = _state.value.copy(
-            pageTitle = pageTitle
-        )
     }
 
     private fun submitReminder() {
