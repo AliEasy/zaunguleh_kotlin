@@ -38,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -576,14 +577,15 @@ fun SubmitReminderScreen(
                             Row(
                                 Modifier
                                     .fillMaxWidth()
-                                    .clickable {
+                                    .clickable(enabled = state.remindDateTime.isSelected) {
                                         viewModel.onEvent(
                                             SubmitReminderEvent.SetRepeatDropdownExpanded(
                                                 true
                                             )
                                         )
                                     }
-                                    .padding(5.dp),
+                                    .padding(5.dp)
+                                    .alpha(if (state.remindDateTime.isSelected) 1f else 0.5f),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
