@@ -110,7 +110,7 @@ fun SubmitReminderScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 SubmitReminderViewModel.UiEvent.NavigateBack -> {
-                    navController.navigateUp()
+                    navController.popBackStack()
                 }
 
                 is SubmitReminderViewModel.UiEvent.ShowSnackBar -> {
