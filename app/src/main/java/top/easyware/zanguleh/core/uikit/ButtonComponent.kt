@@ -27,6 +27,7 @@ fun ButtonComponent(
     onClick: () -> Unit,
     buttonType: ButtonComponentType = ButtonComponentType.Filled,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     var buttonModifier = modifier
         .clip(RoundedCornerShape(10.dp))
@@ -55,5 +56,6 @@ fun ButtonComponent(
             else -> ButtonDefaults.buttonColors(containerColor = Color.Transparent)
         },
         shape = RoundedCornerShape(10.dp),
+        enabled = enabled
     )
 }

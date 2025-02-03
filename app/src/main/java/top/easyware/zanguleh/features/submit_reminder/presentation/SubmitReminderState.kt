@@ -22,4 +22,5 @@ data class SubmitReminderState(
     val showRemindTimeDialog: Boolean = false,
     val tempRemindDate: String = "",
     val tempRemindDatePersian: String = "",
+    val formIsValid: Boolean = false,
 )

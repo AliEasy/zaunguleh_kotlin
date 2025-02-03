@@ -26,11 +26,13 @@ import top.easyware.zanguleh.core.database.reminder.domain.model.RemindRepeatTyp
 import top.easyware.zanguleh.core.database.reminder.domain.model.ReminderModel
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminderUseCase
 import top.easyware.zanguleh.core.util.CalendarUtil
+import top.easyware.zanguleh.features.submit_reminder.domain.use_case.SubmitReminderFormValidationUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SubmitReminderViewModel @Inject constructor(
     private val fullReminderUseCase: FullReminderUseCase,
+    private val formValidationUseCase: SubmitReminderFormValidationUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -119,8 +121,9 @@ class SubmitReminderViewModel @Inject constructor(
                     title = _state.value.title.copy(
                         text = event.value,
                         isHintVisible = event.value.isBlank()
-                    )
+                    ),
                 )
+                validateForm()
             }
 
             is SubmitReminderEvent.DescriptionChangeValue -> {
@@ -144,8 +147,9 @@ class SubmitReminderViewModel @Inject constructor(
                         persianDate = event.persianDate,
                         gregorianDate = event.gregorianDate,
                         isHintVisible = event.persianDate.isBlank()
-                    )
+                    ),
                 )
+                validateForm()
             }
 
             is SubmitReminderEvent.RemindDateTimePickerChange -> {
@@ -246,6 +250,18 @@ class SubmitReminderViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun validateForm() {
+        val titleIsValid = formValidationUseCase.validateReminderTitleUseCase.execute(
+            _state.value.title.text
+        ).success
+        val dueDateIsValid = formValidationUseCase.validateReminderDueDateUseCase.execute(
+            _state.value.dueDate.persianDate
+        ).success
+        _state.value = _state.value.copy(
+            formIsValid = titleIsValid && dueDateIsValid
+        )
     }
 
     private fun submitReminder() {

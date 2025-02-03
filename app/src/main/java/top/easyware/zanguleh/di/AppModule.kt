@@ -18,6 +18,9 @@ import top.easyware.zanguleh.core.database.reminder.domain.use_case.FullReminder
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.GetReminderByIdUseCase
 import top.easyware.zanguleh.core.database.reminder.domain.use_case.GetRemindersUseCase
 import top.easyware.zanguleh.features.home.data.preferences.HomeSharedPreferencesManager
+import top.easyware.zanguleh.features.submit_reminder.domain.use_case.SubmitReminderFormValidationUseCase
+import top.easyware.zanguleh.features.submit_reminder.domain.use_case.ValidateReminderDueDateUseCase
+import top.easyware.zanguleh.features.submit_reminder.domain.use_case.ValidateReminderTitleUseCase
 import javax.inject.Singleton
 
 @Module
@@ -61,5 +64,14 @@ object AppModule {
     @Singleton
     fun provideHomeSharedPreferencesManager(sharedPreferences: SharedPreferences): HomeSharedPreferencesManager {
         return HomeSharedPreferencesManager(sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubmitReminderFormValidationUseCase(): SubmitReminderFormValidationUseCase {
+        return SubmitReminderFormValidationUseCase(
+            validateReminderTitleUseCase = ValidateReminderTitleUseCase(),
+            validateReminderDueDateUseCase = ValidateReminderDueDateUseCase()
+        )
     }
 }

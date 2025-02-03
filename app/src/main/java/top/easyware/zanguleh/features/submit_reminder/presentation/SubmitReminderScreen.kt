@@ -265,7 +265,8 @@ fun SubmitReminderScreen(
                                     viewModel.onEvent(SubmitReminderEvent.SubmitReminder)
                                 },
                                 buttonType = ButtonComponentType.Filled,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                enabled = state.formIsValid
                             )
                             Spacer(modifier = Modifier.width(15.dp))
                             ButtonComponent(
