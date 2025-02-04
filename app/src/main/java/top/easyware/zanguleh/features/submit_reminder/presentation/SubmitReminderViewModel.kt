@@ -1,6 +1,7 @@
 package top.easyware.zanguleh.features.submit_reminder.presentation
 
 import android.app.AlarmManager
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,8 +13,11 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -392,9 +396,13 @@ class ReminderReceiver : BroadcastReceiver() {
         }
 
         val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setColor(Color(ContextCompat.getColor(context, R.color.light_orange)).toArgb())
             .setContentTitle(notificationTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(Notification.CATEGORY_ALARM)
+            .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+            .setChannelId(channelId)
             .setAutoCancel(true)
 
         notificationManager.notify(notificationId, builder.build())
