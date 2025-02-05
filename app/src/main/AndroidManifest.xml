@@ -20,8 +20,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Zanguleh"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            >
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,7 +29,7 @@
 
         <receiver
             android:name="top.easyware.zanguleh.features.submit_reminder.presentation.ReminderReceiver"
-            android:exported="true" />
+            android:exported="false" />
 
     </application>
 
