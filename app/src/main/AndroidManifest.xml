@@ -19,7 +19,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name_persian"
             android:theme="@style/Theme.Zanguleh"
             android:windowSoftInputMode="stateHidden|adjustResize"
             >
