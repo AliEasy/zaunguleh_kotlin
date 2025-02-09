@@ -64,5 +64,6 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotliKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 googleDaggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
 
 
