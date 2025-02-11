@@ -1,12 +1,10 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.kotliKapt)
-    alias(libs.plugins.googleDaggerHilt)
 }
 
 android {
-    namespace = "top.easyware.domain"
+    namespace = "top.easyware.home"
     compileSdk = 34
 
     defaultConfig {
@@ -35,17 +33,19 @@ android {
 }
 
 dependencies {
-    implementation(project(":database"))
-    implementation(project(":core"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //dagger hilt
-    implementation(libs.google.dagger.hilt)
-    kapt(libs.google.dagger.hilt.compiler)
+    //compose
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

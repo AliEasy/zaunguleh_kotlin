@@ -6,7 +6,7 @@ import top.easyware.domain.model.PlannerDto
 interface PlannerRepository {
     fun getAllPlanners(): Flow<List<PlannerDto>>
 
-    suspend fun getPlannerById(id: Int): PlannerDto?
+    suspend fun getPlannerById(plannerId: Int): PlannerDto?
 
     suspend fun addPlanner(planner: PlannerDto): Long
 
