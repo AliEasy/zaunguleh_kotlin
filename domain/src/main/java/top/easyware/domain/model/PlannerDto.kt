@@ -2,6 +2,7 @@ package top.easyware.domain.model
 
 data class PlannerDto (
     val plannerId: Int,
+    val type: String,
     val title: String,
     val dueDate: String,
     val dueDatePersian: String,

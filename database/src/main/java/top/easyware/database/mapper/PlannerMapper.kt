@@ -6,6 +6,7 @@ import top.easyware.domain.model.PlannerDto
 fun PlannerEntity.mapper(): PlannerDto {
     return PlannerDto(
         plannerId = plannerId,
+        type = type,
         title = title,
         dueDate = dueDate,
         dueDatePersian = dueDatePersian,
@@ -21,6 +22,7 @@ fun PlannerEntity.mapper(): PlannerDto {
 fun PlannerDto.mapper(): PlannerEntity {
     return PlannerEntity(
         plannerId = plannerId,
+        type = type,
         title = title,
         dueDate = dueDate,
         dueDatePersian = dueDatePersian,

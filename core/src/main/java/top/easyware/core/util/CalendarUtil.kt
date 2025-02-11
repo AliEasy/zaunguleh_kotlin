@@ -1,4 +1,4 @@
-package top.easyware.zanguleh.core.util
+package top.easyware.core.util
 
 import saman.zamani.persiandate.PersianDate
 import saman.zamani.persiandate.PersianDateFormat

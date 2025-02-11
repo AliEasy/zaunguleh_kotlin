@@ -24,6 +24,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import top.easyware.events.EventsScreen
+import top.easyware.settings.SettingsScreen
 
 @Composable
 fun HomeScreen(
@@ -64,7 +66,7 @@ fun BottomBar(
 
     val screens = listOf(
         BottomNavigationBarItem(
-            route = BottomNavigationItemsEnum.DAILY_COUNTER,
+            route = BottomNavigationItemsEnum.EVENTS,
             title = context.getString(R.string.daily_counter),
             selectedIcon = ImageVector.vectorResource(R.drawable.counter),
             unSelectedIcon = ImageVector.vectorResource(R.drawable.counter),
@@ -127,9 +129,11 @@ fun NavigationGraph(
     NavHost(
         navController = bottomNavigationNavController,
         startDestination = viewModel.getLastVisitedTab()
+            ?: BottomNavigationItemsEnum.EVENTS.value
     ) {
-        composable(BottomNavigationItemsEnum.DAILY_COUNTER.value) {
-            DailyCounterScreen(navController = navController)
+        composable(BottomNavigationItemsEnum.EVENTS.value) {
+//            EventsScreen(navController = navController)
+            EventsScreen()
         }
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()
@@ -145,6 +149,6 @@ data class BottomNavigationBarItem(
 )
 
 enum class BottomNavigationItemsEnum(val value: String) {
-    DAILY_COUNTER("DailyCounter"),
+    EVENTS("Events"),
     SETTINGS("Settings"),
 }

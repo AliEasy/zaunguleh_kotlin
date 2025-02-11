@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class PlannerEntity (
     @PrimaryKey val plannerId: Int,
+    val type: String,
     val title: String,
     val dueDate: String,
     val dueDatePersian: String,

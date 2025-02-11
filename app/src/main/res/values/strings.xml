@@ -1,10 +1,5 @@
 <resources>
-    <string name="app_name">Zanguleh</string>
-    <string name="app_name_persian">زنگوله</string>
-    <string name="daily_counter">روز شمار</string>
-    <string name="tasks">وظایف</string>
     <string name="calendar">تقویم</string>
-    <string name="settings">تنظیمات</string>
     <string name="new_event">رویداد جدید</string>
     <string name="edit_event">ویرایش رویداد</string>
     <string name="filter">فیلتر</string>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="daily">روزانه</string>
+    <string name="weekly">هفتگی</string>
+    <string name="monthly">ماهانه</string>
+    <string name="yearly">سالانه</string>
+</resources>

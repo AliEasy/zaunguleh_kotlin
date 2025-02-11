@@ -1,4 +1,4 @@
-package top.easyware.zanguleh.core.util
+package top.easyware.core.util
 
 import android.content.Context
 import androidx.annotation.StringRes
