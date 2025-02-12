@@ -1,0 +1,37 @@
+package top.easyware.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import top.easyware.home.HomeScreen
+import top.easyware.submit_planner.SubmitPlannerScreen
+
+@Composable
+fun AppNavHost(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = AppScreens.HomeScreen.route,
+    ) {
+        composable(
+            route = AppScreens.HomeScreen.route
+        ) {
+            HomeScreen(navController)
+        }
+        composable(
+            route = AppScreens.SubmitReminderScreen.route + "/reminderId={reminderId}",
+            arguments = listOf(navArgument("reminderId") {
+                type = NavType.IntType
+                defaultValue = -1
+                nullable = false
+            })
+        ) { entry ->
+            SubmitPlannerScreen(
+                navController = navController,
+                reminderId = entry.arguments?.getInt("reminderId") ?: -1
+            )
+        }
+    }
+}

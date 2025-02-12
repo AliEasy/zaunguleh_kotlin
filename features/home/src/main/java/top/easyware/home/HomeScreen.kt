@@ -132,8 +132,7 @@ fun NavigationGraph(
             ?: BottomNavigationItemsEnum.EVENTS.value
     ) {
         composable(BottomNavigationItemsEnum.EVENTS.value) {
-//            EventsScreen(navController = navController)
-            EventsScreen()
+            EventsScreen(navController = navController)
         }
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()

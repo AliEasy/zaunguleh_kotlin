@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/events" />
             <option value="$PROJECT_DIR$/features/home" />
+            <option value="$PROJECT_DIR$/features/navigation" />
             <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/submit_planner" />
             <option value="$PROJECT_DIR$/uikit" />

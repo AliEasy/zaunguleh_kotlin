@@ -8,14 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import top.easyware.core.ui.theme.ZangulehTheme
 import top.easyware.core.util.LocaleHelper
-import top.easyware.zanguleh.core.screens.Screens
+import top.easyware.navigation.AppNavHost
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -35,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    AppNavHost(navController)
                 }
             }
         }
