@@ -67,7 +67,7 @@ import top.easyware.uikit.text_filed.TransparentTextField
 @Composable
 fun SubmitPlannerScreen(
     navController: NavController,
-    viewModel: SubmitReminderViewModel = hiltViewModel(),
+    viewModel: SubmitPlannerViewModel = hiltViewModel(),
     reminderId: Int = -1
 ) {
     val context = LocalContext.current
@@ -107,15 +107,15 @@ fun SubmitPlannerScreen(
 
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                SubmitReminderViewModel.UiEvent.NavigateBack -> {
+                is SubmitPlannerEvent.NavigateBack -> {
                     navController.popBackStack()
                 }
 
-                is SubmitReminderViewModel.UiEvent.ShowSnackBar -> {
+                is SubmitPlannerEvent.ShowSnackBar -> {
 
                 }
 
-                is SubmitReminderViewModel.UiEvent.ScheduleReminder -> {
+                is SubmitPlannerEvent.ScheduleReminder -> {
                     viewModel.scheduleReminder(
                         context,
                         event.remindDate,
@@ -468,7 +468,7 @@ fun SubmitPlannerScreen(
                                                         persianPickerDate: PersianPickerDate
                                                     ) {
                                                         viewModel.onEvent(
-                                                            SubmitPlannerIntent.SetTempRemindDate(
+                                                            SubmitPlannerIntent.SetTempReminderDate(
                                                                 "${persianPickerDate.gregorianYear}-${
                                                                     persianPickerDate.gregorianMonth
                                                                         .toString()
@@ -481,7 +481,7 @@ fun SubmitPlannerScreen(
                                                             )
                                                         )
                                                         viewModel.onEvent(
-                                                            SubmitPlannerIntent.SetTempRemindDatePersian(
+                                                            SubmitPlannerIntent.SetTempReminderDatePersian(
                                                                 "${persianPickerDate.persianYear}/${
                                                                     persianPickerDate.persianMonth
                                                                         .toString()
@@ -518,7 +518,7 @@ fun SubmitPlannerScreen(
                                         ),
                                         contentDescription = UiText.StringResource(R.string.event_remind_date_time)
                                             .asString(),
-                                        colorFilter = ColorFilter.tint(if (state.remindDateTime.isSelected) Color.Black else Color.Gray)
+                                        colorFilter = ColorFilter.tint(if (state.reminderDateTime.isSelected) Color.Black else Color.Gray)
                                     )
                                     Column {
                                         Row {
@@ -527,20 +527,20 @@ fun SubmitPlannerScreen(
                                                 text = UiText.StringResource(R.string.event_remind_date_time)
                                                     .asString(),
                                                 style = MaterialTheme.typography.labelLarge,
-                                                color = if (state.remindDateTime.isSelected) Color.Black else Color.Gray
+                                                color = if (state.reminderDateTime.isSelected) Color.Black else Color.Gray
                                             )
                                         }
-                                        if (state.remindDateTime.isSelected) {
+                                        if (state.reminderDateTime.isSelected) {
                                             Row {
                                                 Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
-                                                    text = state.remindDateTime.time,
+                                                    text = state.reminderDateTime.time,
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
                                                 )
                                                 Spacer(modifier = Modifier.width(5.dp))
                                                 Text(
-                                                    text = state.remindDateTime.persianDate,
+                                                    text = state.reminderDateTime.persianDate,
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
                                                 )
@@ -548,11 +548,11 @@ fun SubmitPlannerScreen(
                                         }
                                     }
                                 }
-                                if (state.remindDateTime.isSelected) {
+                                if (state.reminderDateTime.isSelected) {
                                     IconButton(
                                         onClick = {
-                                            viewModel.onEvent(SubmitPlannerIntent.RemindDateTimePickerClear)
-                                            viewModel.onEvent(SubmitPlannerIntent.RemindRepeatTypeClear)
+                                            viewModel.onEvent(SubmitPlannerIntent.ReminderDateTimePickerClear)
+                                            viewModel.onEvent(SubmitPlannerIntent.ReminderRepeatTypeClear)
                                         },
                                     )
                                     {
@@ -575,7 +575,7 @@ fun SubmitPlannerScreen(
                             Row(
                                 Modifier
                                     .fillMaxWidth()
-                                    .clickable(enabled = state.remindDateTime.isSelected) {
+                                    .clickable(enabled = state.reminderDateTime.isSelected) {
                                         viewModel.onEvent(
                                             SubmitPlannerIntent.SetRepeatDropdownExpanded(
                                                 true
@@ -583,7 +583,7 @@ fun SubmitPlannerScreen(
                                         )
                                     }
                                     .padding(5.dp)
-                                    .alpha(if (state.remindDateTime.isSelected) 1f else 0.5f),
+                                    .alpha(if (state.reminderDateTime.isSelected) 1f else 0.5f),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
@@ -596,7 +596,7 @@ fun SubmitPlannerScreen(
                                         ),
                                         contentDescription = UiText.StringResource(R.string.event_remind_repeat)
                                             .asString(),
-                                        colorFilter = ColorFilter.tint(if (state.remindRepeatType.isSelected) Color.Black else Color.Gray)
+                                        colorFilter = ColorFilter.tint(if (state.reminderRepeatType.isSelected) Color.Black else Color.Gray)
                                     )
                                     Column {
                                         Box {
@@ -606,7 +606,7 @@ fun SubmitPlannerScreen(
                                                     text = UiText.StringResource(R.string.event_remind_repeat)
                                                         .asString(),
                                                     style = MaterialTheme.typography.labelLarge,
-                                                    color = if (state.remindRepeatType.isSelected) Color.Black else Color.Gray
+                                                    color = if (state.reminderRepeatType.isSelected) Color.Black else Color.Gray
                                                 )
                                             }
                                             DropdownMenu(
@@ -630,7 +630,7 @@ fun SubmitPlannerScreen(
                                                         },
                                                         onClick = {
                                                             viewModel.onEvent(
-                                                                SubmitPlannerIntent.RemindRepeatTypeChange(
+                                                                SubmitPlannerIntent.ReminderRepeatTypeChange(
                                                                     type = i
                                                                 )
                                                             )
@@ -644,7 +644,7 @@ fun SubmitPlannerScreen(
                                                 }
                                             }
                                         }
-                                        if (state.remindRepeatType.isSelected) {
+                                        if (state.reminderRepeatType.isSelected) {
                                             Row {
                                                 Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
@@ -652,7 +652,7 @@ fun SubmitPlannerScreen(
                                                         UiText.StringResource(R.string.repeat_in)
                                                             .asString()
                                                     } ${
-                                                        state.remindRepeatType.type!!.toHumanReadable()
+                                                        state.reminderRepeatType.type!!.toHumanReadable()
                                                     }",
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
@@ -661,10 +661,10 @@ fun SubmitPlannerScreen(
                                         }
                                     }
                                 }
-                                if (state.remindRepeatType.isSelected) {
+                                if (state.reminderRepeatType.isSelected) {
                                     IconButton(
                                         onClick = {
-                                            viewModel.onEvent(SubmitPlannerIntent.RemindRepeatTypeClear)
+                                            viewModel.onEvent(SubmitPlannerIntent.ReminderRepeatTypeClear)
                                         },
                                     )
                                     {
@@ -725,13 +725,13 @@ fun SubmitPlannerScreen(
             }
         )
     }
-    if (state.showRemindTimeDialog) {
+    if (state.showReminderTimeDialog) {
         TimePickerDialog(
             onConfirm = { hour, minute ->
                 viewModel.onEvent(
-                    SubmitPlannerIntent.RemindDateTimePickerChange(
-                        persianDate = state.tempRemindDatePersian,
-                        gregorianDate = state.tempRemindDate,
+                    SubmitPlannerIntent.ReminderDateTimePickerChange(
+                        persianDate = state.tempReminderDatePersian,
+                        gregorianDate = state.tempReminderDate,
                         time = String.format("%02d:%02d", hour, minute)
                     )
                 )

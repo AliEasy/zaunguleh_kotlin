@@ -5,15 +5,15 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class PlannerEntity (
-    @PrimaryKey val plannerId: Int,
+    @PrimaryKey val plannerId: Int? = null,
     val type: String,
     val title: String,
     val dueDate: String,
     val dueDatePersian: String,
-    val reminderDate: String?,
-    val reminderDatePersian: String?,
-    val reminderTime: String?,
-    val reminderRepeatType: String?,
-    val isImportant: Boolean?,
-    val description: String?,
+    val reminderDate: String? = null,
+    val reminderDatePersian: String? = null,
+    val reminderTime: String? = null,
+    val reminderRepeatType: String? = null,
+    val isImportant: Boolean? = null,
+    val description: String? = null,
 )

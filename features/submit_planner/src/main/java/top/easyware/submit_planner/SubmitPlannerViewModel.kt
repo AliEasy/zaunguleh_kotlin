@@ -29,11 +29,14 @@ import top.easyware.core.util.CalendarUtil
 import top.easyware.domain.model.PlannerDto
 import top.easyware.domain.model.PlannerTypeEnum
 import top.easyware.domain.model.ReminderRepeatTypeEnum
+import top.easyware.domain.usecase.planner.FullPlannerUseCase
+import top.easyware.domain.usecase.submit_planner_form_validation.SubmitPlannerFormValidationUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SubmitPlannerViewModel @Inject constructor(
-    private val
+    private val fullPlannerUseCase: FullPlannerUseCase,
+    private val formValidationUseCase: SubmitPlannerFormValidationUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -47,32 +50,32 @@ class SubmitPlannerViewModel @Inject constructor(
         savedStateHandle.get<Int>("reminderId")?.let { reminderId ->
             if (reminderId != -1) {
                 viewModelScope.launch {
-                    fullReminderUseCase.getReminderByIdUseCase(reminderId)?.also { reminder ->
+                    fullPlannerUseCase.getPlannerByIdUseCase(reminderId)?.also { planner ->
                         _state.value = _state.value.copy(
-                            reminderId = reminder.reminderId,
+                            plannerId = planner.plannerId,
                             title = _state.value.title.copy(
-                                text = reminder.title,
-                                isHintVisible = reminder.title.isBlank()
+                                text = planner.title,
+                                isHintVisible = planner.title.isBlank()
                             ),
                             description = _state.value.description.copy(
-                                text = reminder.description ?: "",
-                                isHintVisible = reminder.description.isNullOrBlank()
+                                text = planner.description ?: "",
+                                isHintVisible = planner.description.isNullOrBlank()
                             ),
                             dueDate = _state.value.dueDate.copy(
-                                persianDate = reminder.reminderDueDatePersian,
-                                gregorianDate = reminder.reminderDueDate,
-                                isHintVisible = reminder.reminderDueDatePersian.isBlank()
+                                persianDate = planner.dueDatePersian,
+                                gregorianDate = planner.dueDate,
+                                isHintVisible = planner.dueDatePersian.isBlank()
                             ),
-                            isImportant = reminder.isImportant ?: false,
-                            remindDateTime = _state.value.remindDateTime.copy(
-                                persianDate = reminder.remindDatePersian ?: "",
-                                gregorianDate = reminder.remindDate ?: "",
-                                time = reminder.remindTime ?: "",
-                                isSelected = !reminder.remindDate.isNullOrBlank() && !reminder.remindTime.isNullOrBlank()
+                            isImportant = planner.isImportant ?: false,
+                            reminderDateTime = _state.value.reminderDateTime.copy(
+                                persianDate = planner.reminderDatePersian ?: "",
+                                gregorianDate = planner.reminderDate ?: "",
+                                time = planner.reminderTime ?: "",
+                                isSelected = !planner.reminderDate.isNullOrBlank() && !planner.reminderTime.isNullOrBlank()
                             ),
-                            remindRepeatType = _state.value.remindRepeatType.copy(
-                                type = reminder.remindRepeatType,
-                                isSelected = reminder.remindRepeatType != null
+                            reminderRepeatType = _state.value.reminderRepeatType.copy(
+                                type = planner.reminderRepeatType,
+                                isSelected = planner.reminderRepeatType != null
                             ),
                             isHereForInsert = false
                         )
@@ -140,9 +143,9 @@ class SubmitPlannerViewModel @Inject constructor(
                 validateForm()
             }
 
-            is SubmitPlannerIntent.RemindDateTimePickerChange -> {
+            is SubmitPlannerIntent.ReminderDateTimePickerChange -> {
                 _state.value = _state.value.copy(
-                    remindDateTime = _state.value.remindDateTime.copy(
+                    reminderDateTime = _state.value.reminderDateTime.copy(
                         persianDate = event.persianDate,
                         gregorianDate = event.gregorianDate,
                         time = event.time,
@@ -151,9 +154,9 @@ class SubmitPlannerViewModel @Inject constructor(
                 )
             }
 
-            is SubmitPlannerIntent.RemindDateTimePickerClear -> {
+            is SubmitPlannerIntent.ReminderDateTimePickerClear -> {
                 _state.value = _state.value.copy(
-                    remindDateTime = _state.value.remindDateTime.copy(
+                    reminderDateTime = _state.value.reminderDateTime.copy(
                         persianDate = "",
                         gregorianDate = "",
                         time = "",
@@ -162,18 +165,18 @@ class SubmitPlannerViewModel @Inject constructor(
                 )
             }
 
-            is SubmitPlannerIntent.RemindRepeatTypeChange -> {
+            is SubmitPlannerIntent.ReminderRepeatTypeChange -> {
                 _state.value = _state.value.copy(
-                    remindRepeatType = _state.value.remindRepeatType.copy(
+                    reminderRepeatType = _state.value.reminderRepeatType.copy(
                         type = event.type,
                         isSelected = true
                     )
                 )
             }
 
-            is SubmitPlannerIntent.RemindRepeatTypeClear -> {
+            is SubmitPlannerIntent.ReminderRepeatTypeClear -> {
                 _state.value = _state.value.copy(
-                    remindRepeatType = _state.value.remindRepeatType.copy(
+                    reminderRepeatType = _state.value.reminderRepeatType.copy(
                         type = null,
                         isSelected = false
                     )
@@ -216,7 +219,7 @@ class SubmitPlannerViewModel @Inject constructor(
 
             is SubmitPlannerIntent.SetShowRemindTimeDialog -> {
                 _state.value = _state.value.copy(
-                    showRemindTimeDialog = event.value ?: !_state.value.showRemindTimeDialog
+                    showReminderTimeDialog = event.value ?: !_state.value.showReminderTimeDialog
                 )
             }
 
@@ -226,27 +229,27 @@ class SubmitPlannerViewModel @Inject constructor(
                 )
             }
 
-            is SubmitPlannerIntent.SetTempRemindDate -> {
+            is SubmitPlannerIntent.SetTempReminderDate -> {
                 _state.value = _state.value.copy(
-                    tempRemindDate = event.value
+                    tempReminderDate = event.value
                 )
             }
 
-            is SubmitPlannerIntent.SetTempRemindDatePersian -> {
+            is SubmitPlannerIntent.SetTempReminderDatePersian -> {
                 _state.value = _state.value.copy(
-                    tempRemindDatePersian = event.value
+                    tempReminderDatePersian = event.value
                 )
             }
         }
     }
 
     private fun validateForm() {
-        val titleIsValid = formValidationUseCase.validateReminderTitleUseCase.execute(
+        val titleIsValid = formValidationUseCase.validatePlannerTitleUseCase.execute(
             _state.value.title.text
-        ).success
-        val dueDateIsValid = formValidationUseCase.validateReminderDueDateUseCase.execute(
+        ).isValid
+        val dueDateIsValid = formValidationUseCase.validatePlannerDueDateUseCase.execute(
             _state.value.dueDate.persianDate
-        ).success
+        ).isValid
         _state.value = _state.value.copy(
             formIsValid = titleIsValid && dueDateIsValid
         )
@@ -254,30 +257,30 @@ class SubmitPlannerViewModel @Inject constructor(
 
     private fun submitReminder() {
         viewModelScope.launch {
-            val result: Long = fullReminderUseCase.addReminderUseCase(
+            val result: Long = fullPlannerUseCase.addPlannerUseCase(
                 PlannerDto(
-                    plannerId = _state.value.reminderId,
+                    plannerId = _state.value.plannerId,
                     title = _state.value.title.text,
                     type = PlannerTypeEnum.EVENT.value,
                     dueDatePersian = _state.value.dueDate.persianDate,
                     dueDate = _state.value.dueDate.gregorianDate,
                     description = _state.value.description.text,
                     isImportant = _state.value.isImportant,
-                    reminderDatePersian = _state.value.remindDateTime.persianDate,
-                    reminderDate = _state.value.remindDateTime.gregorianDate,
-                    reminderTime = _state.value.remindDateTime.time,
-                    reminderRepeatType = _state.value.remindRepeatType.type
+                    reminderDatePersian = _state.value.reminderDateTime.persianDate,
+                    reminderDate = _state.value.reminderDateTime.gregorianDate,
+                    reminderTime = _state.value.reminderDateTime.time,
+                    reminderRepeatType = _state.value.reminderRepeatType.type
                 )
             )
             if (result > 0) {
-                if (_state.value.remindDateTime.persianDate.isNotBlank() && _state.value.remindDateTime.time.isNotBlank()) {
+                if (_state.value.reminderDateTime.persianDate.isNotBlank() && _state.value.reminderDateTime.time.isNotBlank()) {
                     _eventFlow.emit(
                         SubmitPlannerEvent.ScheduleReminder(
-                            _state.value.remindDateTime.persianDate,
-                            _state.value.remindDateTime.time,
+                            _state.value.reminderDateTime.persianDate,
+                            _state.value.reminderDateTime.time,
                             _state.value.title.text,
                             result.toInt(),
-                            _state.value.remindRepeatType.type
+                            _state.value.reminderRepeatType.type
                         )
                     )
                 }
@@ -290,8 +293,8 @@ class SubmitPlannerViewModel @Inject constructor(
 
     private fun deleteReminder() {
         viewModelScope.launch {
-            if ((_state.value.reminderId ?: -1) != -1) {
-                fullReminderUseCase.deleteReminderUseCase(_state.value.reminderId!!)
+            if ((_state.value.plannerId ?: -1) != -1) {
+                fullPlannerUseCase.deletePlannerUseCase(_state.value.plannerId!!)
                 _eventFlow.emit(SubmitPlannerEvent.NavigateBack)
             } else {
                 _eventFlow.emit(SubmitPlannerEvent.ShowSnackBar("error")) //todo
@@ -380,8 +383,8 @@ class ReminderReceiver : BroadcastReceiver() {
         }
 
         val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_stat_name)
-            .setColor(Color(ContextCompat.getColor(context, R.color.light_orange)).toArgb())
+            .setSmallIcon(top.easyware.core.R.drawable.ic_stat_name)
+            .setColor(Color(ContextCompat.getColor(context, top.easyware.core.R.color.light_orange)).toArgb())
             .setContentTitle(notificationTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(Notification.CATEGORY_ALARM)
