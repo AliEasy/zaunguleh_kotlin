@@ -1,4 +1,4 @@
-package top.easyware.events
+package top.easyware.event_list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
