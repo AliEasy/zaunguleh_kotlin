@@ -51,4 +51,7 @@ dependencies {
     //dagger hilt
     implementation(libs.google.dagger.hilt)
     kapt(libs.google.dagger.hilt.compiler)
+
+    //kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.ktx)
 }
