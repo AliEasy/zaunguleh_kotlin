@@ -21,7 +21,7 @@ fun AppNavHost(navController: NavHostController) {
             HomeScreen(navController)
         }
         composable(
-            route = AppScreens.SubmitReminderScreen.route + "/reminderId={reminderId}",
+            route = AppScreens.SubmitPlannerScreen.route + "/reminderId={reminderId}",
             arguments = listOf(navArgument("reminderId") {
                 type = NavType.IntType
                 defaultValue = -1

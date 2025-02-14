@@ -1,11 +1,5 @@
 package top.easyware.event_list
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -31,21 +26,20 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import top.easyware.core.util.UiText
+import top.easyware.event_list.components.EventItem
 import top.easyware.navigation.AppScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventsScreen(
+fun EventListScreen(
     navController: NavController,
-    viewModel: EventsViewModel = hiltViewModel(),
+    viewModel: EventListViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
     val state = viewModel.state.value
 
     Surface(
@@ -56,17 +50,22 @@ fun EventsScreen(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        navController.navigate(AppScreens.SubmitReminderScreen.withOptionalArgs(mapOf("reminderId" to "-1")))
+                        navController.navigate(
+                            AppScreens.SubmitPlannerScreen.withOptionalArgs(
+                                mapOf("reminderId" to "-1")
+                            )
+                        )
                     },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = context.getString(R.string.new_event)
+                            contentDescription = UiText.StringResource(R.string.new_event)
+                                .asString(),
                         )
                     },
                     text = {
                         Text(
-                            text = context.getString(R.string.new_event),
+                            UiText.StringResource(R.string.new_event).asString(),
                             style = MaterialTheme.typography.titleLarge
                         )
                     },
@@ -83,64 +82,32 @@ fun EventsScreen(
                     ),
                     title = {
                         Text(
-                            context.getString(R.string.events),
+                            UiText.StringResource(R.string.event_list).asString(),
                             style = MaterialTheme.typography.headlineLarge,
                         )
                     },
-//                    navigationIcon = {
-//                        IconButton(
-//                            onClick = {
-//                                viewModel.onEvent(DailyCounterEvent.ToggleFilterSection)
-//                            }) {
-//                            Icon(
-//                                imageVector = ImageVector.vectorResource(R.drawable.filter_outline),
-//                                contentDescription = context.getString(R.string.filter),
-//                                tint = MaterialTheme.colorScheme.onSecondary
-//                            )
-//                        }
-//                    },
                 )
             },
 
             ) {
             Column {
-//                AnimatedVisibility(
-//                    modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer),
-//                    visible = state.isFilterSectionVisible,
-//                    enter = fadeIn() + slideInVertically(),
-//                    exit = fadeOut() + slideOutVertically()
-//                ) {
-//                    FilterSection(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(5.dp),
-//                        filter = state.reminderFilter,
-//                        onFilterChanged = { reminderFilter ->
-//                            viewModel.onEvent(
-//                                DailyCounterEvent.GetReminders(
-//                                    reminderFilter
-//                                )
-//                            )
-//                        }
-//                    )
-//                }
                 Spacer(modifier = Modifier.height(16.dp))
-                if (state.reminders.isNotEmpty()) {
+                if (state.eventList.isNotEmpty()) {
                     LazyColumn(
                         modifier = Modifier
                             .padding(horizontal = 25.dp)
                             .fillMaxSize()
                             .padding(it),
                     ) {
-                        items(state.reminders) { reminder ->
-                            ReminderItem(
+                        items(state.eventList) { event ->
+                            EventItem(
                                 modifier = Modifier.fillMaxWidth(),
-                                reminder = reminder,
+                                planner = event,
                                 onTap = {
                                     navController.navigate(
-                                        AppScreens.SubmitReminderScreen.withOptionalArgs(
+                                        AppScreens.SubmitPlannerScreen.withOptionalArgs(
                                             mapOf(
-                                                "reminderId" to reminder.reminderId.toString()
+                                                "reminderId" to event.plannerId.toString()
                                             )
                                         )
                                     )

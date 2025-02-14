@@ -516,7 +516,7 @@ fun SubmitPlannerScreen(
                                         imageVector = ImageVector.vectorResource(
                                             R.drawable.bell
                                         ),
-                                        contentDescription = UiText.StringResource(R.string.event_remind_date_time)
+                                        contentDescription = UiText.StringResource(R.string.event_reminder_date_time)
                                             .asString(),
                                         colorFilter = ColorFilter.tint(if (state.reminderDateTime.isSelected) Color.Black else Color.Gray)
                                     )
@@ -524,7 +524,7 @@ fun SubmitPlannerScreen(
                                         Row {
                                             Spacer(modifier = Modifier.width(11.dp))
                                             Text(
-                                                text = UiText.StringResource(R.string.event_remind_date_time)
+                                                text = UiText.StringResource(R.string.event_reminder_date_time)
                                                     .asString(),
                                                 style = MaterialTheme.typography.labelLarge,
                                                 color = if (state.reminderDateTime.isSelected) Color.Black else Color.Gray
@@ -594,7 +594,7 @@ fun SubmitPlannerScreen(
                                         imageVector = ImageVector.vectorResource(
                                             R.drawable.repeat_fill
                                         ),
-                                        contentDescription = UiText.StringResource(R.string.event_remind_repeat)
+                                        contentDescription = UiText.StringResource(R.string.event_reminder_repeat)
                                             .asString(),
                                         colorFilter = ColorFilter.tint(if (state.reminderRepeatType.isSelected) Color.Black else Color.Gray)
                                     )
@@ -603,7 +603,7 @@ fun SubmitPlannerScreen(
                                             Row {
                                                 Spacer(modifier = Modifier.width(11.dp))
                                                 Text(
-                                                    text = UiText.StringResource(R.string.event_remind_repeat)
+                                                    text = UiText.StringResource(R.string.event_reminder_repeat)
                                                         .asString(),
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = if (state.reminderRepeatType.isSelected) Color.Black else Color.Gray

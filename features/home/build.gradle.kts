@@ -35,7 +35,7 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":features:settings"))
-    implementation(project(":features:events"))
+    implementation(project(":features:event_list"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

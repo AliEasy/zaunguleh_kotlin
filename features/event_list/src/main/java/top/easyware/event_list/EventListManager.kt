@@ -5,7 +5,3 @@ import top.easyware.domain.model.PlannerDto
 data class EventListState(
     val eventList: List<PlannerDto> = emptyList(),
 )
-
-sealed class EventListIntent {
-    data object GetEventList : EventListIntent()
-}

@@ -2,8 +2,7 @@ package top.easyware.navigation
 
 sealed class AppScreens(val route: String) {
     data object HomeScreen : AppScreens("HomeScreen")
-    data object SubmitReminderScreen : AppScreens("SubmitReminderScreen")
-
+    data object SubmitPlannerScreen : AppScreens("SubmitPlannerScreen")
     fun withOptionalArgs(args: Map<String, String>): String {
         return buildString {
             append(route)

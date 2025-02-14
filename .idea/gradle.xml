@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/event_list" />
-            <option value="$PROJECT_DIR$/features/events" />
             <option value="$PROJECT_DIR$/features/home" />
             <option value="$PROJECT_DIR$/features/navigation" />
             <option value="$PROJECT_DIR$/features/settings" />

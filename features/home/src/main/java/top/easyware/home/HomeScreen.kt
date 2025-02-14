@@ -24,7 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import top.easyware.events.EventsScreen
+import top.easyware.event_list.EventListScreen
 import top.easyware.settings.SettingsScreen
 
 @Composable
@@ -132,7 +132,7 @@ fun NavigationGraph(
             ?: BottomNavigationItemsEnum.EVENTS.value
     ) {
         composable(BottomNavigationItemsEnum.EVENTS.value) {
-            EventsScreen(navController = navController)
+            EventListScreen(navController = navController)
         }
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()

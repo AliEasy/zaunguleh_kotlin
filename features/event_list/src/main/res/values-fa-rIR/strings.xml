@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="new_event">رویداد جدید</string>
-    <string name="events_list">رویداد ها</string>
+    <string name="event_list">رویداد ها</string>
     <string name="nothing_found_to_show">موردی برای نمایش یافت نشد</string>
+    <string name="event_is_important">این رویداد مهم است</string>
 </resources>
