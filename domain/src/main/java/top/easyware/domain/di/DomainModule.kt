@@ -3,6 +3,7 @@ package top.easyware.domain.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import top.easyware.domain.repository.PlannerRepository
 import top.easyware.domain.repository.SharedPreferencesRepository
 import top.easyware.domain.usecase.planner.AddPlannerUseCase
@@ -18,7 +19,7 @@ import top.easyware.domain.usecase.submit_planner_form_validation.ValidatePlanne
 import javax.inject.Singleton
 
 @Module
-@InstallIn
+@InstallIn(SingletonComponent::class)
 object DomainModule {
     @Provides
     @Singleton
