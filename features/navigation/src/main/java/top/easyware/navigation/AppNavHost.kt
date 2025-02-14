@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import top.easyware.core.screens.AppScreens
 import top.easyware.home.HomeScreen
 import top.easyware.submit_planner.SubmitPlannerScreen
 

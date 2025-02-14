@@ -34,7 +34,6 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":features:navigation"))
     implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)

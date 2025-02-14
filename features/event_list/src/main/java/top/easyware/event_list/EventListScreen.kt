@@ -30,9 +30,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import top.easyware.core.screens.AppScreens
 import top.easyware.core.util.UiText
 import top.easyware.event_list.components.EventItem
-import top.easyware.navigation.AppScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

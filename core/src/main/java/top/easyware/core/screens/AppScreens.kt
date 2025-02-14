@@ -1,4 +1,4 @@
-package top.easyware.navigation
+package top.easyware.core.screens
 
 sealed class AppScreens(val route: String) {
     data object HomeScreen : AppScreens("HomeScreen")
