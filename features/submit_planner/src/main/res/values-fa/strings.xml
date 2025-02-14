@@ -20,4 +20,8 @@
     <string name="repeat_in">تکرار به صورت</string>
     <string name="event_list">تکرار به صورت</string>
     <string name="nothing_found_to_show">تکرار به صورت</string>
+    <string name="sure_delete_event_title">حذف رویداد؟!</string>
+    <string name="sure_delete_event_desc">آیا از حذف رویداد مطمئن هستید؟</string>
+    <string name="yes">بله</string>
+    <string name="no">خیر</string>
 </resources>
