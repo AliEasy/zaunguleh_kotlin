@@ -27,4 +27,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "zanguleh"
 include(":app")
- 
+include(":database")
+include(":domain")
+include(":uikit")
+include(":core")
+include(":features:home")
+include(":features:submit_planner")
+include(":features:settings")
+include(":features:navigation")
+include(":features:event_list")

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="new_event">رویداد جدید</string>
+    <string name="edit_event">ویرایش رویداد</string>
+    <string name="get_back">بازگشت</string>
+    <string name="operation">عملیات</string>
+    <string name="delete_event">حذف رویداد</string>
+    <string name="submit_event">ثبت رویداد</string>
+    <string name="cancel">انصراف</string>
+    <string name="event_title">عنوان رویداد</string>
+    <string name="note">یادداشت</string>
+    <string name="event_is_important">این رویداد مهم است</string>
+    <string name="event_date">تاریخ رویداد</string>
+    <string name="event">رویداد</string>
+    <string name="event_reminder_date_time">تاریخ و ساعت یادآوری رویداد</string>
+    <string name="event_reminder_repeat">تکرار یادآوری رویداد</string>
+    <string name="clear">پاک کردن</string>
+    <string name="reminder">یادآوری</string>
+    <string name="reminders">یادآوری ها</string>
+    <string name="sure_delete_event_title">حذف رویداد؟!</string>
+    <string name="sure_delete_event_desc">آیا از حذف رویداد مطمئن هستید؟</string>
+    <string name="yes">بله</string>
+    <string name="no">خیر</string>
+    <string name="repeat_in">تکرار به صورت</string>
+</resources>
