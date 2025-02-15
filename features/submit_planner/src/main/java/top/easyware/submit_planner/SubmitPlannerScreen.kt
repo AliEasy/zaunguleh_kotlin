@@ -652,7 +652,7 @@ fun SubmitPlannerScreen(
                                                         UiText.StringResource(R.string.repeat_in)
                                                             .asString()
                                                     } ${
-                                                        state.reminderRepeatType.type!!.toHumanReadable()
+                                                        state.reminderRepeatType.type!!.toHumanReadable().asString()
                                                     }",
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green
