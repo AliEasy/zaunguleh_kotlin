@@ -15,4 +15,11 @@ class SharedPreferencesRepositoryImpl @Inject constructor(
         return sharedPreferencesManager.getHomeLastVisitedTab()
     }
 
+    override fun setIntroSliderShowed() {
+        return sharedPreferencesManager.setIntroSliderShowed()
+    }
+
+    override fun getIntroSliderShowed(): Boolean {
+        return sharedPreferencesManager.getIntroSliderShowed()
+    }
 }

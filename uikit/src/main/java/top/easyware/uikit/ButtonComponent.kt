@@ -31,7 +31,6 @@ fun ButtonComponent(
     var buttonModifier = modifier
         .clip(RoundedCornerShape(10.dp))
         .height(55.dp)
-        .fillMaxWidth()
 
     if (buttonType == ButtonComponentType.Outlined) {
         buttonModifier = buttonModifier.border(

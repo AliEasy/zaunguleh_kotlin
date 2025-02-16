@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="zanguleh_desc">با زنگوله\nتولد دوستا و خانوادتو از دست نده</string>
+    <string name="notification_permission_title">دسترسی نوتیفیکیشن</string>
+    <string name="notification_permission_desc">جهت یادآوری وقایع، به دسترسی نوتیفیکیشن نیاز است</string>
+    <string name="continue_label">ادامه</string>
+    <string name="enter_app">ورود به اپلیکیشن</string>
+    <string name="previous">قبلی</string>
+</resources>

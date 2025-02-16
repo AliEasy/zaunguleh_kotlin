@@ -8,13 +8,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import top.easyware.core.screens.AppScreens
 import top.easyware.home.HomeScreen
+import top.easyware.intro_slider.IntroSliderScreen
 import top.easyware.submit_planner.SubmitPlannerScreen
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = AppScreens.HomeScreen.route,
+        startDestination = AppScreens.IntroSliderScreen.route,
     ) {
         composable(
             route = AppScreens.HomeScreen.route
@@ -33,6 +34,11 @@ fun AppNavHost(navController: NavHostController) {
                 navController = navController,
                 reminderId = entry.arguments?.getInt("reminderId") ?: -1
             )
+        }
+        composable(
+            route = AppScreens.IntroSliderScreen.route
+        ) {
+            IntroSliderScreen()
         }
     }
 }

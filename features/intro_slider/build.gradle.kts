@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotliKapt)
+    alias(libs.plugins.googleDaggerHilt)
 }
 
 android {
-    namespace = "top.easyware.navigation"
+    namespace = "top.easyware.intro_slider"
     compileSdk = 34
 
     defaultConfig {
@@ -39,10 +41,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":core"))
-    implementation(project(":features:home"))
-    implementation(project(":features:submit_planner"))
-    implementation(project(":features:intro_slider"))
+    implementation(project(":uikit"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -57,4 +58,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    //dagger hilt
+    implementation(libs.google.dagger.hilt)
+    kapt(libs.google.dagger.hilt.compiler)
 }
