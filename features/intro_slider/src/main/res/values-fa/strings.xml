@@ -6,4 +6,5 @@
     <string name="continue_label">ادامه</string>
     <string name="enter_app">ورود به اپلیکیشن</string>
     <string name="previous">قبلی</string>
+    <string name="permission_request">درخواست دسترسی</string>
 </resources>

@@ -38,7 +38,9 @@ fun AppNavHost(navController: NavHostController) {
         composable(
             route = AppScreens.IntroSliderScreen.route
         ) {
-            IntroSliderScreen()
+            IntroSliderScreen(
+                navController = navController
+            )
         }
     }
 }

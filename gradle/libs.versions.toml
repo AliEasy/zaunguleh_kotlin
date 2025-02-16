@@ -21,6 +21,7 @@ daggerHilt = "2.51.1"
 daggerHiltNavigation = "1.2.0"
 persianDate = "1.7.1"
 persianDatePicker = "1.8.0"
+accompanistPermission = "0.31.1-alpha"
 glance = "1.1.0"
 
 [libraries]
@@ -54,6 +55,7 @@ google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-androi
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "daggerHiltNavigation" }
 persian-date = { group = "com.github.samanzamani", name = "PersianDate", version.ref = "persianDate" }
 persian-date-picker = { group = "com.github.aliab", name = "Persian-Date-Picker-Dialog", version.ref = "persianDatePicker" }
+accompanist-permissions = {group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistPermission"}
 glance-app-widget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
 glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glance" }
 glance-material = { group = "androidx.glance", name = "glance-material", version.ref = "glance" }

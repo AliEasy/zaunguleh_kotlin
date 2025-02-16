@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import top.easyware.core.util.UiText
 import top.easyware.domain.model.IntroSliderDto
 import top.easyware.domain.usecase.intro_slider_showed.IntroSliderShowedUseCase
@@ -11,11 +13,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroSliderViewModel @Inject constructor(
-    private val introSliderShowedUseCase: IntroSliderShowedUseCase
+    private val introSliderShowedUseCase: IntroSliderShowedUseCase,
 ) : ViewModel() {
 
     private val _state = mutableStateOf(IntroSliderState())
     val state = _state
+
+    private val _eventFlow = MutableSharedFlow<IntroSliderEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         _state.value = _state.value.copy(
@@ -40,8 +45,10 @@ class IntroSliderViewModel @Inject constructor(
     }
 
     fun onIntent(intent: IntroSliderIntent) {
-//        when(intent) {
-//
-//        }
+        when (intent) {
+            IntroSliderIntent.EnterApp -> {
+                introSliderShowedUseCase.setIntroSliderShowedUseCase.invoke()
+            }
+        }
     }
 }

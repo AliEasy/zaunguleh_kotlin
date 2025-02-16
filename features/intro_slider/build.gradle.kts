@@ -62,4 +62,7 @@ dependencies {
     //dagger hilt
     implementation(libs.google.dagger.hilt)
     kapt(libs.google.dagger.hilt.compiler)
+
+    //permission manager
+    implementation(libs.accompanist.permissions)
 }

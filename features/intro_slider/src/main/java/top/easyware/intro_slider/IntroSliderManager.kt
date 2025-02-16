@@ -1,6 +1,5 @@
 package top.easyware.intro_slider
 
-import androidx.compose.foundation.pager.PagerState
 import top.easyware.domain.model.IntroSliderDto
 
 data class IntroSliderState(
@@ -8,5 +7,9 @@ data class IntroSliderState(
 )
 
 sealed interface IntroSliderIntent {
+    data object EnterApp : IntroSliderIntent
+}
 
+sealed interface IntroSliderEvent {
+    data object PermissionDenied : IntroSliderEvent
 }

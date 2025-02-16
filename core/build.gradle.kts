@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotliKapt)
+    alias(libs.plugins.googleDaggerHilt)
 }
 
 android {
@@ -51,4 +53,8 @@ dependencies {
 
     //persian date
     implementation(libs.persian.date)
+
+    //dagger hilt
+    implementation(libs.google.dagger.hilt)
+    kapt(libs.google.dagger.hilt.compiler)
 }
