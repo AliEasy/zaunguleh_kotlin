@@ -1,6 +1,7 @@
 package top.easyware.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,10 +13,17 @@ import top.easyware.intro_slider.IntroSliderScreen
 import top.easyware.submit_planner.SubmitPlannerScreen
 
 @Composable
-fun AppNavHost(navController: NavHostController) {
+fun AppNavHostScreen(
+    navController: NavHostController,
+    viewModel: AppNavHostViewModel = hiltViewModel()
+) {
     NavHost(
         navController = navController,
-        startDestination = AppScreens.IntroSliderScreen.route,
+        startDestination = if (viewModel.state.value.introSliderShowed) {
+            AppScreens.HomeScreen.route
+        } else {
+            AppScreens.IntroSliderScreen.route
+        },
     ) {
         composable(
             route = AppScreens.HomeScreen.route

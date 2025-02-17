@@ -12,7 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import top.easyware.core.ui.theme.ZangulehTheme
 import top.easyware.core.util.LocaleHelper
-import top.easyware.navigation.AppNavHost
+import top.easyware.navigation.AppNavHostScreen
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavHost(navController)
+                    AppNavHostScreen(navController)
                 }
             }
         }
