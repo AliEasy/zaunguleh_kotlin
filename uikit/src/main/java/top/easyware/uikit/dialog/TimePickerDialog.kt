@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import top.easyware.core.util.UiText
 import top.easyware.uikit.ButtonComponent
 import top.easyware.uikit.ButtonComponentType
 import top.easyware.uikit.R
@@ -73,7 +74,7 @@ fun TimePickerDialog(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     ButtonComponent(
-                        title = context.getString(R.string.yes),
+                        title = UiText.StringResource(R.string.yes).asString(),
                         onClick = {
                             onConfirm(selectedHour, selectedMinute)
                         },
@@ -82,7 +83,7 @@ fun TimePickerDialog(
                     )
                     Spacer(modifier = Modifier.width(15.dp))
                     ButtonComponent(
-                        title = context.getString(R.string.no),
+                        title = UiText.StringResource(R.string.no).asString(),
                         onClick = {
                             onDismiss()
                         },

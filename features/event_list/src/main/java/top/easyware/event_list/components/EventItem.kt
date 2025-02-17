@@ -20,10 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import top.easyware.core.util.UiText
 import top.easyware.domain.model.PlannerDto
 import top.easyware.event_list.R
 
@@ -33,7 +33,6 @@ fun EventItem(
     planner: PlannerDto,
     onTap: () -> Unit
 ) {
-    val context = LocalContext.current
 
     Box(
         Modifier
@@ -61,7 +60,8 @@ fun EventItem(
                     imageVector = ImageVector.vectorResource(
                         R.drawable.important_selected,
                     ),
-                    contentDescription = context.getString(R.string.event_is_important)
+                    contentDescription = UiText.StringResource(R.string.event_is_important)
+                        .asString()
                 )
                 Text(
                     text = planner.title,

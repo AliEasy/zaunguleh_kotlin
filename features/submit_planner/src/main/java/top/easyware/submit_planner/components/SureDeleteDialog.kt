@@ -15,9 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import top.easyware.core.util.UiText
 import top.easyware.submit_planner.R
 import top.easyware.uikit.ButtonComponent
 import top.easyware.uikit.ButtonComponentType
@@ -28,8 +28,6 @@ fun CustomDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val context = LocalContext.current
-
     Dialog(onDismissRequest = { onDismiss() }) {
         Box(
             modifier = Modifier
@@ -43,11 +41,11 @@ fun CustomDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = context.getString(R.string.sure_delete_event_title),
+                    text = UiText.StringResource(R.string.sure_delete_event_title).asString(),
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Text(
-                    text = context.getString(R.string.sure_delete_event_desc),
+                    text = UiText.StringResource(R.string.sure_delete_event_desc).asString(),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Spacer(modifier = Modifier.height(15.dp))
@@ -56,7 +54,7 @@ fun CustomDialog(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     ButtonComponent(
-                        title = context.getString(R.string.yes),
+                        title = UiText.StringResource(R.string.yes).asString(),
                         onClick = {
                             onConfirm()
                         },
@@ -65,7 +63,7 @@ fun CustomDialog(
                     )
                     Spacer(modifier = Modifier.width(15.dp))
                     ButtonComponent(
-                        title = context.getString(R.string.no),
+                        title = UiText.StringResource(R.string.no).asString(),
                         onClick = {
                             onDismiss()
                         },

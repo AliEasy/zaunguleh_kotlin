@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -24,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import top.easyware.core.util.UiText
 import top.easyware.event_list.EventListScreen
 import top.easyware.settings.SettingsScreen
 
@@ -62,18 +62,16 @@ fun BottomBar(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
-    val context = LocalContext.current
-
     val screens = listOf(
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.EVENTS,
-            title = context.getString(R.string.daily_counter),
+            title = UiText.StringResource(R.string.daily_counter).asString(),
             selectedIcon = ImageVector.vectorResource(R.drawable.counter),
             unSelectedIcon = ImageVector.vectorResource(R.drawable.counter),
         ),
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.SETTINGS,
-            title = context.getString(R.string.settings),
+            title = UiText.StringResource(R.string.settings).asString(),
             selectedIcon = Icons.Filled.Settings,
             unSelectedIcon = Icons.Outlined.Settings,
         )

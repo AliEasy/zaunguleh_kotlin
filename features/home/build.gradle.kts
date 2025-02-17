@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation(project(":domain"))
     implementation(project(":features:settings"))
     implementation(project(":features:event_list"))
