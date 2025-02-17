@@ -99,7 +99,9 @@ fun IntroSliderScreen(
                                     .asString(),
                                 onClick = {
                                     viewModel.onIntent(IntroSliderIntent.EnterApp)
-                                    navController.navigate(AppScreens.HomeScreen)
+                                    navController.navigate(AppScreens.HomeScreen.route) {
+                                        popUpTo(AppScreens.IntroSliderScreen.route) {inclusive = true}
+                                    }
                                 },
                                 buttonType = ButtonComponentType.Filled,
                                 modifier = Modifier.fillMaxWidth()
