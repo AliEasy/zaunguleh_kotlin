@@ -94,7 +94,7 @@ fun BottomBar(
                         restoreState = true
                     }
 
-                    viewModel.saveLastVisitedTab(screen.route.value)
+                    viewModel.onIntent(HomeIntent.SaveLastVisitedTab(screen.route.value))
                 },
                 label = {
                     Text(
@@ -126,7 +126,7 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = bottomNavigationNavController,
-        startDestination = viewModel.getLastVisitedTab()
+        startDestination = viewModel.state.value.lastVisitedTab
             ?: BottomNavigationItemsEnum.EVENTS.value
     ) {
         composable(BottomNavigationItemsEnum.EVENTS.value) {
