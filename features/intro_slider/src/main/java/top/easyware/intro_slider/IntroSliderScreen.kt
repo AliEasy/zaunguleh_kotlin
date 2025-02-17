@@ -12,13 +12,17 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -41,19 +45,27 @@ fun IntroSliderScreen(
 ) {
     val state by viewModel.state
     val scope = rememberCoroutineScope()
-
     val pagerState = rememberPagerState(
         initialPage = 0, pageCount = {
             state.introSliderPages.size
         })
+    val snackbarHostState = remember { SnackbarHostState() }
     val notificationPermissionState =
         rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 IntroSliderEvent.PermissionDenied -> {
-
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            UiText.StringResource(R.string.permission_request_denied_try_again)
+                                .asString(
+                                    context
+                                )
+                        )
+                    }
                 }
             }
         }
@@ -64,6 +76,9 @@ fun IntroSliderScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
             bottomBar = {
                 Row(
                     modifier = Modifier
@@ -100,7 +115,9 @@ fun IntroSliderScreen(
                                 onClick = {
                                     viewModel.onIntent(IntroSliderIntent.EnterApp)
                                     navController.navigate(AppScreens.HomeScreen.route) {
-                                        popUpTo(AppScreens.IntroSliderScreen.route) {inclusive = true}
+                                        popUpTo(AppScreens.IntroSliderScreen.route) {
+                                            inclusive = true
+                                        }
                                     }
                                 },
                                 buttonType = ButtonComponentType.Filled,

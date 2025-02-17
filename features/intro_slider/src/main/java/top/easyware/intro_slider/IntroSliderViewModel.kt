@@ -3,9 +3,11 @@ package top.easyware.intro_slider
 import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import top.easyware.core.util.UiText
 import top.easyware.domain.model.IntroSliderDto
 import top.easyware.domain.usecase.intro_slider_showed.IntroSliderShowedUseCase
@@ -48,6 +50,12 @@ class IntroSliderViewModel @Inject constructor(
         when (intent) {
             IntroSliderIntent.EnterApp -> {
                 introSliderShowedUseCase.setIntroSliderShowedUseCase.invoke()
+            }
+
+            IntroSliderIntent.PermissionDenied -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(IntroSliderEvent.PermissionDenied)
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ data class IntroSliderState(
 
 sealed interface IntroSliderIntent {
     data object EnterApp : IntroSliderIntent
+    data object PermissionDenied : IntroSliderIntent
 }
 
 sealed interface IntroSliderEvent {
