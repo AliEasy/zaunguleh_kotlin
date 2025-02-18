@@ -2,9 +2,6 @@ package top.easyware.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -65,16 +62,16 @@ fun BottomBar(
     val screens = listOf(
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.EVENTS,
-            title = UiText.StringResource(R.string.daily_counter).asString(),
+            title = UiText.StringResource(R.string.event).asString(),
             selectedIcon = ImageVector.vectorResource(R.drawable.counter),
             unSelectedIcon = ImageVector.vectorResource(R.drawable.counter),
         ),
-        BottomNavigationBarItem(
-            route = BottomNavigationItemsEnum.SETTINGS,
-            title = UiText.StringResource(R.string.settings).asString(),
-            selectedIcon = Icons.Filled.Settings,
-            unSelectedIcon = Icons.Outlined.Settings,
-        )
+//        BottomNavigationBarItem(
+//            route = BottomNavigationItemsEnum.SETTINGS,
+//            title = UiText.StringResource(R.string.settings).asString(),
+//            selectedIcon = Icons.Filled.Settings,
+//            unSelectedIcon = Icons.Outlined.Settings,
+//        )
     )
 
     NavigationBar {
