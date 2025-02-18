@@ -6,7 +6,7 @@
 
     <application>
         <receiver
-            android:name="top.easyware.submit_planner.ReminderReceiver"
+            android:name=".ReminderReceiver"
             android:exported="false" />
     </application>
 
