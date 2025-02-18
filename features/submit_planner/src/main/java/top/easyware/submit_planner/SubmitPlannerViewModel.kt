@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import top.easyware.core.util.CalendarUtil
+import top.easyware.core.util.UiText
 import top.easyware.domain.model.PlannerDto
 import top.easyware.domain.model.PlannerTypeEnum
 import top.easyware.domain.model.ReminderRepeatTypeEnum
@@ -87,7 +88,7 @@ class SubmitPlannerViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: SubmitPlannerIntent) {
+    fun onIntent(event: SubmitPlannerIntent) {
         when (event) {
             is SubmitPlannerIntent.EditReminderEnable -> {
                 _state.value =
@@ -353,7 +354,7 @@ class SubmitPlannerViewModel @Inject constructor(
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val notificationTitle =
-            intent?.getStringExtra("notificationTitle") ?: context.getString(R.string.reminder)
+            intent?.getStringExtra("notificationTitle") ?: UiText.StringResource(R.string.reminder).asString(context)
         val notificationId = intent?.getIntExtra("notificationId", 0) ?: 0
         val repeatTypeStr = intent?.getStringExtra("repeatTypeStr")
         val repeatType = ReminderRepeatTypeEnum.entries.find { it.value == repeatTypeStr }
@@ -376,7 +377,7 @@ class ReminderReceiver : BroadcastReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                context.getString(R.string.reminders),
+                UiText.StringResource(R.string.reminders).asString(context),
                 NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel)

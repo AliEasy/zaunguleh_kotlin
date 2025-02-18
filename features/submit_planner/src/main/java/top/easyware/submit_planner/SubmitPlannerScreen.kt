@@ -74,31 +74,31 @@ fun SubmitPlannerScreen(
     val state by viewModel.state
 
     LaunchedEffect(key1 = true) {
-        viewModel.onEvent(
+        viewModel.onIntent(
             SubmitPlannerIntent.SetTitleHint(
                 UiText.StringResource(R.string.event_title).asString(context)
             )
         )
-        viewModel.onEvent(
+        viewModel.onIntent(
             SubmitPlannerIntent.SetDescriptionHint(
                 UiText.StringResource(R.string.note).asString(context)
             )
         )
 
         if (!state.isEditMode && !state.isHereForInsert) {
-            viewModel.onEvent(
+            viewModel.onIntent(
                 SubmitPlannerIntent.SetPageTitle(
                     UiText.StringResource(R.string.event).asString(context)
                 )
             )
         } else if (reminderId == -1) {
-            viewModel.onEvent(
+            viewModel.onIntent(
                 SubmitPlannerIntent.SetPageTitle(
                     UiText.StringResource(R.string.new_event).asString(context)
                 )
             )
         } else {
-            viewModel.onEvent(
+            viewModel.onIntent(
                 SubmitPlannerIntent.SetPageTitle(
                     UiText.StringResource(R.string.edit_event).asString(context)
                 )
@@ -150,7 +150,7 @@ fun SubmitPlannerScreen(
                         IconButton(
                             onClick = {
                                 if (state.isEditMode) {
-                                    viewModel.onEvent(SubmitPlannerIntent.EditReminderCancel)
+                                    viewModel.onIntent(SubmitPlannerIntent.EditReminderCancel)
                                 } else {
                                     navController.popBackStack()
                                 }
@@ -168,7 +168,7 @@ fun SubmitPlannerScreen(
                         if (!state.isEditMode && !state.isHereForInsert)
                             IconButton(
                                 onClick = {
-                                    viewModel.onEvent(
+                                    viewModel.onIntent(
                                         SubmitPlannerIntent.SetAppbarDropdownExpanded(
                                             null
                                         )
@@ -185,7 +185,7 @@ fun SubmitPlannerScreen(
                                     DropdownMenu(
                                         expanded = state.isAppbarDropdownExpanded,
                                         onDismissRequest = {
-                                            viewModel.onEvent(
+                                            viewModel.onIntent(
                                                 SubmitPlannerIntent.SetAppbarDropdownExpanded(
                                                     false
                                                 )
@@ -207,12 +207,12 @@ fun SubmitPlannerScreen(
                                                 }
                                             },
                                             onClick = {
-                                                viewModel.onEvent(
+                                                viewModel.onIntent(
                                                     SubmitPlannerIntent.SetShowSureDeleteDialog(
                                                         true
                                                     )
                                                 )
-                                                viewModel.onEvent(
+                                                viewModel.onIntent(
                                                     SubmitPlannerIntent.SetAppbarDropdownExpanded(
                                                         false
                                                     )
@@ -235,7 +235,7 @@ fun SubmitPlannerScreen(
                                                 }
                                             },
                                             onClick = {
-                                                viewModel.onEvent(
+                                                viewModel.onIntent(
                                                     SubmitPlannerIntent.EditReminderEnable
                                                 )
                                             },
@@ -261,7 +261,7 @@ fun SubmitPlannerScreen(
                             ButtonComponent(
                                 title = UiText.StringResource(R.string.submit_event).asString(),
                                 onClick = {
-                                    viewModel.onEvent(SubmitPlannerIntent.SubmitReminder)
+                                    viewModel.onIntent(SubmitPlannerIntent.SubmitReminder)
                                 },
                                 buttonType = ButtonComponentType.Filled,
                                 modifier = Modifier.weight(1f),
@@ -274,7 +274,7 @@ fun SubmitPlannerScreen(
                                     if (state.isHereForInsert) {
                                         navController.navigateUp()
                                     } else {
-                                        viewModel.onEvent(SubmitPlannerIntent.EditReminderCancel)
+                                        viewModel.onIntent(SubmitPlannerIntent.EditReminderCancel)
                                     }
                                 },
                                 buttonType = ButtonComponentType.Outlined,
@@ -301,7 +301,7 @@ fun SubmitPlannerScreen(
                                 hint = state.title.hint,
                                 isHintVisible = state.title.isHintVisible,
                                 onValueChange = { value ->
-                                    viewModel.onEvent(
+                                    viewModel.onIntent(
                                         SubmitPlannerIntent.TitleChangeValue(
                                             value
                                         )
@@ -337,7 +337,7 @@ fun SubmitPlannerScreen(
                                             .setListener(
                                                 object : PersianPickerListener {
                                                     override fun onDateSelected(persianPickerDate: PersianPickerDate) {
-                                                        viewModel.onEvent(
+                                                        viewModel.onIntent(
                                                             SubmitPlannerIntent.DueDatePickerChange(
                                                                 persianDate = "${persianPickerDate.persianYear}/${
                                                                     persianPickerDate.persianMonth
@@ -418,7 +418,7 @@ fun SubmitPlannerScreen(
                                 Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        viewModel.onEvent(SubmitPlannerIntent.IsImportantChange)
+                                        viewModel.onIntent(SubmitPlannerIntent.IsImportantChange)
                                     }
                                     .padding(5.dp)
                             ) {
@@ -467,7 +467,7 @@ fun SubmitPlannerScreen(
                                                     override fun onDateSelected(
                                                         persianPickerDate: PersianPickerDate
                                                     ) {
-                                                        viewModel.onEvent(
+                                                        viewModel.onIntent(
                                                             SubmitPlannerIntent.SetTempReminderDate(
                                                                 "${persianPickerDate.gregorianYear}-${
                                                                     persianPickerDate.gregorianMonth
@@ -480,7 +480,7 @@ fun SubmitPlannerScreen(
                                                                 }"
                                                             )
                                                         )
-                                                        viewModel.onEvent(
+                                                        viewModel.onIntent(
                                                             SubmitPlannerIntent.SetTempReminderDatePersian(
                                                                 "${persianPickerDate.persianYear}/${
                                                                     persianPickerDate.persianMonth
@@ -493,7 +493,7 @@ fun SubmitPlannerScreen(
                                                                 }"
                                                             )
                                                         )
-                                                        viewModel.onEvent(
+                                                        viewModel.onIntent(
                                                             SubmitPlannerIntent.SetShowRemindTimeDialog(
                                                                 true
                                                             )
@@ -551,8 +551,8 @@ fun SubmitPlannerScreen(
                                 if (state.reminderDateTime.isSelected) {
                                     IconButton(
                                         onClick = {
-                                            viewModel.onEvent(SubmitPlannerIntent.ReminderDateTimePickerClear)
-                                            viewModel.onEvent(SubmitPlannerIntent.ReminderRepeatTypeClear)
+                                            viewModel.onIntent(SubmitPlannerIntent.ReminderDateTimePickerClear)
+                                            viewModel.onIntent(SubmitPlannerIntent.ReminderRepeatTypeClear)
                                         },
                                     )
                                     {
@@ -576,7 +576,7 @@ fun SubmitPlannerScreen(
                                 Modifier
                                     .fillMaxWidth()
                                     .clickable(enabled = state.reminderDateTime.isSelected) {
-                                        viewModel.onEvent(
+                                        viewModel.onIntent(
                                             SubmitPlannerIntent.SetRepeatDropdownExpanded(
                                                 true
                                             )
@@ -612,7 +612,7 @@ fun SubmitPlannerScreen(
                                             DropdownMenu(
                                                 expanded = state.isRepeatDropdownExpanded,
                                                 onDismissRequest = {
-                                                    viewModel.onEvent(
+                                                    viewModel.onIntent(
                                                         SubmitPlannerIntent.SetRepeatDropdownExpanded(
                                                             false
                                                         )
@@ -629,12 +629,12 @@ fun SubmitPlannerScreen(
                                                             }
                                                         },
                                                         onClick = {
-                                                            viewModel.onEvent(
+                                                            viewModel.onIntent(
                                                                 SubmitPlannerIntent.ReminderRepeatTypeChange(
                                                                     type = i
                                                                 )
                                                             )
-                                                            viewModel.onEvent(
+                                                            viewModel.onIntent(
                                                                 SubmitPlannerIntent.SetRepeatDropdownExpanded(
                                                                     false
                                                                 )
@@ -664,7 +664,7 @@ fun SubmitPlannerScreen(
                                 if (state.reminderRepeatType.isSelected) {
                                     IconButton(
                                         onClick = {
-                                            viewModel.onEvent(SubmitPlannerIntent.ReminderRepeatTypeClear)
+                                            viewModel.onIntent(SubmitPlannerIntent.ReminderRepeatTypeClear)
                                         },
                                     )
                                     {
@@ -697,7 +697,7 @@ fun SubmitPlannerScreen(
                                     hint = state.description.hint,
                                     isHintVisible = state.description.isHintVisible,
                                     onValueChange = { value ->
-                                        viewModel.onEvent(
+                                        viewModel.onIntent(
                                             SubmitPlannerIntent.DescriptionChangeValue(value)
                                         )
                                     },
@@ -717,28 +717,28 @@ fun SubmitPlannerScreen(
     if (state.showSureDeleteDialog) {
         CustomDialog(
             onConfirm = {
-                viewModel.onEvent(SubmitPlannerIntent.DeleteReminder)
-                viewModel.onEvent(SubmitPlannerIntent.SetShowSureDeleteDialog(false))
+                viewModel.onIntent(SubmitPlannerIntent.DeleteReminder)
+                viewModel.onIntent(SubmitPlannerIntent.SetShowSureDeleteDialog(false))
             },
             onDismiss = {
-                viewModel.onEvent(SubmitPlannerIntent.SetShowSureDeleteDialog(false))
+                viewModel.onIntent(SubmitPlannerIntent.SetShowSureDeleteDialog(false))
             }
         )
     }
     if (state.showReminderTimeDialog) {
         TimePickerDialog(
             onConfirm = { hour, minute ->
-                viewModel.onEvent(
+                viewModel.onIntent(
                     SubmitPlannerIntent.ReminderDateTimePickerChange(
                         persianDate = state.tempReminderDatePersian,
                         gregorianDate = state.tempReminderDate,
                         time = String.format("%02d:%02d", hour, minute)
                     )
                 )
-                viewModel.onEvent(SubmitPlannerIntent.SetShowRemindTimeDialog(false))
+                viewModel.onIntent(SubmitPlannerIntent.SetShowRemindTimeDialog(false))
             },
             onDismiss = {
-                viewModel.onEvent(SubmitPlannerIntent.SetShowRemindTimeDialog(false))
+                viewModel.onIntent(SubmitPlannerIntent.SetShowRemindTimeDialog(false))
             }
         )
     }
