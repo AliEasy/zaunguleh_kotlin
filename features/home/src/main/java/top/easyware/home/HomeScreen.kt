@@ -2,6 +2,7 @@ package top.easyware.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -64,8 +66,14 @@ fun BottomBar(
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.EVENTS,
             title = UiText.StringResource(R.string.event).asString(),
-            selectedIcon = ImageVector.vectorResource(R.drawable.counter),
-            unSelectedIcon = ImageVector.vectorResource(R.drawable.counter),
+            selectedIcon = ImageVector.vectorResource(R.drawable.event_filled),
+            unSelectedIcon = ImageVector.vectorResource(R.drawable.event_outlined),
+        ),
+        BottomNavigationBarItem(
+            route = BottomNavigationItemsEnum.TASKS,
+            title = UiText.StringResource(R.string.tasks).asString(),
+            selectedIcon = ImageVector.vectorResource(R.drawable.task_filled),
+            unSelectedIcon = ImageVector.vectorResource(R.drawable.task_outline),
         ),
     )
 
@@ -102,7 +110,8 @@ fun BottomBar(
                         } else {
                             screen.unSelectedIcon
                         },
-                        contentDescription = screen.title
+                        contentDescription = screen.title,
+                        modifier = Modifier.size(25.dp)
                     )
                 }
             )
@@ -131,6 +140,9 @@ fun NavigationGraph(
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()
         }
+        composable(BottomNavigationItemsEnum.TASKS.value) {
+            SettingsScreen()
+        }
     }
 }
 
@@ -143,5 +155,6 @@ data class BottomNavigationBarItem(
 
 enum class BottomNavigationItemsEnum(val value: String) {
     EVENTS("Events"),
+    TASKS("Tasks"),
     SETTINGS("Settings"),
 }
