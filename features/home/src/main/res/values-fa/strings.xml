@@ -2,4 +2,5 @@
 <resources>
     <string name="event">رویداد</string>
     <string name="settings">تنظیمات</string>
+    <string name="tasks">وظایف</string>
 </resources>

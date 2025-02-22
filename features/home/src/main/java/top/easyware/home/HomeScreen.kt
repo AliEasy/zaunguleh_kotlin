@@ -2,6 +2,7 @@ package top.easyware.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -20,14 +22,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import top.easyware.core.screens.AppScreens
 import top.easyware.core.util.UiText
 import top.easyware.event_list.EventListScreen
 import top.easyware.settings.SettingsScreen
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
-    viewModel: HomeViewModel = hiltViewModel()
+    appNavController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val bottomNavigationNavController = rememberNavController()
 
@@ -45,9 +48,9 @@ fun HomeScreen(
             modifier = Modifier.padding(it)
         ) {
             NavigationGraph(
-                navController = navController,
                 bottomNavigationNavController = bottomNavigationNavController,
-                viewModel = viewModel
+                appNavController = appNavController,
+                viewModel = viewModel,
             )
         }
     }
@@ -63,15 +66,15 @@ fun BottomBar(
         BottomNavigationBarItem(
             route = BottomNavigationItemsEnum.EVENTS,
             title = UiText.StringResource(R.string.event).asString(),
-            selectedIcon = ImageVector.vectorResource(R.drawable.counter),
-            unSelectedIcon = ImageVector.vectorResource(R.drawable.counter),
+            selectedIcon = ImageVector.vectorResource(R.drawable.event_filled),
+            unSelectedIcon = ImageVector.vectorResource(R.drawable.event_outlined),
         ),
-//        BottomNavigationBarItem(
-//            route = BottomNavigationItemsEnum.SETTINGS,
-//            title = UiText.StringResource(R.string.settings).asString(),
-//            selectedIcon = Icons.Filled.Settings,
-//            unSelectedIcon = Icons.Outlined.Settings,
-//        )
+        BottomNavigationBarItem(
+            route = BottomNavigationItemsEnum.TASKS,
+            title = UiText.StringResource(R.string.tasks).asString(),
+            selectedIcon = ImageVector.vectorResource(R.drawable.task_filled),
+            unSelectedIcon = ImageVector.vectorResource(R.drawable.task_outline),
+        ),
     )
 
     NavigationBar {
@@ -107,7 +110,8 @@ fun BottomBar(
                         } else {
                             screen.unSelectedIcon
                         },
-                        contentDescription = screen.title
+                        contentDescription = screen.title,
+                        modifier = Modifier.size(25.dp)
                     )
                 }
             )
@@ -117,9 +121,9 @@ fun BottomBar(
 
 @Composable
 fun NavigationGraph(
-    navController: NavHostController,
     bottomNavigationNavController: NavHostController,
-    viewModel: HomeViewModel
+    appNavController: NavHostController,
+    viewModel: HomeViewModel,
 ) {
     NavHost(
         navController = bottomNavigationNavController,
@@ -127,9 +131,16 @@ fun NavigationGraph(
             ?: BottomNavigationItemsEnum.EVENTS.value
     ) {
         composable(BottomNavigationItemsEnum.EVENTS.value) {
-            EventListScreen(navController = navController)
+            EventListScreen(
+                navToSubmitPlannerScreen = {
+                    appNavController.navigate(AppScreens.SubmitPlanner(plannerId = 1))
+                }
+            )
         }
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
+            SettingsScreen()
+        }
+        composable(BottomNavigationItemsEnum.TASKS.value) {
             SettingsScreen()
         }
     }
@@ -144,5 +155,6 @@ data class BottomNavigationBarItem(
 
 enum class BottomNavigationItemsEnum(val value: String) {
     EVENTS("Events"),
+    TASKS("Tasks"),
     SETTINGS("Settings"),
 }

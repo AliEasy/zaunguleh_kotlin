@@ -29,16 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import top.easyware.core.screens.AppScreens
 import top.easyware.core.util.UiText
 import top.easyware.event_list.components.EventItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventListScreen(
-    navController: NavController,
     viewModel: EventListViewModel = hiltViewModel(),
+    navToSubmitPlannerScreen: () -> Unit
 ) {
     val state = viewModel.state.value
 
@@ -50,11 +48,7 @@ fun EventListScreen(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        navController.navigate(
-                            AppScreens.SubmitPlannerScreen.withOptionalArgs(
-                                mapOf("reminderId" to "-1")
-                            )
-                        )
+                        navToSubmitPlannerScreen()
                     },
                     icon = {
                         Icon(
@@ -104,13 +98,7 @@ fun EventListScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 planner = event,
                                 onTap = {
-                                    navController.navigate(
-                                        AppScreens.SubmitPlannerScreen.withOptionalArgs(
-                                            mapOf(
-                                                "reminderId" to event.plannerId.toString()
-                                            )
-                                        )
-                                    )
+                                    navToSubmitPlannerScreen()
                                 },
                             )
                         }
