@@ -48,7 +48,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import ir.hamsaa.persiandatepicker.PersianDatePickerDialog
 import ir.hamsaa.persiandatepicker.api.PersianPickerDate
 import ir.hamsaa.persiandatepicker.api.PersianPickerListener
@@ -66,9 +65,9 @@ import top.easyware.uikit.text_filed.TransparentTextField
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubmitPlannerScreen(
-    navController: NavController,
     viewModel: SubmitPlannerViewModel = hiltViewModel(),
-    reminderId: Int = -1
+    plannerId: Int = -1,
+    onPopBackStack: () -> Unit,
 ) {
     val context = LocalContext.current
     val state by viewModel.state
@@ -91,7 +90,7 @@ fun SubmitPlannerScreen(
                     UiText.StringResource(R.string.event).asString(context)
                 )
             )
-        } else if (reminderId == -1) {
+        } else if (plannerId == -1) {
             viewModel.onIntent(
                 SubmitPlannerIntent.SetPageTitle(
                     UiText.StringResource(R.string.new_event).asString(context)
@@ -108,7 +107,7 @@ fun SubmitPlannerScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is SubmitPlannerEvent.NavigateBack -> {
-                    navController.popBackStack()
+                    onPopBackStack()
                 }
 
                 is SubmitPlannerEvent.ShowSnackBar -> {
@@ -152,7 +151,7 @@ fun SubmitPlannerScreen(
                                 if (state.isEditMode) {
                                     viewModel.onIntent(SubmitPlannerIntent.EditReminderCancel)
                                 } else {
-                                    navController.popBackStack()
+                                    onPopBackStack()
                                 }
                             })
                         {
@@ -272,7 +271,7 @@ fun SubmitPlannerScreen(
                                 title = UiText.StringResource(R.string.cancel).asString(),
                                 onClick = {
                                     if (state.isHereForInsert) {
-                                        navController.navigateUp()
+                                        onPopBackStack()
                                     } else {
                                         viewModel.onIntent(SubmitPlannerIntent.EditReminderCancel)
                                     }

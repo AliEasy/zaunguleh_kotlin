@@ -20,14 +20,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import top.easyware.core.screens.AppScreens
 import top.easyware.core.util.UiText
 import top.easyware.event_list.EventListScreen
 import top.easyware.settings.SettingsScreen
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
-    viewModel: HomeViewModel = hiltViewModel()
+    appNavController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val bottomNavigationNavController = rememberNavController()
 
@@ -45,9 +46,9 @@ fun HomeScreen(
             modifier = Modifier.padding(it)
         ) {
             NavigationGraph(
-                navController = navController,
                 bottomNavigationNavController = bottomNavigationNavController,
-                viewModel = viewModel
+                appNavController = appNavController,
+                viewModel = viewModel,
             )
         }
     }
@@ -66,12 +67,6 @@ fun BottomBar(
             selectedIcon = ImageVector.vectorResource(R.drawable.counter),
             unSelectedIcon = ImageVector.vectorResource(R.drawable.counter),
         ),
-//        BottomNavigationBarItem(
-//            route = BottomNavigationItemsEnum.SETTINGS,
-//            title = UiText.StringResource(R.string.settings).asString(),
-//            selectedIcon = Icons.Filled.Settings,
-//            unSelectedIcon = Icons.Outlined.Settings,
-//        )
     )
 
     NavigationBar {
@@ -117,9 +112,9 @@ fun BottomBar(
 
 @Composable
 fun NavigationGraph(
-    navController: NavHostController,
     bottomNavigationNavController: NavHostController,
-    viewModel: HomeViewModel
+    appNavController: NavHostController,
+    viewModel: HomeViewModel,
 ) {
     NavHost(
         navController = bottomNavigationNavController,
@@ -127,7 +122,11 @@ fun NavigationGraph(
             ?: BottomNavigationItemsEnum.EVENTS.value
     ) {
         composable(BottomNavigationItemsEnum.EVENTS.value) {
-            EventListScreen(navController = navController)
+            EventListScreen(
+                navToSubmitPlannerScreen = {
+                    appNavController.navigate(AppScreens.SubmitPlanner(plannerId = 1))
+                }
+            )
         }
         composable(BottomNavigationItemsEnum.SETTINGS.value) {
             SettingsScreen()

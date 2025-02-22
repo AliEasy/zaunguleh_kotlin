@@ -25,13 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.easyware.core.screens.AppScreens
 import top.easyware.core.util.UiText
 import top.easyware.intro_slider.component.IntroSliderItem
 import top.easyware.uikit.ButtonComponent
@@ -40,8 +38,8 @@ import top.easyware.uikit.ButtonComponentType
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun IntroSliderScreen(
-    navController: NavController,
     viewModel: IntroSliderViewModel = hiltViewModel(),
+    navToHomeScreen: () -> Unit
 ) {
     val state by viewModel.state
     val scope = rememberCoroutineScope()
@@ -114,11 +112,7 @@ fun IntroSliderScreen(
                                     .asString(),
                                 onClick = {
                                     viewModel.onIntent(IntroSliderIntent.EnterApp)
-                                    navController.navigate(AppScreens.HomeScreen.route) {
-                                        popUpTo(AppScreens.IntroSliderScreen.route) {
-                                            inclusive = true
-                                        }
-                                    }
+                                    navToHomeScreen()
                                 },
                                 buttonType = ButtonComponentType.Filled,
                                 modifier = Modifier.fillMaxWidth()

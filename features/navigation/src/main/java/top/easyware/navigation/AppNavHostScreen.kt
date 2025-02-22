@@ -3,10 +3,9 @@ package top.easyware.navigation
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import top.easyware.core.screens.AppScreens
 import top.easyware.home.HomeScreen
 import top.easyware.intro_slider.IntroSliderScreen
@@ -20,34 +19,32 @@ fun AppNavHostScreen(
     NavHost(
         navController = navController,
         startDestination = if (viewModel.state.value.introSliderShowed) {
-            AppScreens.HomeScreen.route
+            AppScreens.Home
         } else {
-            AppScreens.IntroSliderScreen.route
+            AppScreens.IntroSlider
         },
     ) {
-        composable(
-            route = AppScreens.HomeScreen.route
-        ) {
+        composable<AppScreens.Home> {
             HomeScreen(navController)
         }
-        composable(
-            route = AppScreens.SubmitPlannerScreen.route + "/reminderId={reminderId}",
-            arguments = listOf(navArgument("reminderId") {
-                type = NavType.IntType
-                defaultValue = -1
-                nullable = false
-            })
-        ) { entry ->
+        composable<AppScreens.SubmitPlanner> { entry ->
+            val arg: AppScreens.SubmitPlanner = entry.toRoute()
             SubmitPlannerScreen(
-                navController = navController,
-                reminderId = entry.arguments?.getInt("reminderId") ?: -1
+                plannerId = arg.plannerId,
+                onPopBackStack = {
+                    navController.popBackStack()
+                }
             )
         }
-        composable(
-            route = AppScreens.IntroSliderScreen.route
-        ) {
+        composable<AppScreens.IntroSlider> {
             IntroSliderScreen(
-                navController = navController
+                navToHomeScreen = {
+                    navController.navigate(AppScreens.Home) {
+                        popUpTo(AppScreens.IntroSlider) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
     }
