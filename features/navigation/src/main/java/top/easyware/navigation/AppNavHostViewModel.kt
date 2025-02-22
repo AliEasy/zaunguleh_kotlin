@@ -12,7 +12,7 @@ class AppNavHostViewModel @Inject constructor(
     private val introSliderShowedUseCase: IntroSliderShowedUseCase,
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(AppNavHostManager())
+    private val _state = mutableStateOf(AppNavHostState())
     val state = _state
 
     init {

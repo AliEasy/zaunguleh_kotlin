@@ -1,5 +1,5 @@
 package top.easyware.navigation
 
-data class AppNavHostManager (
+data class AppNavHostState (
     val introSliderShowed : Boolean = false
 )
