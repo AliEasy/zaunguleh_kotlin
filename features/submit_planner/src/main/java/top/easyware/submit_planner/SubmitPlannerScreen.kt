@@ -66,7 +66,6 @@ import top.easyware.uikit.text_filed.TransparentTextField
 @Composable
 fun SubmitPlannerScreen(
     viewModel: SubmitPlannerViewModel = hiltViewModel(),
-    plannerId: Int = -1,
     onPopBackStack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -90,7 +89,7 @@ fun SubmitPlannerScreen(
                     UiText.StringResource(R.string.event).asString(context)
                 )
             )
-        } else if (plannerId == -1) {
+        } else if (state.plannerId == -1) {
             viewModel.onIntent(
                 SubmitPlannerIntent.SetPageTitle(
                     UiText.StringResource(R.string.new_event).asString(context)
@@ -651,7 +650,8 @@ fun SubmitPlannerScreen(
                                                         UiText.StringResource(R.string.repeat_in)
                                                             .asString()
                                                     } ${
-                                                        state.reminderRepeatType.type!!.toHumanReadable().asString()
+                                                        state.reminderRepeatType.type!!.toHumanReadable()
+                                                            .asString()
                                                     }",
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = Color.Green

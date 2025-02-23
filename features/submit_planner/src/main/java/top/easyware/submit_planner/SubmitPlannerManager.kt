@@ -3,7 +3,7 @@ package top.easyware.submit_planner
 import top.easyware.domain.model.ReminderRepeatTypeEnum
 
 data class SubmitPlannerState(
-    val plannerId: Int? = null,
+    val plannerId: Int?,
     val isHereForInsert: Boolean = true,
     val isEditMode: Boolean = false,
     val title: TextFieldState = TextFieldState(),

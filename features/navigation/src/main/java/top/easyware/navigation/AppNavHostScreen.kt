@@ -5,7 +5,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import top.easyware.core.screens.AppScreens
 import top.easyware.home.HomeScreen
 import top.easyware.intro_slider.IntroSliderScreen
@@ -27,10 +26,8 @@ fun AppNavHostScreen(
         composable<AppScreens.Home> {
             HomeScreen(navController)
         }
-        composable<AppScreens.SubmitPlanner> { entry ->
-            val arg: AppScreens.SubmitPlanner = entry.toRoute()
+        composable<AppScreens.SubmitPlanner> {
             SubmitPlannerScreen(
-                plannerId = arg.plannerId,
                 onPopBackStack = {
                     navController.popBackStack()
                 }
