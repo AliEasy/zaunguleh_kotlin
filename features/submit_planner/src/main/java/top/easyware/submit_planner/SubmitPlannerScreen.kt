@@ -123,6 +123,13 @@ fun SubmitPlannerScreen(
                         event.repeatType
                     )
                 }
+
+                is SubmitPlannerEvent.CancelReminder -> {
+                    viewModel.cancelReminder(
+                        context,
+                        event.notificationId
+                    )
+                }
             }
         }
     }

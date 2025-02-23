@@ -77,15 +77,18 @@ sealed interface SubmitPlannerIntent {
     data class SetTempReminderDatePersian(val value: String) : SubmitPlannerIntent
 }
 
-sealed class SubmitPlannerEvent {
-    data class ShowSnackBar(val message: String) : SubmitPlannerEvent()
+sealed interface SubmitPlannerEvent {
+    data class ShowSnackBar(val message: String) : SubmitPlannerEvent
     data class ScheduleReminder(
         val remindDate: String,
         val remindTime: String,
         val notificationTitle: String,
         val notificationId: Int,
         val repeatType: ReminderRepeatTypeEnum?
-    ) : SubmitPlannerEvent()
+    ) : SubmitPlannerEvent
 
-    data object NavigateBack : SubmitPlannerEvent()
+    data object NavigateBack : SubmitPlannerEvent
+    data class CancelReminder(
+        val notificationId: Int,
+    ) : SubmitPlannerEvent
 }

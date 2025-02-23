@@ -294,8 +294,9 @@ class SubmitPlannerViewModel @Inject constructor(
 
     private fun deleteReminder() {
         viewModelScope.launch {
-            if ((_state.value.plannerId ?: -1) != -1) {
+            if (_state.value.plannerId != null) {
                 fullPlannerUseCase.deletePlannerUseCase(_state.value.plannerId!!)
+                _eventFlow.emit(SubmitPlannerEvent.CancelReminder(_state.value.plannerId!!))
                 _eventFlow.emit(SubmitPlannerEvent.NavigateBack)
             } else {
                 _eventFlow.emit(SubmitPlannerEvent.ShowSnackBar("error")) //todo
@@ -339,6 +340,21 @@ class SubmitPlannerViewModel @Inject constructor(
                 requestExactAlarmPermission(context)
             }
         }
+    }
+
+    fun cancelReminder(context: Context, notificationId: Int) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, ReminderReceiver::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            notificationId,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager.cancel(pendingIntent)
+        pendingIntent.cancel()
     }
 
     private fun requestExactAlarmPermission(context: Context) {
