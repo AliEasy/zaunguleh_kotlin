@@ -36,7 +36,7 @@ import top.easyware.event_list.components.EventItem
 @Composable
 fun EventListScreen(
     viewModel: EventListViewModel = hiltViewModel(),
-    navToSubmitPlannerScreen: (Int) -> Unit
+    navToSubmitPlannerScreen: (Int?) -> Unit
 ) {
     val state = viewModel.state.value
 
@@ -48,7 +48,7 @@ fun EventListScreen(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        navToSubmitPlannerScreen(-1)
+                        navToSubmitPlannerScreen(null)
                     },
                     icon = {
                         Icon(

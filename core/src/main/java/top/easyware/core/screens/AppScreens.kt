@@ -7,7 +7,7 @@ object AppScreens {
     object Home
 
     @Serializable
-    data class SubmitPlanner(val plannerId: Int)
+    data class SubmitPlanner(val plannerId: Int?)
 
     @Serializable
     object IntroSlider

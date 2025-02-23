@@ -41,14 +41,14 @@ class SubmitPlannerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(SubmitPlannerState(savedStateHandle["plannerId"] ?: -1))
+    private val _state = mutableStateOf(SubmitPlannerState(savedStateHandle["plannerId"]))
     val state = _state
 
     private val _eventFlow = MutableSharedFlow<SubmitPlannerEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        if ((_state.value.plannerId ?: -1) != -1) {
+        if (_state.value.plannerId != null) {
             viewModelScope.launch {
                 fullPlannerUseCase.getPlannerByIdUseCase(_state.value.plannerId!!)
                     ?.also { planner ->
@@ -80,6 +80,7 @@ class SubmitPlannerViewModel @Inject constructor(
                             ),
                             isHereForInsert = false
                         )
+                        validateForm()
                     }
             }
         } else {
