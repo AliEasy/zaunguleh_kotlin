@@ -48,10 +48,10 @@ class SubmitPlannerViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        savedStateHandle.get<Int>("plannerId")?.let { plannerId ->
-            if (plannerId != -1) {
-                viewModelScope.launch {
-                    fullPlannerUseCase.getPlannerByIdUseCase(plannerId)?.also { planner ->
+        if ((_state.value.plannerId ?: -1) != -1) {
+            viewModelScope.launch {
+                fullPlannerUseCase.getPlannerByIdUseCase(_state.value.plannerId!!)
+                    ?.also { planner ->
                         _state.value = _state.value.copy(
                             plannerId = planner.plannerId,
                             title = _state.value.title.copy(
@@ -81,10 +81,9 @@ class SubmitPlannerViewModel @Inject constructor(
                             isHereForInsert = false
                         )
                     }
-                }
-            } else {
-                _state.value = state.value.copy(isHereForInsert = true)
             }
+        } else {
+            _state.value = state.value.copy(isHereForInsert = true)
         }
     }
 
@@ -354,7 +353,8 @@ class SubmitPlannerViewModel @Inject constructor(
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val notificationTitle =
-            intent?.getStringExtra("notificationTitle") ?: UiText.StringResource(R.string.reminder).asString(context)
+            intent?.getStringExtra("notificationTitle") ?: UiText.StringResource(R.string.reminder)
+                .asString(context)
         val notificationId = intent?.getIntExtra("notificationId", 0) ?: 0
         val repeatTypeStr = intent?.getStringExtra("repeatTypeStr")
         val repeatType = ReminderRepeatTypeEnum.entries.find { it.value == repeatTypeStr }
@@ -385,7 +385,14 @@ class ReminderReceiver : BroadcastReceiver() {
 
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(top.easyware.core.R.drawable.ic_stat_name)
-            .setColor(Color(ContextCompat.getColor(context, top.easyware.core.R.color.light_orange)).toArgb())
+            .setColor(
+                Color(
+                    ContextCompat.getColor(
+                        context,
+                        top.easyware.core.R.color.light_orange
+                    )
+                ).toArgb()
+            )
             .setContentTitle(notificationTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(Notification.CATEGORY_ALARM)
