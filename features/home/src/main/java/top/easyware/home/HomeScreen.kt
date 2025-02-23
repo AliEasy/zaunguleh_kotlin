@@ -133,7 +133,7 @@ fun NavigationGraph(
         composable(BottomNavigationItemsEnum.EVENTS.value) {
             EventListScreen(
                 navToSubmitPlannerScreen = {
-                    appNavController.navigate(AppScreens.SubmitPlanner(plannerId = 1))
+                    appNavController.navigate(AppScreens.SubmitPlanner(plannerId = it))
                 }
             )
         }
