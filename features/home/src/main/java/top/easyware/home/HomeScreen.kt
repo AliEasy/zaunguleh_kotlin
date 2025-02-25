@@ -69,12 +69,12 @@ fun BottomBar(
             selectedIcon = ImageVector.vectorResource(R.drawable.event_filled),
             unSelectedIcon = ImageVector.vectorResource(R.drawable.event_outlined),
         ),
-        BottomNavigationBarItem(
-            route = BottomNavigationItemsEnum.TASKS,
-            title = UiText.StringResource(R.string.tasks).asString(),
-            selectedIcon = ImageVector.vectorResource(R.drawable.task_filled),
-            unSelectedIcon = ImageVector.vectorResource(R.drawable.task_outline),
-        ),
+//        BottomNavigationBarItem(
+//            route = BottomNavigationItemsEnum.TASKS,
+//            title = UiText.StringResource(R.string.tasks).asString(),
+//            selectedIcon = ImageVector.vectorResource(R.drawable.task_filled),
+//            unSelectedIcon = ImageVector.vectorResource(R.drawable.task_outline),
+//        ),
     )
 
     NavigationBar {
