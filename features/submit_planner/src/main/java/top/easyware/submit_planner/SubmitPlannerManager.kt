@@ -20,6 +20,7 @@ data class SubmitPlannerState(
     val tempReminderDate: String = "",
     val tempReminderDatePersian: String = "",
     val formIsValid: Boolean = false,
+    val initialReminderDateTime: DateTimePickerState = DateTimePickerState(),
 )
 
 data class TextFieldState(

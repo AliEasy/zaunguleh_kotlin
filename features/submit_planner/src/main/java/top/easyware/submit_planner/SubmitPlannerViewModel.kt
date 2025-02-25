@@ -78,6 +78,12 @@ class SubmitPlannerViewModel @Inject constructor(
                                 type = planner.reminderRepeatType,
                                 isSelected = planner.reminderRepeatType != null
                             ),
+                            initialReminderDateTime = _state.value.initialReminderDateTime.copy(
+                                persianDate = planner.reminderDatePersian ?: "",
+                                gregorianDate = planner.reminderDate ?: "",
+                                time = planner.reminderTime ?: "",
+                                isSelected = !planner.reminderDate.isNullOrBlank() && !planner.reminderTime.isNullOrBlank()
+                            ),
                             isHereForInsert = false
                         )
                         validateForm()
@@ -274,6 +280,16 @@ class SubmitPlannerViewModel @Inject constructor(
                 )
             )
             if (result > 0) {
+                if (_state.value.isEditMode &&
+                    (_state.value.reminderDateTime.time != _state.value.initialReminderDateTime.time ||
+                    _state.value.reminderDateTime.persianDate != _state.value.initialReminderDateTime.persianDate)
+                ) {
+                    _eventFlow.emit(
+                        SubmitPlannerEvent.CancelReminder(
+                            result.toInt(),
+                        )
+                    )
+                }
                 if (_state.value.reminderDateTime.persianDate.isNotBlank() && _state.value.reminderDateTime.time.isNotBlank()) {
                     _eventFlow.emit(
                         SubmitPlannerEvent.ScheduleReminder(
