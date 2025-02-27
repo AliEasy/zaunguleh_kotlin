@@ -7,9 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import top.easyware.core.screens.AppScreens
 import top.easyware.core.ui.theme.ZangulehTheme
 import top.easyware.core.util.LocaleHelper
 import top.easyware.navigation.AppNavHostScreen
@@ -27,6 +29,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             ZangulehTheme {
                 val navController = rememberNavController()
+
+                val notificationId = intent?.getIntExtra("notificationId", -1) ?: -1
+
+                LaunchedEffect(notificationId) {
+                    if (notificationId != -1) {
+                        navController.navigate(AppScreens.SubmitPlanner(notificationId))
+                    }
+                }
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),

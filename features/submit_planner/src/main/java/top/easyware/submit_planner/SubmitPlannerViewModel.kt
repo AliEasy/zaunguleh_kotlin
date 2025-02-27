@@ -416,6 +416,18 @@ class ReminderReceiver : BroadcastReceiver() {
             notificationManager.createNotificationChannel(channel)
         }
 
+        val plannerDetailIntent = Intent("top.easyware.zanguleh.OPEN_PLANNER_DETAIL").apply {
+            putExtra("notificationId", notificationId)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val plannerDetailPendingIntent = PendingIntent.getActivity(
+            context,
+            notificationId,
+            plannerDetailIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(top.easyware.core.R.drawable.ic_stat_name)
             .setColor(
@@ -432,6 +444,7 @@ class ReminderReceiver : BroadcastReceiver() {
             .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
             .setChannelId(channelId)
             .setAutoCancel(true)
+            .setContentIntent(plannerDetailPendingIntent)
 
         notificationManager.notify(notificationId, builder.build())
 
