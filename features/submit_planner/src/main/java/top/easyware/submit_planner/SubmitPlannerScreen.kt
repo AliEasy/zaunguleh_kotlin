@@ -200,6 +200,27 @@ fun SubmitPlannerScreen(
                                             text = {
                                                 Row {
                                                     Icon(
+                                                        imageVector = Icons.Default.Edit,
+                                                        contentDescription = UiText.StringResource(R.string.edit_event)
+                                                            .asString()
+                                                    )
+                                                    Spacer(modifier = Modifier.width(5.dp))
+                                                    Text(
+                                                        text = UiText.StringResource(R.string.edit_event)
+                                                            .asString()
+                                                    )
+                                                }
+                                            },
+                                            onClick = {
+                                                viewModel.onIntent(
+                                                    SubmitPlannerIntent.EditPlannerEnable
+                                                )
+                                            },
+                                        )
+                                        DropdownMenuItem(
+                                            text = {
+                                                Row {
+                                                    Icon(
                                                         imageVector = Icons.Default.Delete,
                                                         contentDescription = UiText.StringResource(R.string.delete_event)
                                                             .asString()
@@ -221,27 +242,6 @@ fun SubmitPlannerScreen(
                                                     SubmitPlannerIntent.SetAppbarDropdownExpanded(
                                                         false
                                                     )
-                                                )
-                                            },
-                                        )
-                                        DropdownMenuItem(
-                                            text = {
-                                                Row {
-                                                    Icon(
-                                                        imageVector = Icons.Default.Edit,
-                                                        contentDescription = UiText.StringResource(R.string.edit_event)
-                                                            .asString()
-                                                    )
-                                                    Spacer(modifier = Modifier.width(5.dp))
-                                                    Text(
-                                                        text = UiText.StringResource(R.string.edit_event)
-                                                            .asString()
-                                                    )
-                                                }
-                                            },
-                                            onClick = {
-                                                viewModel.onIntent(
-                                                    SubmitPlannerIntent.EditPlannerEnable
                                                 )
                                             },
                                         )
