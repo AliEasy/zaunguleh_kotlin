@@ -48,10 +48,10 @@ data class DatePickerState(
 )
 
 sealed interface SubmitPlannerIntent {
-    data object EditReminderEnable : SubmitPlannerIntent
-    data object EditReminderCancel : SubmitPlannerIntent
-    data object SubmitReminder : SubmitPlannerIntent
-    data object DeleteReminder : SubmitPlannerIntent
+    data object EditPlannerEnable : SubmitPlannerIntent
+    data object EditPlannerCancel : SubmitPlannerIntent
+    data object SubmitPlanner : SubmitPlannerIntent
+    data object DeletePlanner : SubmitPlannerIntent
     data class TitleChangeValue(val value: String) : SubmitPlannerIntent
     data class DescriptionChangeValue(val value: String) : SubmitPlannerIntent
     data object IsImportantChange : SubmitPlannerIntent

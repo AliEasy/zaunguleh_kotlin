@@ -96,21 +96,21 @@ class SubmitPlannerViewModel @Inject constructor(
 
     fun onIntent(event: SubmitPlannerIntent) {
         when (event) {
-            is SubmitPlannerIntent.EditReminderEnable -> {
+            is SubmitPlannerIntent.EditPlannerEnable -> {
                 _state.value =
                     state.value.copy(isEditMode = true)
             }
 
-            is SubmitPlannerIntent.EditReminderCancel -> {
+            is SubmitPlannerIntent.EditPlannerCancel -> {
                 _state.value =
                     state.value.copy(isEditMode = false)
             }
 
-            is SubmitPlannerIntent.DeleteReminder -> {
+            is SubmitPlannerIntent.DeletePlanner -> {
                 deleteReminder()
             }
 
-            is SubmitPlannerIntent.SubmitReminder -> {
+            is SubmitPlannerIntent.SubmitPlanner -> {
                 submitReminder()
             }
 

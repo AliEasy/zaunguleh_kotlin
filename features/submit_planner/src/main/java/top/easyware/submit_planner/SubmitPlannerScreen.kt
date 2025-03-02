@@ -155,7 +155,7 @@ fun SubmitPlannerScreen(
                         IconButton(
                             onClick = {
                                 if (state.isEditMode) {
-                                    viewModel.onIntent(SubmitPlannerIntent.EditReminderCancel)
+                                    viewModel.onIntent(SubmitPlannerIntent.EditPlannerCancel)
                                 } else {
                                     onPopBackStack()
                                 }
@@ -241,7 +241,7 @@ fun SubmitPlannerScreen(
                                             },
                                             onClick = {
                                                 viewModel.onIntent(
-                                                    SubmitPlannerIntent.EditReminderEnable
+                                                    SubmitPlannerIntent.EditPlannerEnable
                                                 )
                                             },
                                         )
@@ -266,7 +266,7 @@ fun SubmitPlannerScreen(
                             ButtonComponent(
                                 title = UiText.StringResource(R.string.submit_event).asString(),
                                 onClick = {
-                                    viewModel.onIntent(SubmitPlannerIntent.SubmitReminder)
+                                    viewModel.onIntent(SubmitPlannerIntent.SubmitPlanner)
                                 },
                                 buttonType = ButtonComponentType.Filled,
                                 modifier = Modifier.weight(1f),
@@ -279,7 +279,7 @@ fun SubmitPlannerScreen(
                                     if (state.isHereForInsert) {
                                         onPopBackStack()
                                     } else {
-                                        viewModel.onIntent(SubmitPlannerIntent.EditReminderCancel)
+                                        viewModel.onIntent(SubmitPlannerIntent.EditPlannerCancel)
                                     }
                                 },
                                 buttonType = ButtonComponentType.Outlined,
@@ -723,7 +723,7 @@ fun SubmitPlannerScreen(
     if (state.showSureDeleteDialog) {
         CustomDialog(
             onConfirm = {
-                viewModel.onIntent(SubmitPlannerIntent.DeleteReminder)
+                viewModel.onIntent(SubmitPlannerIntent.DeletePlanner)
                 viewModel.onIntent(SubmitPlannerIntent.SetShowSureDeleteDialog(false))
             },
             onDismiss = {

@@ -18,15 +18,15 @@ class EventListViewModel @Inject constructor(
     private val _state = mutableStateOf(EventListState())
     val state = _state
 
-    private var getRemindersJob: Job? = null
+    private var getPlannersJob: Job? = null
 
     init {
         getEventList()
     }
 
     private fun getEventList() {
-        getRemindersJob?.cancel()
-        getRemindersJob =
+        getPlannersJob?.cancel()
+        getPlannersJob =
             fullPlannerUseCase.getAllPlannersUseCase().onEach { events ->
                 _state.value = state.value.copy(
                     eventList = events,

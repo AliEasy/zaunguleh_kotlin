@@ -10,7 +10,7 @@ class ValidatePlannerTitleUseCase : BaseUseCase<String, ValidationResult> {
         return if (input.isBlank()) {
             ValidationResult(
                 isValid = false,
-                errorMessage = UiText.StringResource(R.string.reminder_title_is_empty)
+                errorMessage = UiText.StringResource(R.string.event_title_is_empty)
             )
         } else {
             ValidationResult(

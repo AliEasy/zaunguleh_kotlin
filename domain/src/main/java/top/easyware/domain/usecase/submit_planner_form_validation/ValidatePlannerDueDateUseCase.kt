@@ -10,7 +10,7 @@ class ValidatePlannerDueDateUseCase : BaseUseCase<String, ValidationResult> {
         return if (input.isBlank()) {
             ValidationResult(
                 isValid = false,
-                errorMessage = UiText.StringResource(resId = R.string.reminder_due_date_is_empty)
+                errorMessage = UiText.StringResource(resId = R.string.event_due_date_is_empty)
             )
         } else {
             ValidationResult(
