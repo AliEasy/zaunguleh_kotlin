@@ -89,7 +89,7 @@ fun SubmitPlannerScreen(
                     UiText.StringResource(R.string.event).asString(context)
                 )
             )
-        } else if (state.plannerId == -1) {
+        } else if (state.plannerId == null) {
             viewModel.onIntent(
                 SubmitPlannerIntent.SetPageTitle(
                     UiText.StringResource(R.string.new_event).asString(context)
