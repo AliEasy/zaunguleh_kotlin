@@ -1,5 +1,6 @@
 package top.easyware.submit_planner
 
+import top.easyware.core.util.UiText
 import top.easyware.domain.model.ReminderRepeatTypeEnum
 
 data class SubmitPlannerState(
@@ -12,7 +13,7 @@ data class SubmitPlannerState(
     val isImportant: Boolean = false,
     val reminderDateTime: DateTimePickerState = DateTimePickerState(),
     val reminderRepeatType: ReminderRepeatState = ReminderRepeatState(),
-    val pageTitle: String = "",
+    val pageTitle: UiText = UiText.DynamicString(""),
     val isAppbarDropdownExpanded: Boolean = false,
     val isRepeatDropdownExpanded: Boolean = false,
     val showSureDeleteDialog: Boolean = false,
@@ -25,7 +26,6 @@ data class SubmitPlannerState(
 
 data class TextFieldState(
     val text: String = "",
-    val hint: String = "",
     val isHintVisible: Boolean = true,
 )
 
@@ -67,9 +67,6 @@ sealed interface SubmitPlannerIntent {
     data object ReminderDateTimePickerClear : SubmitPlannerIntent
     data class ReminderRepeatTypeChange(val type: ReminderRepeatTypeEnum) : SubmitPlannerIntent
     data object ReminderRepeatTypeClear : SubmitPlannerIntent
-    data class SetTitleHint(val value: String) : SubmitPlannerIntent
-    data class SetDescriptionHint(val value: String) : SubmitPlannerIntent
-    data class SetPageTitle(val value: String) : SubmitPlannerIntent
     data class SetAppbarDropdownExpanded(val value: Boolean?) : SubmitPlannerIntent
     data class SetRepeatDropdownExpanded(val value: Boolean?) : SubmitPlannerIntent
     data class SetShowSureDeleteDialog(val value: Boolean?) : SubmitPlannerIntent

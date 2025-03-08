@@ -1,5 +1,6 @@
 package top.easyware.submit_planner
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -72,37 +73,6 @@ fun SubmitPlannerScreen(
     val state by viewModel.state
 
     LaunchedEffect(key1 = true) {
-        viewModel.onIntent(
-            SubmitPlannerIntent.SetTitleHint(
-                UiText.StringResource(R.string.event_title).asString(context)
-            )
-        )
-        viewModel.onIntent(
-            SubmitPlannerIntent.SetDescriptionHint(
-                UiText.StringResource(R.string.note).asString(context)
-            )
-        )
-
-        if (!state.isEditMode && !state.isHereForInsert) {
-            viewModel.onIntent(
-                SubmitPlannerIntent.SetPageTitle(
-                    UiText.StringResource(R.string.event).asString(context)
-                )
-            )
-        } else if (state.plannerId == null) {
-            viewModel.onIntent(
-                SubmitPlannerIntent.SetPageTitle(
-                    UiText.StringResource(R.string.new_event).asString(context)
-                )
-            )
-        } else {
-            viewModel.onIntent(
-                SubmitPlannerIntent.SetPageTitle(
-                    UiText.StringResource(R.string.edit_event).asString(context)
-                )
-            )
-        }
-
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is SubmitPlannerEvent.NavigateBack -> {
@@ -153,7 +123,7 @@ fun SubmitPlannerScreen(
                     ),
                     title = {
                         Text(
-                            text = state.pageTitle,
+                            text = state.pageTitle.asString(),
                             style = MaterialTheme.typography.headlineLarge,
                         )
                     },
@@ -309,7 +279,8 @@ fun SubmitPlannerScreen(
                         Column {
                             TransparentTextField(
                                 text = state.title.text,
-                                hint = state.title.hint,
+                                hint = UiText.StringResource(R.string.event_title)
+                                    .asString(context),
                                 isHintVisible = state.title.isHintVisible,
                                 onValueChange = { value ->
                                     viewModel.onIntent(
@@ -706,7 +677,7 @@ fun SubmitPlannerScreen(
                                 Spacer(modifier = Modifier.width(11.dp))
                                 TransparentTextField(
                                     text = state.description.text,
-                                    hint = state.description.hint,
+                                    hint = UiText.StringResource(R.string.note).asString(context),
                                     isHintVisible = state.description.isHintVisible,
                                     onValueChange = { value ->
                                         viewModel.onIntent(

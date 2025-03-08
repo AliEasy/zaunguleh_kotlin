@@ -87,10 +87,12 @@ class SubmitPlannerViewModel @Inject constructor(
                             isHereForInsert = false
                         )
                         validateForm()
+                        setPageTitle()
                     }
             }
         } else {
             _state.value = state.value.copy(isHereForInsert = true)
+            setPageTitle()
         }
     }
 
@@ -98,12 +100,14 @@ class SubmitPlannerViewModel @Inject constructor(
         when (event) {
             is SubmitPlannerIntent.EditPlannerEnable -> {
                 _state.value =
-                    state.value.copy(isEditMode = true)
+                    state.value.copy(isEditMode = true, isAppbarDropdownExpanded = false)
+                setPageTitle()
             }
 
             is SubmitPlannerIntent.EditPlannerCancel -> {
                 _state.value =
                     state.value.copy(isEditMode = false)
+                setPageTitle()
             }
 
             is SubmitPlannerIntent.DeletePlanner -> {
@@ -190,28 +194,6 @@ class SubmitPlannerViewModel @Inject constructor(
                 )
             }
 
-            is SubmitPlannerIntent.SetDescriptionHint -> {
-                _state.value = _state.value.copy(
-                    description = _state.value.description.copy(
-                        hint = event.value
-                    )
-                )
-            }
-
-            is SubmitPlannerIntent.SetTitleHint -> {
-                _state.value = _state.value.copy(
-                    title = _state.value.title.copy(
-                        hint = event.value
-                    )
-                )
-            }
-
-            is SubmitPlannerIntent.SetPageTitle -> {
-                _state.value = _state.value.copy(
-                    pageTitle = event.value
-                )
-            }
-
             is SubmitPlannerIntent.SetAppbarDropdownExpanded -> {
                 _state.value = _state.value.copy(
                     isAppbarDropdownExpanded = event.value ?: !_state.value.isAppbarDropdownExpanded
@@ -282,7 +264,7 @@ class SubmitPlannerViewModel @Inject constructor(
             if (result > 0) {
                 if (_state.value.isEditMode &&
                     (_state.value.reminderDateTime.time != _state.value.initialReminderDateTime.time ||
-                    _state.value.reminderDateTime.persianDate != _state.value.initialReminderDateTime.persianDate)
+                            _state.value.reminderDateTime.persianDate != _state.value.initialReminderDateTime.persianDate)
                 ) {
                     _eventFlow.emit(
                         SubmitPlannerEvent.CancelReminder(
@@ -379,6 +361,16 @@ class SubmitPlannerViewModel @Inject constructor(
                 data = Uri.parse("package:${context.packageName}")
             }
             context.startActivity(intent)
+        }
+    }
+
+    private fun setPageTitle() {
+        if (!_state.value.isEditMode && !_state.value.isHereForInsert) {
+            _state.value = state.value.copy(pageTitle = UiText.StringResource(R.string.event))
+        } else if (_state.value.plannerId == null) {
+            _state.value = state.value.copy(pageTitle = UiText.StringResource(R.string.new_event))
+        } else {
+            _state.value = state.value.copy(pageTitle = UiText.StringResource(R.string.edit_event))
         }
     }
 }
