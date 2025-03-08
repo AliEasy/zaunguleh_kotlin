@@ -134,6 +134,12 @@ fun SubmitPlannerScreen(
         }
     }
 
+    BackHandler(
+        enabled = state.isEditMode
+    ) {
+        viewModel.onIntent(SubmitPlannerIntent.EditPlannerCancel)
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
