@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -21,7 +22,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -31,6 +36,7 @@ import top.easyware.domain.model.PlannerDto
 import top.easyware.domain.model.PlannerTypeEnum
 import top.easyware.domain.model.ReminderRepeatTypeEnum
 import top.easyware.domain.usecase.planner.FullPlannerUseCase
+import top.easyware.domain.usecase.planner.GetUpcomingRemindersUseCase
 import top.easyware.domain.usecase.submit_planner_form_validation.SubmitPlannerFormValidationUseCase
 import javax.inject.Inject
 
@@ -467,6 +473,65 @@ class ReminderReceiver : BroadcastReceiver() {
                 nextGregorianCalendar.timeInMillis,
                 pendingIntent
             )
+        }
+    }
+}
+
+@AndroidEntryPoint
+class BootReceiver : BroadcastReceiver() {
+    @Inject
+    lateinit var getUpcomingRemindersUseCase: GetUpcomingRemindersUseCase
+
+    @Inject
+    lateinit var reminderScheduler: ReminderScheduler
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+        Log.d("BootReceiver", "Broadcast received: ${intent?.action}")
+        if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
+            CoroutineScope(Dispatchers.IO).launch {
+                getUpcomingRemindersUseCase().collect { upcomingPlanners ->
+                    upcomingPlanners.forEach { planner ->
+                        reminderScheduler.scheduleReminder(planner)
+                    }
+                }
+            }
+        }
+    }
+}
+
+class ReminderScheduler @Inject constructor(private val context: Context) {
+
+    fun scheduleReminder(planner: PlannerDto) {
+        if (planner.reminderDatePersian != null && planner.reminderTime != null && planner.plannerId != null) {
+            val calendar = CalendarUtil.convertJalaliToGregorian(
+                planner.reminderDatePersian!!,
+                planner.reminderTime!!
+            )
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, ReminderReceiver::class.java).apply {
+                putExtra("notificationTitle", planner.title)
+                putExtra("notificationId", planner.plannerId)
+                if (planner.reminderRepeatType != null) {
+                    putExtra("repeatTypeStr", planner.reminderRepeatType!!.value)
+                    putExtra("mainRemindDate", planner.reminderDatePersian)
+                    putExtra("mainRemindTime", planner.reminderTime)
+                }
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                planner.plannerId!!,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (alarmManager.canScheduleExactAlarms()) {
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        pendingIntent
+                    )
+                }
+            }
         }
     }
 }

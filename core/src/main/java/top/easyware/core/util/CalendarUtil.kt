@@ -2,7 +2,9 @@ package top.easyware.core.util
 
 import saman.zamani.persiandate.PersianDate
 import saman.zamani.persiandate.PersianDateFormat
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class CalendarUtil {
     companion object {
@@ -71,6 +73,17 @@ class CalendarUtil {
             val adjustedDay = if (month == 12 && day == 30 && !isLeapYear) 29 else day
 
             return String.format("%04d/%02d/%02d", newYear, month, adjustedDay)
+        }
+
+        fun convertDateToMillis(dateString: String): Long {
+            val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            return formatter.parse(dateString)?.time ?: 0L
+        }
+
+        fun convertTimeToMillis(timeString: String): Long {
+            val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val date = formatter.parse(timeString)
+            return date?.time?.rem(24 * 60 * 60 * 1000) ?: 0L
         }
     }
 }

@@ -17,6 +17,7 @@ import top.easyware.domain.usecase.planner.DeletePlannerUseCase
 import top.easyware.domain.usecase.planner.FullPlannerUseCase
 import top.easyware.domain.usecase.planner.GetAllPlannersUseCase
 import top.easyware.domain.usecase.planner.GetPlannerByIdUseCase
+import top.easyware.domain.usecase.planner.GetUpcomingRemindersUseCase
 import top.easyware.domain.usecase.submit_planner_form_validation.SubmitPlannerFormValidationUseCase
 import top.easyware.domain.usecase.submit_planner_form_validation.ValidatePlannerDueDateUseCase
 import top.easyware.domain.usecase.submit_planner_form_validation.ValidatePlannerTitleUseCase
@@ -61,5 +62,11 @@ object DomainModule {
             setIntroSliderShowedUseCase = SetIntroSliderShowedUseCase(repository = repository),
             getIntroSliderShowedUseCase = GetIntroSliderShowedUseCase(repository = repository)
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUpcomingRemindersUseCase(repository: PlannerRepository): GetUpcomingRemindersUseCase {
+        return GetUpcomingRemindersUseCase(repository = repository)
     }
 }
