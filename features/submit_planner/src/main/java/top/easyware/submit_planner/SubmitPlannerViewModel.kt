@@ -23,7 +23,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -490,8 +489,10 @@ class BootReceiver : BroadcastReceiver() {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             CoroutineScope(Dispatchers.IO).launch {
                 getUpcomingRemindersUseCase().collect { upcomingPlanners ->
-                    upcomingPlanners.forEach { planner ->
-                        reminderScheduler.scheduleReminder(planner)
+                    if (upcomingPlanners.any()) {
+                        upcomingPlanners.forEach { planner ->
+                            reminderScheduler.scheduleReminder(planner)
+                        }
                     }
                 }
             }
@@ -502,6 +503,7 @@ class BootReceiver : BroadcastReceiver() {
 class ReminderScheduler @Inject constructor(private val context: Context) {
 
     fun scheduleReminder(planner: PlannerDto) {
+        Log.d("BootReceiver", "Reminder Scheduler:")
         if (planner.reminderDatePersian != null && planner.reminderTime != null && planner.plannerId != null) {
             val calendar = CalendarUtil.convertJalaliToGregorian(
                 planner.reminderDatePersian!!,

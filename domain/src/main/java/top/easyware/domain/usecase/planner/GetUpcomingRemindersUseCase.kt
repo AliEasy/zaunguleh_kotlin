@@ -15,11 +15,15 @@ class GetUpcomingRemindersUseCase @Inject constructor(
             .map { planners ->
                 val currentTime = System.currentTimeMillis()
                 planners.filter { planner ->
-                    val reminderDateMillis = planner.reminderDate?.let { CalendarUtil.convertDateToMillis(it) } ?: 0L
-                    val reminderTimeMillis = planner.reminderTime?.let { CalendarUtil.convertTimeToMillis(it) } ?: 0L
-                    val reminderDateTime = reminderDateMillis + reminderTimeMillis
-
-                    reminderDateTime > currentTime
+                    if (!planner.reminderDate.isNullOrEmpty() && !planner.reminderTime.isNullOrEmpty()) {
+                        val reminderDateTimeMillis = CalendarUtil.convertDateTimeToMillis(
+                            dateString = planner.reminderDate,
+                            timeString = planner.reminderTime
+                        )
+                        reminderDateTimeMillis > currentTime
+                    } else {
+                        false
+                    }
                 }
             }
     }

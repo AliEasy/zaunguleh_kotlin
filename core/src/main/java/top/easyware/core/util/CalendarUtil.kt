@@ -75,15 +75,10 @@ class CalendarUtil {
             return String.format("%04d/%02d/%02d", newYear, month, adjustedDay)
         }
 
-        fun convertDateToMillis(dateString: String): Long {
-            val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-            return formatter.parse(dateString)?.time ?: 0L
-        }
-
-        fun convertTimeToMillis(timeString: String): Long {
-            val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
-            val date = formatter.parse(timeString)
-            return date?.time?.rem(24 * 60 * 60 * 1000) ?: 0L
+        fun convertDateTimeToMillis(dateString: String, timeString: String): Long {
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            val dateTime = sdf.parse("$dateString $timeString") ?: return 0L
+            return dateTime.time
         }
     }
 }
