@@ -90,3 +90,4 @@ sealed interface SubmitPlannerEvent {
         val notificationId: Int,
     ) : SubmitPlannerEvent
 }
+
